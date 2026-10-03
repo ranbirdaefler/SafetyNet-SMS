@@ -9,3 +9,4 @@ venv/
 *.limit*.meta.json
 logs/
 data/*.db
+models/
