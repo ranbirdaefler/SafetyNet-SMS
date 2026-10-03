@@ -87,3 +87,17 @@ def test_new_symptom_word_never_turns_an_age_into_a_duration():
 def test_frozen_attachment_kept():
     # fever named first, a nearer diarrhoea verb: fever still gets the 10 days (additive attachment)
     assert textparse.parse("ana homa na anaharisha kwa siku 10").durations["fever"] == 10
+
+
+# "kuna" exception (post-hoc): the mined E2 term "kuna" counts for blood in stool only with "damu"
+@pytest.mark.parametrize("text", ["Mtoto wangu wa miaka 2 ana kikohozi, kuna mvua nyingi hapa",
+                                  "mtoto wa miezi 30 ana upele, je kuna dawa?"])
+def test_kuna_alone_is_not_blood(text):
+    assert "blood_stool" not in keyword_extractor(text)
+
+
+@pytest.mark.parametrize("text", ["mtoto wa miaka 2, kuna damu kwenye choo", "mtoto wa miaka 2 kuna choo chenye damu leo",
+                                  "mtoto wa miezi 20 ana damu kwenye kinyesi"])
+def test_blood_still_read(text):
+    assert keyword_extractor(text).get("blood_stool") == "PRESENT"
+    assert act(text) == "GO_NOW"

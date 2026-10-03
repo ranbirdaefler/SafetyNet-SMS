@@ -12,7 +12,7 @@ def keyword_rows():
 
 def chp_case(text, registered=True):
     p = textparse.parse(text)
-    fields = lexicon.match(text, keyword_rows(), k=lexicon.LIVE["k"], use_cues=True)
+    fields = lexicon.match_live(text, keyword_rows(), k=lexicon.LIVE["k"], use_cues=True)
     return Case(registered=registered, fields=fields, age_months=p.age_months, u2m=p.u2m,
                 pregnancy=p.pregnancy, adult=p.adult, durations=dict(p.durations), muac_mm=p.muac_mm)
 

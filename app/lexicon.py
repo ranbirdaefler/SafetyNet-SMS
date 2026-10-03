@@ -157,6 +157,22 @@ def use(kw):
     LIVE.update(kw)
 
 
+def match_live(text, rows, k, use_cues=True):
+    """match() for the live parent and health-worker lines, with one post-hoc exception (Sat 3 Oct, README): the
+    mined E2 term "kuna" ("there is") counts for blood in stool only when "damu" (blood) is also in the text, because
+    alone it named "blood in stool" in clinical alerts for messages that never mention blood. The frozen E2 used by
+    the evaluation harness (match) is unchanged."""
+    found = match(text, rows, k=k, use_cues=use_cues)
+    if found.get("blood_stool") == PRESENT_WORD and "kuna" in rows.get("blood_stool", []):
+        terms = {t for s, t, neg in match_detail(text, rows, k) if s == "blood_stool" and not neg}
+        if terms == {"kuna"} and not any(tok.startswith("damu") for c in clauses(text) for tok in c):
+            del found["blood_stool"]
+    return found
+
+
+PRESENT_WORD = "PRESENT"
+
+
 def match_detail(text, rows, k):
     """Every match as (sign, term, negated), using the same rules as match()."""
     phrases = _phrases(rows)
