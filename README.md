@@ -2,7 +2,9 @@
 
 **Pre-registered claim (native Swahili): NOT TESTED**
 
-A parent texts a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. A box in the county (a Raspberry Pi 5) reads it for danger signs and either tells the parent to take the child to the facility now, or tells them their health worker has been told, with a deadline and the danger-sign list. The health worker gets a fixed checklist; the facility gets an alert with a code and texts the code back when the child arrives.
+An assistant for Kenya's community health promoters (CHPs). The user is the health worker: she makes every clinical call. Parents in her area text a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. The assistant reads it for danger signs, tells her (with the full checklist), keeps her case board, and writes the referral and arrival record for her. When a danger sign is reported, or she is on a visit or asleep and does not reply in time, the automatic "go now" to the parent and the facility alert are a safety net, not a replacement for her.
+
+Designed to sit alongside eCHIS on the health worker's government phone; integration not built this weekend. eCHIS records her visits; this assistant reads parents' SMS, flags danger signs, and writes the referral and arrival record for her instead of adding reports for her to send.
 
 World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 to 4 October 2026.
 
@@ -10,11 +12,22 @@ World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 t
 
 ## How it works
 
+The model runs on her phone. Where phones fail, the same model runs on a county box behind the SMS number. That box is what we demoed. The parent still gets "go now" and the facility is still alerted when her phone is off or broken.
+
 - **One endpoint.** `POST /sms {from, to, body}`; the role (parent, health worker, facility) comes from the number texted. A 3-pane web simulator (Parent / Health worker / Facility + CHA) is the demo client. A gateway adapter (Africa's Talking or a county shortcode in Kenya; Twilio elsewhere) is a thin mapping onto this endpoint and is not built.
 - **Parent line.** The parent only ever gets one of five fixed English messages: go now, go now (unregistered number), your health worker has been told (with a deadline and the danger-sign list), the health worker did not reply (go now), or not for this number. The parent is never asked a question and never gets advice, reassurance, a diagnosis, a medicine or a dose. A send-time check refuses any other text to a parent.
 - **Health-worker line.** Deterministic: a regex and a fixed keyword list read the text for signs that are present; nothing is ever read as absent. The health worker gets the full 8-option checklist and only a numbered reply ("0") clears a sign. Any sign, "9", silence or two unreadable replies refer.
+- **Case board.** In the health-worker pane: her cases with code, age, a danger flag, the signs recorded, status (to check / referred / no reply / arrived / closed) and time, danger first, then oldest. Built only from stored case records; nothing generated. After an arrival it shows "follow-up visit due {date}", after she closes a case with "0" "check on child due {date}" (3 days, WHO/UNICEF CHW manual pp.98 and 116); these say only when to go back and are never sent as SMS.
 - **Referral loop.** Every referral sends an alert with a 4-digit code to the facility and the community health assistant (CHA). The facility texts the code on arrival; the health worker and CHA are told the child arrived. The facility owns the arrival code. No reply to a code means it was not recorded: resend.
 - **Rules.** `config/protocol.yaml` holds the RED (refer) rules from the WHO/UNICEF community case management materials, editable by the ministry. Must-stay-RED tests (T1 to T35, T34 retired) and caregiver tests (CG1 to CG18, CG16 retired) run on every load: a protocol edit that drops a RED rule is refused, and any red caregiver test switches the parent door off.
+
+## Runs on a phone-class device
+
+The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
+
+> Raspberry Pi 5 (4x Arm Cortex-A76, 8 GB) runs the model here, as a county backup and as a stand-in for the health worker's phone. Phones issued to Kenyan health workers are reported to have 2 GB RAM (chipset not published); entry-level phones sold in Kenya use older Arm cores (Cortex-A55/A75). So we report peak RAM and 1- and 2-core timings. Not yet measured on a phone; no phone app was built this weekend.
+
+(On-device card and the table "What fits on which phone, and what it costs" are filled from `data/sweep_ydev.json` and the Pi benchmark.)
 
 ## Safety contract and preconditions
 
