@@ -1,0 +1,52 @@
+{
+ "label": "Exploratory, thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.",
+ "lo": 0.068065,
+ "hi": 0.9,
+ "sets": {
+  "a": {
+   "N": 25,
+   "please_read": 11,
+   "please_read_pct": 44.0,
+   "please_read_cp95": [
+    24.4,
+    65.1
+   ],
+   "danger": 12,
+   "danger_with_no_band": 0,
+   "danger_with_no_band_cp95": [
+    0.0,
+    26.5
+   ]
+  },
+  "b": {
+   "N": 25,
+   "please_read": 6,
+   "please_read_pct": 24.0,
+   "please_read_cp95": [
+    9.4,
+    45.1
+   ],
+   "danger": 12,
+   "danger_with_no_band": 0,
+   "danger_with_no_band_cp95": [
+    0.0,
+    26.5
+   ]
+  },
+  "ytest": {
+   "N": 150,
+   "please_read": 35,
+   "please_read_pct": 23.3,
+   "please_read_cp95": [
+    16.8,
+    30.9
+   ],
+   "danger": 80,
+   "danger_with_no_band": 0,
+   "danger_with_no_band_cp95": [
+    0.0,
+    4.5
+   ]
+  }
+ }
+}

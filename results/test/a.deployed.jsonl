@@ -1,0 +1,25 @@
+{"id": "D01", "label": "danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "D02", "label": "danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "D03", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["cannot drink or feed", "under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D04", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["cannot drink or feed"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D05", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["vomits everything"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D06", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["vomits everything"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D07", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D08", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["very sleepy or cannot wake"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D09", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["blood in stool"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D10", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["long illness", "under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D11", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["long illness"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "D12", "label": "danger", "kind": null, "action": "GO_NOW", "reasons": ["long illness"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "N01", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N02", "label": "no_danger", "kind": null, "action": "GO_NOW", "reasons": ["blood in stool"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "N03", "label": "no_danger", "kind": null, "action": "GO_NOW", "reasons": ["under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "N04", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N05", "label": "no_danger", "kind": null, "action": "GO_NOW_NO_AGE", "reasons": [], "triggered": false, "age_not_received_only": true, "c4": false}
+{"id": "N06", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N07", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N08", "label": "no_danger", "kind": null, "action": "GO_NOW_NO_AGE", "reasons": [], "triggered": false, "age_not_received_only": true, "c4": false}
+{"id": "N09", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N10", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N11", "label": "no_danger", "kind": null, "action": "GO_NOW", "reasons": ["under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
+{"id": "N12", "label": "no_danger", "kind": null, "action": "TOLD", "reasons": [], "triggered": false, "age_not_received_only": false, "c4": false}
+{"id": "N13", "label": "no_danger", "kind": null, "action": "GO_NOW", "reasons": ["under 2 months"], "triggered": true, "age_not_received_only": false, "c4": false}
