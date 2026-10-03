@@ -27,7 +27,42 @@ The model runs on the health worker's own phone, with no internet or data bundle
 
 > Raspberry Pi 5 (4x Arm Cortex-A76, 8 GB) runs the model here, as a county backup and as a stand-in for the health worker's phone. Phones issued to Kenyan health workers are reported to have 2 GB RAM (chipset not published); entry-level phones sold in Kenya use older Arm cores (Cortex-A55/A75). So we report peak RAM and 1- and 2-core timings. Not yet measured on a phone; no phone app was built this weekend.
 
-(On-device card and the table "What fits on which phone, and what it costs" are filled from `data/sweep_ydev.json` and the Pi benchmark.)
+The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests. The tables below show the model the tool would ship once it passes the caregiver tests.
+
+### What fits on which phone, and what it costs
+
+All variants come from the same fine-tuned v1 model. Size = model + tokenizer on disk. Peak RAM, cold load and p95 per message (64 tokens) measured on the Pi 5 with ONNX Runtime (4 cores, and pinned to 1 core with `taskset`). Accuracy on Y-dev (GPT-written development set, 120 messages: 60 danger, 45 no-danger), never on a test set. Rule: deploy the smallest variant with >= 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches.
+
+| Variant | Size MB | Peak RAM MB | Load s | p95 ms, 4 cores | p95 ms, 1 core | Danger caught | False go-now | Agrees with FP32 | Danger missed vs FP32 | Passes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FP32 (registered default) | 1074.9 | 1851 | 2.2 | 126.0 | 373.2 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| INT8 dynamic, MatMul only (registered INT8) | 832.1 | 1610 | 1.75 | 44.4 | 116.8 | 26/60 | 3/45 | 87/120 | 30 | no |
+| INT8 dynamic, MatMul only, per-channel | 832.5 | 1611 | 1.78 | 46.0 | 119.8 | 49/60 | 6/45 | 113/120 | 7 | no |
+| INT8 dynamic incl. embeddings (Gather) | 281.6 | 625 | 1.21 | 45.7 | 117.2 | 27/60 | 4/45 | 89/120 | 29 | no |
+| INT8 weight-only (per-channel), FP32 compute | 283.1 | 1432 | 1.47 | 182.1 | 317.3 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Vocab trim (9,759 tokens), FP32 | 355.4 | 490 | 0.82 | 158.4 | 364.6 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Vocab trim + INT8 dynamic, MatMul only | 112.6 | 252 | 0.4 | 46.0 | 116.9 | 26/60 | 3/45 | 87/120 | 30 | no |
+| Vocab trim + INT8 dynamic incl. embeddings | 90.0 | 228 | 0.39 | 45.6 | 117.7 | 28/60 | 4/45 | 90/120 | 28 | no |
+| Vocab trim + INT8 weight-only (per-channel) | 90.3 | 322 | 0.63 | 86.3 | 215.9 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Keyword list E2 (no model; runs the parent line live), for reference | | | | | | 50/60 | 2/45 | | | |
+| Keyword list v0 (no model), for reference | | | | | | 30/60 | 3/45 | | | |
+
+INT4 (MatMulNBits) was not built: its export failed on the first try. Activation-quantized INT8 (the registered INT8 and its variants) fails the rule badly: it pushes many danger probabilities below 0.5. Weight-only INT8 stores the weights as 8-bit and computes in FP32.
+
+### On-device card (deployed variant)
+
+| | Deployed: vocab trim + weight-only INT8 | Registered: FP32 (reference) |
+|---|---|---|
+| File size | 90.3 MB | 1074.9 MB |
+| Peak RAM | 322 MB (2 GB phone: Android itself uses part of this RAM) | 1851 MB |
+| Cold load | 0.63 s | 2.2 s |
+| p50 / p95 at 64 tokens, 4 cores | 82.7 / 86.3 ms | 125.6 / 126.0 ms |
+| p95 at 64 tokens, 2 cores | 118.2 ms | 192.1 ms |
+| p95 at 64 tokens, 1 core | 215.9 ms | 373.2 ms |
+
+Entry-level Android phone in Kenya: {spec line, cited in DATA.md}
+
+CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit needs root, so only core pinning was used.
 
 ## Safety contract and preconditions
 
@@ -98,6 +133,10 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - Before sealing, rows D10 and N03 of set (a) were corrected for format (age present; duration clearly over 14 days; no breathing/chest/"worse" words), and Florian saw those two rows' text; the other 23 rows were not read.
 - "miaka" added as a year unit on Sat 3 Oct, before any test set was opened; source: the system's pre-event Swahili onboarding text.
 - "umri N" without a unit is treated as no age (an age needs a unit).
+- **Deployment rule and deployed model.** Extends prereg section 7: deploy the smallest variant with at least 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches, chosen on Y-dev before `freeze`. Deployed: the v1 model with its vocabulary trimmed after fine-tuning to 9,759 tokens (keep-list: single Latin characters, X train, the keyword lists, the fixed strings, MASSIVE train) and weights stored as 8-bit (weight-only, per channel), 90.3 MB with tokenizer (FP32: 1,074.9 MB). Reason: the brief's rule that model files must be small enough to side-load or send over a weak connection. The registered row stays FP32 as pre-registered (the registered INT8 failed the section 7 rule); the deployed variant is reported as its own labelled row.
+- **Rung 3.** The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests (CG1 and CG5 with the encoder on) and the Y-dev go-live gate (more needless go-nows than the keyword list).
+- **v2.** A second training run (v2) added terse and negated messages after the v1 encoder failed the caregiver safety tests CG1/CG5; training on short danger-term messages makes CG1 easier to pass, which we consider legitimate because recognising bare danger terms is what CG1 requires. v2 still failed (CG5, CG5b, CG10, CG12 and the Y-dev gate) and is reported as its own labelled row.
+- **Exploratory row (not pre-registered).** MASSIVE sw-KE: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.
 
 ## Word lists added on Saturday (from the protocol sources only)
 
