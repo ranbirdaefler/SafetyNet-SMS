@@ -1,0 +1,8 @@
+{
+ "split": "y_dev",
+ "generator": "gpt-5.5",
+ "cards": 120,
+ "written": 120,
+ "errors": {},
+ "finished": "2026-10-03 12:23:00 Eastern Daylight Time"
+}

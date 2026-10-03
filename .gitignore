@@ -7,3 +7,5 @@ venv/
 *.limit*.jsonl
 *.limit*.csv
 *.limit*.meta.json
+logs/
+data/*.db

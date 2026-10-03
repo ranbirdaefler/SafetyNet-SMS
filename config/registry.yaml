@@ -1,0 +1,26 @@
+# Pre-seeded registry (X6). Synthetic demo numbers only; no real people.
+# In production the health worker adds the parent number at household registration.
+lines:
+  parent: "40100"     # county shortcode the parent texts
+  chp: "40101"        # health-worker (CHP) line
+  facility: "40102"   # facility + CHA line
+
+facility:
+  name: "Nambale Health Centre"   # {facility}, max 28 GSM-7 chars, checked on load
+  phone: "+254711000100"
+
+cha:
+  - {id: "CHA 1", phone: "+254711000200"}
+
+chus:
+  - {n: 3, cha: "CHA 1"}
+
+chps:
+  - {id: "07", chu: 3, phone: "+254722000107"}
+  - {id: "08", chu: 3, phone: "+254722000108"}
+
+parents:
+  - {phone: "+254733000001", chp: "07"}
+  - {phone: "+254733000002", chp: "07"}
+  - {phone: "+254733000003", chp: "08"}
+  - {phone: "+254733000004", chp: null}   # registered, no CHP assigned (D7)
