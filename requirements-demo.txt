@@ -1,0 +1,6 @@
+fastapi==0.135.2
+uvicorn==0.42.0
+pyyaml==6.0.2
+numpy
+onnxruntime==1.23.2
+tokenizers>=0.22,<0.24

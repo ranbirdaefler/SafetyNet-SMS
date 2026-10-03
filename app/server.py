@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -79,6 +79,21 @@ def load_protocol():
 load_protocol()
 app = FastAPI(title="SafetyNet-SMS")
 LOCK = threading.Lock()   # one event at a time: the first committed event wins (D29)
+# Public demo mode (Hugging Face Space): fictional data only, admin/diagnostic endpoints off, input size limit,
+# a "Reset demo" button and an automatic reset after 30 minutes without activity. No SMS gateway exists in any mode.
+PUBLIC = os.environ.get("SNS_PUBLIC") == "1"
+MAX_BODY = 1000
+IDLE_RESET_S = 30 * 60
+ACTIVITY = {"last": time.time()}
+
+
+def reset_demo():
+    from app.board_model import LOG
+    with STORE.lock:
+        for t in ("cases", "inbox", "outbox"):
+            STORE.db.execute(f"DELETE FROM {t}")
+    LOG.clear()
+    ACTIVITY["last"] = time.time()
 
 
 def _timer():
@@ -86,6 +101,8 @@ def _timer():
         try:
             with LOCK:
                 service.tick(STORE, REGISTRY, STATE["protocol"], extractors=STATE["extractors"])
+                if PUBLIC and time.time() - ACTIVITY["last"] > IDLE_RESET_S and STORE.last_outbox_id():
+                    reset_demo()
         except Exception:
             pass
         time.sleep(1)
@@ -104,6 +121,9 @@ class Inbound(BaseModel):
 @app.post("/sms")
 def sms(msg: Inbound):
     role = REGISTRY.role(msg.to)
+    if PUBLIC and len(msg.body) > MAX_BODY:
+        raise HTTPException(status_code=413, detail=f"demo limit: at most {MAX_BODY} characters")
+    ACTIVITY["last"] = time.time()
     with LOCK:
         before = STORE.last_outbox_id()
         STORE.log_in(msg.sender, msg.to, role, msg.body)
@@ -134,8 +154,26 @@ def case_board(phone: str):
         return board.board(STORE, phone, STATE["protocol"])
 
 
+@app.post("/demo/reset")
+def demo_reset():
+    """Clears every case, message and log line (the registry, protocol and models are untouched)."""
+    with LOCK:
+        reset_demo()
+    return {"ok": True}
+
+
+@app.post("/demo/fire-timeouts")
+def demo_fire_timeouts():
+    """Demo shortcut: fire every pending due time now, instead of waiting for the 60 s demo timeout."""
+    with LOCK:
+        n = service.tick(STORE, REGISTRY, STATE["protocol"], now=time.time() + 10 ** 6, extractors=STATE["extractors"])
+    return {"fired": n}
+
+
 @app.post("/admin/reload")
 def reload():
+    if PUBLIC:
+        raise HTTPException(status_code=404)
     st = load_protocol()
     return {"loaded": st["load_error"] is None, "error": st["load_error"], "door_on": st["door_on"],
             "keyword_list": st["keyword_list"], "encoder_on": st["encoder_on"], "model": MODEL_DIR,
@@ -149,7 +187,7 @@ def config():
     r = REGISTRY
     return {"lines": r.lines, "parents": list(r.parents), "chps": [c["phone"] for c in r.chps.values()],
             "facility": r.facility["phone"], "facilities": [{"phone": f["phone"], "name": f["name"]} for f in r.facilities.values()],
-            "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"]}
+            "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"], "public": PUBLIC}
 
 
 @app.get("/")
@@ -196,6 +234,8 @@ def phone_file(name: str):
 
 @app.post("/phone/report")
 def phone_report(r: dict = Body(...)):
+    if PUBLIC:
+        raise HTTPException(status_code=404)
     import json as _json
     import time as _time
     r["received"] = _time.strftime("%Y-%m-%d %H:%M:%S")
@@ -207,6 +247,8 @@ def phone_report(r: dict = Body(...)):
 @app.post("/phone/parity")
 def phone_parity(rows: list = Body(...)):
     """Compare the phone's token ids, raw head flags and board band with the Pi's, message by message."""
+    if PUBLIC:
+        raise HTTPException(status_code=404)
     import json as _json
     import numpy as np
     from app.board_model import BoardModel

@@ -43,12 +43,18 @@
   .logbox { position:fixed; right:12px; bottom:46px; width:min(420px, calc(100% - 24px)); background:rgba(255,255,255,.95);
             border:1px solid var(--line); border-radius:10px; padding:6px 10px; font:12px/1.4 ui-monospace, Consolas, monospace; }
   .logbox b { font-family:system-ui, sans-serif; font-size:12px; }
+  .banner { background:#fff4d6; border-bottom:1px solid #e8d49a; padding:6px 16px; font-size:13px; }
+  .tool { font:inherit; font-size:12px; padding:4px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; cursor:pointer; }
+  .osm { position:fixed; left:12px; bottom:46px; font-size:11px; color:var(--muted); }
   .corner { position:fixed; left:12px; right:12px; bottom:10px; background:rgba(29,35,41,.88); color:#fff; font-size:12.5px;
             padding:6px 10px; border-radius:8px; text-align:center; }
 </style>
 </head>
 <body>
-<header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span></header>
+<div class="banner" id="banner" hidden>Demo with synthetic data. Not for medical use. In deployment this runs offline on the health worker's phone; this public demo runs the same code on a cloud server so you can try it.</div>
+<header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span>
+  <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
+  <button type="button" class="tool" id="reset">Reset demo</button></header>
 <main>
   <section class="pane" data-role="parent">
     <h2>Parent</h2>
@@ -73,6 +79,7 @@
   </section>
 </main>
 <div class="logbox" id="logbox"><b>On the box: model time and band per parent message</b><div id="loglines">waiting for a parent SMS</div></div>
+<div class="osm">Facility names: &copy; OpenStreetMap contributors (healthsites.io, ODbL). Phone numbers, health workers and villages are fictional.</div>
 <div class="corner">SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi. Synthetic cases; not clinically validated.</div>
 <script>
 if (new URLSearchParams(location.search).get("clean")) document.body.classList.add("clean");
@@ -192,6 +199,10 @@ async function pollLog() {
 }
 document.getElementById("loglines").style.whiteSpace = "pre";
 setInterval(pollLog, 1500);
+
+document.getElementById("reset").onclick = async () => { await fetch("demo/reset", {method: "POST"}); location.reload(); };
+document.getElementById("fire").onclick = async () => { await fetch("demo/fire-timeouts", {method: "POST"}); };
+fetch("config").then(r => r.json()).then(c => { if (c.public) document.getElementById("banner").hidden = false; });
 
 init().then(setupTabs);
 </script>

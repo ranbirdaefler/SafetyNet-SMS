@@ -1,0 +1,9 @@
+{
+ "repo": "ranbirr1/safetynet-sms-board",
+ "revision": "main",
+ "board_config": "config/board_model.json",
+ "sha256": {
+  "model.onnx": "0dcaaf1353e76556680f352d13c0de8571a2878394b6ac1ddb9d9b46e933b0e6",
+  "tokenizer.json": "7146c767e3087e96aa375c590c239a9210172393856eecdc4c0d52a34d398a6b"
+ }
+}
