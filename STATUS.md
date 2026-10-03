@@ -68,7 +68,7 @@ Bug fixed: "18m ..." inside an open case was read as options 1 and 8.
 
 ## v3 (after results, exploratory)
 - Criteria efdeab3 + 07323eb; data db7cad9; configs before evaluation 5faab32; evaluation 17df7ec^ (v3/evaluation.json). v3 passes (a)(b)(c); re-tuned v2 fails (c). Board = v3 (config/board_model.json; v2 kept as board_model_v2_shipped.json).
-- STEP 5 on the Pi, shipped v3 board file (models/onnx/v3_trim_wq8, 92.7 MB, git hash-object 4c7916c9): model only p95 80 ms (4 cores) / 215 ms (1 core) at 64 tokens, peak RSS 350 MB; full round trip on 1 core p95 530 ms (p50 404), whole service peak RSS 569 MB (includes the v1 encoder loaded for the CG check and the web simulator). Memory cgroup disabled at boot (cgroup_disable=memory): no cap possible without a boot-config change. Phone page serves v3: parity 20/20 tokens, flags, bands (max dp 0.021); Florian to re-run timing on the iPhone.
+- STEP 5 on the Pi, shipped v3 board file (models/onnx/v3_trim_wq8, 92.7 MB, git hash-object 4c7916c9): model only p95 80 ms (4 cores) / 215 ms (1 core) at 64 tokens, peak RSS 350 MB; full round trip on 1 core p95 530 ms (p50 404), whole service peak RSS 569 MB (includes the v1 encoder loaded for the CG check and the web simulator). Memory cgroup disabled at boot (cgroup_disable=memory): no cap possible without a boot-config change. Phone page serves v3: parity 20/20 tokens, flags, bands (max dp 0.021); iPhone re-run with the v3 file (Safari, same UA as P4, received 16:04:53): 50 Y-dev p50 110 ms, p95 165 ms, download 3.2 s, load 1.26 s.
 
 ## Open issues
 - `freeze` held until the planner's go. Then: freeze record -> push tag -> run tests (a), (b) and Y-test with E2 / registered v1 FP32 / deployed / v2 rows, and MASSIVE; counts only.
