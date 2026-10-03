@@ -1,6 +1,6 @@
 # STATUS
 
-**Updated:** Sat 3 Oct, ~13:55 ET · **Block:** B13 done up to the gate; `freeze` HELD (waiting for the planner's go) · **Last tag:** `mvs`
+**Updated:** Sat 3 Oct, ~15:15 ET · **Block:** after `results`: diagnosis done, v3 NO-GO (pending Florian), writing · **Last tag:** `results` (ab79b5b)
 
 ## Seal record (GitHub push record is the evidence)
 | Item | Commit | Time (ET) | Notes |
@@ -58,6 +58,13 @@ B6; B7 (v1, 0.4 min); B10 (export, sweep, Pi bench); B11 (harness, E2 mining, Y-
 - MASSIVE exploratory script, freeze record and test-run scripts (none run).
 
 Bug fixed: "18m ..." inside an open case was read as options 1 and 8.
+
+## Since freeze
+- `freeze` 28609b6 (14:06:09 ET); sealed raw outputs 357f63a; `results` ab79b5b (14:31). Outcome: no native set; safety switch fired on (b) and Y-test; statements verbatim in README/results.
+- Final parent strings live (Swahili first + English; CG_TOLD in the parent's language, waiting time in minutes). CLAUDE.md rule 8 updated by Florian (1bd2335).
+- P4 phone page live at http://192.168.1.208:8000/phone. Florian's iPhone (Safari, iOS 18.7, UA "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1"): 50 Y-dev p50 109 ms, p95 170 ms, load 1.28 s; parity 20/20 tokens, flags, bands, max dp 0.021; offline in airplane mode worked. No reload offline (no HTTPS service worker).
+- Pi pinned to 1 core: full service p50 397 / p95 516 ms per parent message, peak RSS 549 MB. The 2 GB cap was not enforced (user cgroup has no memory controller).
+- Diagnosis D1-D5 done (see README Results and results/d5_everyday_swahili.json). Fresh test set y_test2 sealed unopened (64a4fff).
 
 ## Open issues
 - `freeze` held until the planner's go. Then: freeze record -> push tag -> run tests (a), (b) and Y-test with E2 / registered v1 FP32 / deployed / v2 rows, and MASSIVE; counts only.
