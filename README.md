@@ -21,6 +21,7 @@ World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 t
 - Outgoing SMS are English only in this build. Swahili versions are future work and need a native speaker's back-translation, keeping every qualifier, before any use.
 - A parent message without the child's age is sent to the facility at once; this over-refers on purpose.
 - Caregiver path not clinically validated.
+- If any caregiver safety test fails at start-up, the parent door switches off; a parent text then gets the fixed "take the child to the nearest health facility NOW" reply without being read, and the CHA gets a copy. The parent line is never silent.
 - No text is ever read as absent; only a numbered reply clears a sign. Enforced by T1 to T35 and CG1 to CG18 on every load; not counted on the eval sets.
 - Numbers not in the registry are always sent to the facility; in production the CHP would add the number at household registration.
 - A Swahili report that the child is worse is not read as go-now; the parent still gets the deadline and the health worker is called.

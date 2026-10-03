@@ -42,3 +42,16 @@ def tick(store, reg, proto, now=None, extractors=None):
 
 def _ex(extractors):
     return {"extractors": extractors} if extractors else {}
+
+
+def door_off(store, reg, sender):
+    """Door flag off (a red CG test, or no valid protocol): never silence. The parent gets the fixed CG_GO_NOW_U
+    (the text is not read) and the CHA gets an ALERT copy with the reason "text not read"."""
+    parent = reg.parent(sender)
+    chp = reg.chp_of_parent(sender) if parent else None
+    code = store.create_case(chp["phone"] if chp else None, "parent", {"age_months": None, "u2m": False}, "REFERRED_U",
+                             parent_phone=sender)
+    cha = reg.cha_of_chp(chp) if chp else reg.default_cha
+    body = M.alert(code, None, ["text not read"], chp["chu"] if chp else "-", chp["id"] if chp else "-", parent=True)
+    store.send(cha["phone"], "cha", "ALERT", body, code)
+    store.send(sender, "parent", "CG_GO_NOW_U", M.CG_GO_NOW_U.format(code=code), code)

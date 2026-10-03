@@ -75,7 +75,7 @@ def sms(msg: Inbound):
         before = STORE.last_outbox_id()
         STORE.log_in(msg.sender, msg.to, role, msg.body)
         if role == "parent" and not STATE["door_on"]:
-            pass                       # door flag off: the parent line is not offered (logged only)
+            service.door_off(STORE, REGISTRY, msg.sender)   # fail-safe: fixed go-now + CHA copy, never silence
         elif role is not None:
             service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
         return {"role": role, "replies": STORE.outbox_since(before)}
