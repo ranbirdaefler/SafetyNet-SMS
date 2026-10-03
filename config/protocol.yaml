@@ -10,6 +10,7 @@ parameters:
   diarrhoea_red_days: {value: 14, allowed: [14]}     # S1 p.36
   fever_red_days: {value: 7, allowed: [7]}           # S1 p.36
   muac_red_below_mm: {value: 115, allowed: [115]}    # S1 p.30
+  retention_days: {value: 30, allowed: [7, 14, 30, 60, 90]}   # closed-case content is deleted after this many days (county/MoH sets it)
   followup_days: {value: 3, allowed: [3]}            # S1 p.98 "Follow up child in 3 days" (treated at home); S1 p.116 referred child: "on return at least once a week until well"
 
 timeouts: {reply_min: 30, reply_window_min: 60, reply_window_max_min: 120, demo_s: 60, digit_window_h: 24}

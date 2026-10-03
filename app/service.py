@@ -31,6 +31,7 @@ def tick(store, reg, proto, now=None, extractors=None):
     door = DoorFlow(store, reg, proto, ref, **_ex(extractors))
     chw = ChwFlow(store, reg, proto, notify_referral=ref.alert, on_refer=door.on_chp_refer)
     n = 0
+    store.purge(proto.params["retention_days"], now=now if now and now < __import__("time").time() + 1 else None)
     for case in store.due_cases(now):
         if case["origin"] == "parent":
             door.on_due(case)

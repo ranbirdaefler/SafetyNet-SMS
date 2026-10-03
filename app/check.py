@@ -22,11 +22,12 @@ e2_ok = not must_stay_red.run(proto) and not cg_tests.run(proto)
 print("E2 (k=%s) with T1-T35 and CG1-CG18: %s" % (lexicon.LIVE["k"], "PASS, E2 live" if e2_ok else "FAIL, v0 stays live"))
 if not e2_ok:
     lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
-variants = [(lexicon.LIVE["name"] + ", encoder off", (keyword_extractor,))]
 model = sys.argv[2] if len(sys.argv) > 2 else str(ROOT / "models" / "onnx" / "trim10k_wq8")
 if Path(model, "model.onnx").exists():
     from app.encoder import Encoder
-    variants.append((lexicon.LIVE["name"] + ", encoder on", (Encoder(model), keyword_extractor)))
-cg_failed = cg_tests.run(proto, verbose=True, variants=variants)
+    enc_failed = cg_tests.run(proto, variants=[(lexicon.LIVE["name"] + ", encoder on", (Encoder(model), keyword_extractor))])
+    print("ENCODER LIVE: CG1-CG18 pass with it on" if not enc_failed else
+          "ENCODER NOT LIVE (rung 3, keyword list runs the parent line): " + ", ".join(enc_failed))
+cg_failed = cg_tests.run(proto, verbose=True, variants=[(lexicon.LIVE["name"] + ", encoder off", (keyword_extractor,))])
 print("DOOR OFF: " + ", ".join(cg_failed) if cg_failed else "DOOR ON: CG1-CG18 and lints pass")
 sys.exit(2 if cg_failed else 0)

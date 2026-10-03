@@ -120,3 +120,25 @@ class Store:
             rows = self.db.execute("SELECT * FROM cases WHERE status IN ('ASK_AGE', 'ASK_SIGNS') AND due IS NOT NULL "
                                    "AND due <= ? ORDER BY due", (now,)).fetchall()
         return [self._case(r) for r in rows]
+
+    def purge(self, days, now=None):
+        """Retention: delete the content of cases closed more than `days` ago (case record, its outgoing SMS) and
+        every inbound text older than that from a number with no open case. Returns counts."""
+        now = now or time.time()
+        cutoff = now - days * 86400
+        with self.lock:
+            codes = [r[0] for r in self.db.execute(
+                "SELECT code FROM cases WHERE status IN ('CLOSED', 'NON_RED', 'REFERRED', 'REFERRED_U') AND updated < ?",
+                (cutoff,))]
+            open_senders = {p for r in self.db.execute(
+                "SELECT chp_phone, parent_phone FROM cases WHERE status IN ('ASK_AGE', 'ASK_SIGNS')") for p in r if p}
+            n_out = 0
+            for c in codes:
+                n_out += self.db.execute("DELETE FROM outbox WHERE case_code = ?", (c,)).rowcount
+                self.db.execute("DELETE FROM cases WHERE code = ?", (c,))
+            old = self.db.execute("SELECT id, sender FROM inbox WHERE ts < ?", (cutoff,)).fetchall()
+            n_in = 0
+            for i, sender in old:
+                if sender not in open_senders:
+                    n_in += self.db.execute("DELETE FROM inbox WHERE id = ?", (i,)).rowcount
+        return {"cases": len(codes), "outbox": n_out, "inbox": n_in}

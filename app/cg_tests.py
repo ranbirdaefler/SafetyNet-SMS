@@ -31,6 +31,7 @@ class Env:
 
     def send(self, phone, role, body):
         before = self.store.last_outbox_id()
+        self.store.log_in(phone, LINES[role], role, body)
         self.service.handle(self.store, self.reg, self.proto, role, phone, body, extractors=self.extractors)
         out = self.store.outbox_since(before)
         self.all += out
