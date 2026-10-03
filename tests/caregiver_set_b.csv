@@ -1,0 +1,26 @@
+id,label_line,message
+D01,D01 danger: convulsions,"Habari daktari, mtoto wangu wa miezi 32 amepata degedege wakati huu akiwa mgonjwa. Nimeogopa sana sijui nifanye nini. Naomba ushauri tafadhali, nimpeleke hospitali sasa hivi?"
+D02,D02 danger: convulsions,"Habari, mtoto wangu ana miezi 33. Jana usiku nadhani mwili wake ulikuwa ukitetemeka na kukakamaa, macho yakaenda juu kwa muda mfupi, sijui kama ni kweli au nilikosea kuona. Nimeogopa sana. Nifanye nini tafadhali?"
+D03,D03 danger: not_drink_feed,"Habari daktari, mtoto wangu wa miaka 4 hawezi kunywa kitu chochote kabisa. Nikimpa maji au uji anakataa, hawezi kunywa hata kidogo. Naomba ushauri, nifanye nini?"
+D04,D04 danger: not_drink_feed,"Habari, mtoto wangu ana miezi 3. Leo hanywi chochote, hata maziwa ya mama hanyonyi kabisa. Nimejaribu mara nyingi lakini anakataa. || Pia hata maji kidogo hakunywa. Nifanye nini? Naomba ushauri tafadhali."
+D05,D05 danger: vomits_everything,"Habari, mtoto wangu wa miezi 30 anatapika kila kitu anachokula au kunywa. Hata maji akinywa anatapika yote. Nifanye nini tafadhali? Naomba ushauri."
+D06,D06 danger: vomits_everything,"Habari, mtoto wangu wa miezi 26 anatapika kila kitu. Kila nikimpa maji, uji au chakula chochote kinarudi nje mara moja. Hakuna kinachobaki tumboni. Nifanye nini tafadhali?"
+D07,D07 danger: sleepy_unconscious,"Habari daktari. Mtoto wangu wa miaka 4 leo amekuwa na usingizi mwingi sana, si kawaida yake. Analala tu muda wote na nikimwamsha anarudi kulala tena. Nina wasiwasi sana. Nifanye nini tafadhali?"
+D08,D08 danger: sleepy_unconscious,"Habari, mtoto wangu wa miezi 27 leo analala sana na nikimwamsha haamki kwa urahisi, sijui kama ni usingizi tu au ni ugonjwa, sina uhakika. Nifanye nini?"
+D09,D09 danger: blood_stool,"Habari daktari. Mtoto wangu ana miezi 41, leo nimeona damu kwenye choo chake. Nimeogopa sana, sijui nifanye nini. || Samahani tena, naomba ushauri. Je, nimpeleke hospitali leo? Damu kwenye kinyesi chake ni dalili ya nini?"
+D10,D10 danger: cough_long,"Habari, mtoto wangu wa mwaka 1 amekuwa akikohoa tangu wiki mbili na siku mbili zilizopita, yaani siku 16 sasa. Kikohozi hakijaisha. Naomba ushauri, nifanye nini?"
+D11,D11 danger: fever_long,Habari daktari. Mtoto wangu ana miezi 6 na ana homa kwa karibu wiki 1 sasa. Mwili wake ni moto sana. Nifanye nini? Naomba ushauri tafadhali.
+D12,D12 danger: diarrhoea_long,Habari daktari. Mtoto wangu wa miezi 51 ameharisha kwa wiki 3 sasa. Choo chake ni majimaji. Naomba ushauri nifanye nini?
+N01,N01 no danger: none,Habari daktari. Mtoto wangu wa miezi 37 ana homa kidogo tangu jana. Hajapata degedege hata kidogo. Nifanye nini? Naomba ushauri tafadhali.
+N02,N02 no danger: none,"Habari daktari. Mtoto wangu wa miaka 3 anaharisha, choo chake ni majimaji. Hakuna damu kwenye choo. Nifanye nini tafadhali?"
+N03,N03 no danger: none,"Habari daktari, mtoto wangu wa miezi 56 ana mafua, kamasi zinatoka puani. Hana usingizi usio wa kawaida, anacheza kama kawaida. Nifanye nini?"
+N04,N04 no danger: none,"Habari, mtoto wangu wa mwaka 1 ana homa kidogo tangu jana. Hana shida ya kunywa, ananyonya vizuri na anakunywa maji kama kawaida. Nifanye nini?"
+N05,N05 no danger: none,"Habari daktari, mtoto wangu wa miaka 3 anatapika mara kwa mara, lakini akinywa maji au kunyonya maziwa ya mama hayatapiki, yanabaki tumboni. Nifanye nini? Naomba ushauri."
+N06,N06 no danger: none,"Habari daktari. Mtoto wangu ana miezi 6. Siku hizi analala sana kuliko kawaida yake, lakini akiitwa au kuguswa anaamka haraka na ananyonya vizuri tu. Je, ni sawa au nimpeleke hospitali? Naomba ushauri."
+N07,N07 no danger: none,"Habari daktari, mtoto wangu ana mwaka 1. Amekuwa na homa kwa siku 5 sasa. Nifanye nini? Naomba ushauri tafadhali."
+N08,N08 no danger: none,"Habari daktari, mtoto wangu wa miezi 5 amekuwa akikohoa kwa siku 10 sasa. Nina wasiwasi sana. Nifanye nini? Naomba ushauri tafadhali."
+N09,N09 no danger: none,"Habari, mtoto wangu ana miezi 15. Ameharisha kwa siku 4 sasa, choo chake ni majimaji. || Naomba ushauri, nifanye nini? Nimpeleke hospitali?"
+N10,N10 no danger: none,"Habari, mtoto wangu wa miaka 3 siku hizi anakula chakula kidogo kuliko kawaida. Lakini anakunywa maji vizuri na ananyonya kama kawaida. Nifanye nini ili ale vizuri? Naomba ushauri."
+N11,N11 no danger: none,"Habari, mtoto wangu wa miaka 3 ana homa kwa siku 2 sasa. Naomba ushauri nifanye nini?"
+N12,N12 no danger: none,"Habari, mtoto wangu ana miaka 3 na ana vipele kwenye ngozi. Nina wasiwasi sana. Naomba ushauri nifanye nini?"
+N13,N13 no danger: none,"Habari daktari. Mtoto wangu ana miezi 46, anatoka kamasi puani. Nifanye nini kumsaidia? Naomba ushauri."
