@@ -14,7 +14,7 @@ short_description: Danger-sign SMS assistant for health workers (synthetic data 
 
 **Demo with synthetic data. Not for medical use.** In deployment this runs offline on the health worker's phone; this public demo runs the same code on a cloud server so you can try it.
 
-- Built from the GitHub repo at tag `submission`: https://github.com/ranbirdaefler/SafetyNet-SMS
+- Built from the GitHub repo at a fixed commit (the `submission` tag once it exists): https://github.com/ranbirdaefler/SafetyNet-SMS
 - Board model: https://huggingface.co/ranbirr1/safetynet-sms-board (v3, 92.7 MB, SHA-256 checked at start-up)
 - No SMS gateway is connected. Phone numbers, health workers and villages are fictional. Facility names: © OpenStreetMap contributors (healthsites.io, ODbL).
 - Cases reset after 30 minutes of inactivity, or with "Reset demo".

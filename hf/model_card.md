@@ -1,5 +1,6 @@
 ---
 license: other
+license_name: research-and-evaluation-only
 language:
 - sw
 - en

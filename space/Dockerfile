@@ -1,10 +1,11 @@
 # SafetyNet-SMS public demo (Hugging Face Space, Docker, CPU basic).
-# Runs exactly the `submission` tag of the GitHub repo: no fork, no rewrite. Fictional data; no SMS gateway.
+# Runs one fixed commit or tag of the GitHub repo (Space variable REF; `submission` once that tag exists): no fork,
+# no rewrite. Fictional data; no SMS gateway.
 FROM python:3.11-slim
 RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates && rm -rf /var/lib/apt/lists/*
 ARG REPO=https://github.com/ranbirdaefler/SafetyNet-SMS
-ARG TAG=submission
-RUN git clone --depth 1 --branch ${TAG} ${REPO} /app
+ARG REF=submission
+RUN git clone ${REPO} /app && cd /app && git checkout --detach ${REF} && git log -1 --format="built from %H"
 WORKDIR /app
 RUN pip install --no-cache-dir -r requirements-demo.txt
 # onnxruntime-web for the /phone page, from the npm registry tarball, checked against its published SHA-512 integrity
