@@ -144,3 +144,9 @@ def parent_variants(msg_id):
 
 
 load_sw()
+
+# ---------- counter-referral (facility outcome; staff only, never to the parent) ----------
+OUTCOME_ACK = "{code}: outcome recorded {time}. CHP and CHA told."
+OUTCOME_CHP = "{head}: facility outcome {time}: {outcome}. Follow your chart booklet."
+OUTCOME_REJECT = "Not recorded: {reason}. After arrival, send the code then A (admitted), T and days 1-30 (treated, sent home, e.g. T5) or R (referred on)."
+OUTCOME_LABEL = {"A": "admitted", "T": "treated, sent home, follow-up day {n}", "R": "referred on"}

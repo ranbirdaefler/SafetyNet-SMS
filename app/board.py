@@ -43,6 +43,11 @@ def row(case, proto):
     elif status == "CLOSED" and st.get("arrived_at"):
         shown, event_ts = "arrived", st["arrived_at"]
         reminder = M.FOLLOWUP_REFERRED.format(date=_date(st["arrived_at"] + n * DAY))
+        oc = st.get("outcome")
+        if oc:                                   # an outcome never removes the reminder; "T n" moves it to day n
+            shown, event_ts = M.OUTCOME_LABEL[oc["kind"]].format(n=oc["n"]), oc["at"]
+            if oc["kind"] == "T":
+                reminder = M.FOLLOWUP_REFERRED.format(date=_date(oc["at"] + oc["n"] * DAY))
     elif status == "NON_RED":
         shown = "closed"
         reminder = M.FOLLOWUP_HOME.format(date=_date(case["updated"] + n * DAY))
