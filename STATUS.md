@@ -1,6 +1,6 @@
 # STATUS
 
-**Updated:** Sat 3 Oct · **Block:** B9, D2a, D2b done; B12 README draft done; `mvs` tagged (clip pending, Florian) · **Last tag:** `mvs`
+**Updated:** Sat 3 Oct · **Block:** resumed after the brief (no pivot); B7 training running in `.venv` · **Last tag:** `mvs`
 
 ## Seal record (commit times are push times from the local clock; GitHub push record is the evidence)
 | Item | Commit | Time (ET) | Notes |
@@ -33,6 +33,9 @@
 - B9 + timers b8a7a2e: A1 24 h window after NON_RED, A3 silence, D21/D22 late replies (CHA copied), M4, NON_RED; timer thread fires due times (restart reloads them, D28); one event lock (D29). T1-T35 (T34 retired) pass. Live 60 s door timeout checked on the Pi (CG_TIMEOUT + CHP_TIMEOUT + ALERT).
 - D2a/D2b 54230c7: no-CHP reason, D27 send failure; `app/cg_tests.py` CG1-CG18 (CG16 retired) + parent and staff lints on every load; red CG -> door flag off. Mutation checks: removing C4 "breathing", MUAC regex, negation, sending CG_TOLD before staff SMS, ALERT without PARENT SMS, a blocked word -> each caught. Door ON on the Pi. 69 pytest checks pass.
 - B12: README draft (MVS items: NOT TESTED header, safety contract, arrival-code owner, retention, English-only, no-age, C12, X5 (b), X6 (e), 60 s timeouts).
+
+- Brief deltas (Florian, via planner): fresh `.venv` for training/export (system Python packages kept corrupting); B10 measures model size variants, deployed = smallest passing the prereg INT8 rule on Y-dev; DATA.md; README Responsible AI (done, 77f66b8).
+- B10/B11 prep 1474b08: `app/encoder.py` (ONNX, 4 threads, first+last 256 tokens), `train/export.py` (fp32, int8, int8_emb, trim_*), `train/agree.py`, `app/harness.py` (counts only; tested on dummy files), `config/e2.json` (E2 mined by the recipe; k set at B13).
 
 ## Open issues
 - 60 s three-actor clip for `mvs`: needs Florian to record (simulator at http://192.168.1.208:8000/?clean=1).
