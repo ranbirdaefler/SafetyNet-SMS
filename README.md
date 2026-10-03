@@ -132,6 +132,14 @@ Board threshold hi = 0.9 (chosen on Y-dev before the freeze, Sat 3 Oct). At hi =
 
 Under Kenya's Data Protection Act 2019 (No. 24 of 2019), "health status" is sensitive personal data (s.2), and health data "may only be processed (a) by or under the responsibility of a health care provider; or (b) by a person subject to the obligation of professional secrecy under any law" (s.46(1)), so a deployment would run under a health care provider, not the hackathon team. Source: Kenya Law, https://new.kenyalaw.org/akn/ke/act/2019/24/eng@2022-12-31
 
+### Consent
+
+**Consent.** The health worker registers a parent's number at a household visit, after explaining in Swahili or English what the number does and what the facility will see, and that a program on her phone reads each message first to sort her cases, and notes verbal consent in her existing household register (DESIGN). Only registered numbers open a full case; an unregistered number gets only the fixed "go to the nearest facility now" reply and a CHA copy, and nothing else is stored about it beyond the case log (BUILT). A parent can opt out at any time by telling the health worker, who removes the number from the registry (DESIGN; removal itself is BUILT). An SMS "STOP" keyword is not built (DESIGN).
+
+### Bias and who it may fail
+
+**Bias and who it may fail.** The model was trained on GPT-written messages and tested on Claude-written messages, in Swahili, English and code-mixed text; no message written by a real parent or health worker was used, and no native speaker checked them (see DATA.md). It is untested on Kikuyu, Luo and Sheng; AfroXLMR was not trained on Kikuyu, and Luo was not in its training (DATA.md, M1), so we expect it to do worse there. The keyword list is also Swahili and English only, so in Kikuyu, Luo or Sheng both can miss. The backstop is the danger list in every reply and the health worker reading every message. Because the model never decides what the parent is told, a miss in an untested language leaves the case where the keyword list put it, and the health worker still reads every message. The drift monitor counts model-vs-health-worker disagreements by language each week, so a group of parents the model fails shows up as a rising count (DESIGN). Results by language are reported as an exploratory row, using each test message's language as fixed when the data was generated.
+
 ### Human in the loop
 
 The tool never decides against care. Only a health worker can close a case, and only by replying "0" (none of the danger signs, all checked) after seeing the child. Every other path ends with a person: the health worker is called, the facility and CHA are alerted, and the facility confirms arrival. The model can only add a reason to send a child now; it can never remove one.
@@ -145,6 +153,8 @@ When the tool is not sure, it sends the child or calls a person; it never guesse
 **Drift and bias monitor (DESIGN).** Each case logs the model's flags next to the health worker's checklist answers. A weekly count of disagreements, by sign and by language, goes to the CHA. A rising count means the model is drifting or failing a group of parents, and is the trigger to review it.
 
 ## Where the record lands
+
+**The data gap this fills.** Nobody routinely knows whether a referred child reaches the facility. In one Kenyan sub-county, of 112 children referred for pneumonia by community volunteers, referral forms were on file at the hospital for 19 (DATA.md, P8). This tool writes the missing record as a side effect of care: a referral when the case opens and an arrival when the facility texts the code back (BUILT). Those two records are what a referral-completion rate needs, and they are designed to flow into eCHIS and, as eCHIS data is reported to sync to KHIS, into Kenya's national DHIS2 instance (DESIGN).
 
 **Where the record lands (DESIGN, not built).** Each case produces two records: a referral (case code, child's age, CHP, danger signs flagged, time sent) and an arrival (facility, time seen). In a real deployment these would be sent to eCHIS, the Ministry of Health's community health app built on Medic's Community Health Toolkit, which already includes client referral. eCHIS data is reported to sync to KHIS, Kenya's national DHIS2 instance, so counts would roll up there. No public inbound API is confirmed. The demo writes the same fields to a local database.
 
@@ -184,6 +194,34 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - Duration symptom words: cough, kikohozi; diarrhoea, diarrhea, kuhara; fever, homa. The Swahili words come from the pre-event ASK_SIGNS option 7 ("Siku: kikohozi 14+, kuhara 14+, homa 7+").
 - Hedges: "labda", "?". "about a week" and "a week" count as 7 days. Numbers written as words are not read.
 - Swahili keyword and test words come from AI-drafted planning text that no native speaker checked.
+
+## Does it fit the sector's challenges, and what constraints does it add?
+
+| Challenge in the health annex / persona | How SafetyNet-SMS fits |
+|---|---|
+| Parents on basic phones, no data bundles (only 27.5% of rural women own a smartphone, DATA.md F1) | Parent side is plain SMS on any phone; no app, no data (BUILT) |
+| 2G/3G networks | SMS only; the model needs no internet (BUILT) |
+| Low digital literacy | Parent is never asked a question; fixed short messages (BUILT). Voice not built |
+| Clinician time and heavy load | Danger cases sorted first; checklist with numbered replies; facility gets one short alert (BUILT) |
+| Burdensome record-keeping | Referral and arrival records written automatically (BUILT) |
+| No new hardware for the user | Runs on the health worker's existing phone (DESIGN); the demo box is a stand-in and a county backup |
+| Local language | Parents write in Swahili, English or both; the four urgent replies are bilingual, the longer one is in the parent's language (BUILT as a mechanism; the Swahili strings are machine-translated, not native-reviewed, and go live only after Florian approves them) |
+| Privacy (where data sits, lost phone) | See "Where the data sits" (BUILT/DESIGN marked) |
+
+**Constraints we add.**
+- The health worker needs an Android phone with about 322 MB free memory (peak RAM of the deployed model on the Pi) and 90.3 MB storage; reported CHP phones have 2 GB RAM (DATA.md, C5), and Android uses part of that.
+- Someone pays for the SMS: average KES 1.18 per message (DATA.md, F3); a case uses 4 to 10 outgoing messages (7 to 13 SMS segments), counted from scripted runs of the demo flows: told then no danger sign 4 (8 segments), parent go-now then arrival 7 (7), told then referred then arrival 10 (13).
+- The parent needs access to any phone, often shared; women are less likely than men to own one (DATA.md, F2).
+- The parent must read Swahili or English (replies: see the Swahili note).
+- Facilities must text the arrival code back; a facility that doesn't leaves the case open and escalates to the CHA (BUILT).
+
+## Reuse in another setting
+
+- **What changes:** the protocol file (`config/protocol.yaml`, edited by the ministry, checked by the must-stay-RED tests on every load); the facility and health worker registry; the fixed messages (reviewed once by a native speaker and a clinician); the model, retrained on local messages.
+- **What stays:** the workflow, the safety tests, the fail-safe, the case board.
+- **Cost to add a language (measured this weekend):** 1,794 generated training and development messages (gpt-5.5: 1,200 X train, 474 v2 additions, 120 Y-dev) plus 175 generated test messages (claude-opus-5-5); API cost not logged this weekend; fine-tuning 0.4 GPU-minutes per run on one desktop GPU (RTX 4070 Ti SUPER; v1 measured); deployed model 89.7 MB (90.3 MB with tokenizer); the whole build, from the first generation commit to the frozen results, took about 2 hours 10 minutes of wall-clock (git log: 12:21 to 14:31 ET, Sat 3 Oct). Real deployment would replace generated messages with messages written by local parents and health workers.
+- **Running cost:** SMS at about KES 1.18 each (DATA.md, F3); no cloud.
+- **Pilot plan:** one CHU, the CHA reviews every model flag for the first weeks before anyone relies on it.
 
 ## Data and evaluation (filled at `freeze` and `results`)
 
