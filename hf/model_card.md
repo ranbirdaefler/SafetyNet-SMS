@@ -1,5 +1,5 @@
 ---
-license: other
+license: other  # TBD by the author
 language:
 - sw
 - en
@@ -25,9 +25,9 @@ Reads a parent's SMS about a sick child (Swahili, English or mixed) and gives th
 | File | Size | SHA-256 |
 |---|---|---|
 | `model.onnx` (vocabulary-trimmed, 8-bit weights, per-channel) | 92.7 MB | `0dcaaf1353e76556680f352d13c0de8571a2878394b6ac1ddb9d9b46e933b0e6` |
-| `tokenizer.json` | | `7146c767e3087e96aa375c590c239a9210172393856eecdc4c0d52a34d398a6b` |
+| `tokenizer.json` | 0.77 MB (766,645 bytes) | `7146c767e3087e96aa375c590c239a9210172393856eecdc4c0d52a34d398a6b` |
 
-Board thresholds (from `config/board_model.json` in the GitHub repo): lo 0.849, hi 0.997, per-head temperatures calibrated on Y-dev.
+Board thresholds (from `config/board_model.json` in the GitHub repo): lo 0.849, hi 0.997, per-head temperatures calibrated on v3's held-out X-val (547 messages).
 
 ## Base model
 
@@ -51,17 +51,22 @@ Fine-tuned from AfroXLMR-base (Alabi et al., COLING 2022), MIT licence.
 | Everyday Swahili, FLORES-200 devtest (1,012): flagged | 70.6% | 0.1% |
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 0.0% |
 
-Caregiver tests (must-stay-RED T1–T35, CG1–CG18) pass with v3 on.
+Caregiver tests (must-stay-RED T1–T35, CG1–CG18) pass with the v3 board on (the board never changes what a parent is told).
 
 ## Known failures
 
 - On the fresh set, keywords + v3 board miss 2 danger messages, both long-duration signs in Swahili (fever, diarrhoea). On the three earlier sealed sets (report-only), keywords + v3 board miss one danger message on each: a "cannot drink or feed" in negative form (mixed Swahili/English) and two long-duration diarrhoea messages in Swahili.
+- On the three earlier sets, keywords + v3 board let 3 of 104 danger messages through that keywords + v2 board caught; v2's board, however, flagged 62.6-80.5% of everyday Swahili.
 - All test data is AI-written. Thresholds must be re-set on real parents' texts before any use.
 - Swahili is the only local language tested. Kikuyu and Luo are not covered.
 
 ## Disclosure
 
 v3's training changes were chosen after seeing error types on dev data and, report-only, on earlier test sets; v3 was evaluated once on a fresh sealed set. The fresh set includes the error types v3 was trained to fix (denials, durations).
+
+## Licence
+
+Licence: TBD by the author
 
 ## Device
 

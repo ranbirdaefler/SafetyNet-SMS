@@ -6,8 +6,8 @@ colorTo: red
 sdk: docker
 app_port: 7860
 pinned: false
-license: mit
-short_description: Child danger-sign SMS triage demo (synthetic data only)
+license: other  # TBD by the author
+short_description: SMS danger-sign assistant for health workers (synthetic demo)
 ---
 
 # SafetyNet-SMS: public demo

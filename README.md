@@ -27,6 +27,8 @@ The model runs on the health worker's own phone, with no internet or data bundle
 
 > The same 93 MB model runs offline in a phone browser (iPhone, Safari: p95 165 ms; a best case, since entry-level Android phones are slower). Raspberry Pi 5 limited to 1 core: the model answers in 215 ms (p95); a full round trip through the demo service takes 530 ms. Peak memory: model 350 MB; whole demo service 569 MB, which also holds the earlier pre-registered model and the web simulator; a phone app would carry neither. Not yet measured on an entry-level Android; no phone app was built this weekend.
 
+The service also loads the earlier pre-registered encoder (v1) at start-up only to run the caregiver tests with it switched on; it failed them, so it is never used, and the parent line stays on the keyword list. It never affects what a parent or health worker sees.
+
 **In a phone browser (P4).** The board model (v3, trimmed, 8-bit weights, 92.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 110 ms, p95 165 ms; model load 1.3 s (the v2 file, 89.7 MB, measured p50 109 ms, p95 170 ms) (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
 
 **Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
@@ -110,6 +112,7 @@ The board now runs **v3**, a third training run made after the results were tabu
 
 v3 added, to the v2 training data: gpt-5.5 contrast pairs (the same message with a sign present and denied, extra "very sleepy" denials), duration messages under the cut-offs, human-written Swahili with no health content as no-danger examples (MASSIVE sw-KE train and AfriSenti swa train), and SMS-style noise. v3 includes AfriSenti training data; a ministry deployment would retrain without it or seek the creators' approval.
 
+<!-- HOLD: v3 results table and paragraph pending Florian-approved wording.
 | Evaluation split (never used for training or thresholds) | Keywords + v2 board (as shipped) | Keywords + v2 board (re-tuned) | Keywords + v3 board |
 |---|---|---|---|
 | Fresh test set y_test2 (Claude-written, 80 danger): danger missed | 2 | 2 | 2 |
@@ -118,7 +121,6 @@ v3 added, to the v2 training data: gpt-5.5 contrast pairs (the same message with
 | Everyday Swahili, FLORES-200 devtest (1,012; FLORES was never trained on): flagged | 70.6% | 70.6% | 0.1% |
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 80.5% | 0.0% |
 
-<!-- HOLD: v3 results paragraph pending Florian-approved wording.
 v3 passed all three pre-declared criteria (caregiver tests green with it on; no more danger missed than with v2; at most 35% of each everyday split flagged). v2 with thresholds re-chosen by the same rule kept its safe lower threshold and still flagged 60 to 80% of everyday Swahili: thresholds alone could not fix the flood without giving up safety; retraining did. The v3 board thresholds (lo 0.849, hi 0.997) were set by the rule on separate threshold splits.
 
 Reported, not used for any decision: on the three original sealed sets, keywords + the v3 board missed one danger message on each of (a), (b) and Y-test, where keywords + the v2 board (whose flood flagged almost everything) missed none.
