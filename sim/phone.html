@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SafetyNet-SMS on a phone</title>
+<style>
+  :root { --bg:#f3f4f6; --card:#fff; --ink:#1d2329; --muted:#6b7480; --line:#d6dae0; --acc:#1f6feb; --red:#b42318; --ok:#13795b; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.45 -apple-system, system-ui, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width:520px; margin:0 auto; padding:12px 16px 40px; }
+  h1 { font-size:19px; margin:6px 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin:10px 0; }
+  .status { font-weight:600; }
+  .status.on { color:var(--ok); } .status.off { color:var(--red); }
+  button { font:inherit; padding:9px 14px; border:0; border-radius:10px; background:var(--acc); color:#fff; margin:4px 6px 4px 0; }
+  button:disabled { opacity:.5; }
+  textarea { width:100%; font:inherit; padding:8px; border:1px solid var(--line); border-radius:10px; min-height:70px; }
+  .k { color:var(--muted); font-size:13px; }
+  .flag { color:var(--red); font-weight:600; }
+  pre { white-space:pre-wrap; font-size:12.5px; margin:6px 0 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>SafetyNet-SMS on a phone</h1>
+  <div class="sub">The shipped board model (90 MB, 8-bit weights) running in this browser, single-threaded WebAssembly. No app, no cloud.</div>
+  <div class="card">Network: <span id="net" class="status">checking</span><div class="k">From the browser (navigator.onLine and online/offline events).</div></div>
+  <div class="card"><div>Model: <span id="load">loading...</span></div><div class="k" id="loadk"></div></div>
+  <div class="card">
+    <div>Type a parent's SMS:</div>
+    <textarea id="txt" placeholder="mtoto wangu miezi 18 ana degedege"></textarea>
+    <button id="read" disabled>Read</button>
+    <div id="out"></div>
+  </div>
+  <div class="card">
+    <button id="bench" disabled>Time 50 messages</button>
+    <button id="parity" disabled>Parity with the Pi (20)</button>
+    <pre id="res"></pre>
+  </div>
+</main>
+<script type="module">
+import * as ort from "./phone/ort/ort.wasm.min.mjs";
+ort.env.wasm.wasmPaths = new URL("./phone/ort/", location.href).href;
+ort.env.wasm.numThreads = 1;
+
+const HEADS = ["convulsions", "not_drink_feed", "vomits_everything", "sleepy_unconscious", "blood_stool", "cough_long", "diarrhoea_long", "fever_long"];
+const LABEL = {convulsions: "convulsions", not_drink_feed: "cannot drink or feed", vomits_everything: "vomits everything",
+  sleepy_unconscious: "very sleepy or cannot wake", blood_stool: "blood in stool", cough_long: "long illness",
+  diarrhoea_long: "long illness", fever_long: "long illness"};
+const $ = id => document.getElementById(id);
+
+function setNet() { const on = navigator.onLine; $("net").textContent = on ? "Online" : "Offline"; $("net").className = "status " + (on ? "on" : "off"); }
+addEventListener("online", setNet); addEventListener("offline", setNet); setNet();
+
+// ---------- Unigram tokenizer (XLM-R: NFKC, whitespace split, "▁" prefix per word, Viterbi over the vocab) ----------
+let pieces, maxLen, unkScore, UNK = 3, BOS = 0, EOS = 2;
+function initTok(tj) {
+  const vocab = tj.model.vocab;
+  UNK = tj.model.unk_id;
+  pieces = new Map(); maxLen = 0; let minScore = Infinity;
+  vocab.forEach(([p, s], i) => { pieces.set(p, [i, s]); maxLen = Math.max(maxLen, Array.from(p).length); if (s < minScore) minScore = s; });
+  unkScore = minScore - 10;
+}
+function viterbi(word) {
+  const ch = Array.from(word), n = ch.length;
+  const best = new Array(n + 1).fill(-Infinity), back = new Array(n + 1);
+  best[0] = 0;
+  for (let i = 0; i < n; i++) {
+    if (best[i] === -Infinity) continue;
+    let any = false;
+    for (let L = 1; L <= Math.min(maxLen, n - i); L++) {
+      const sub = ch.slice(i, i + L).join("");
+      const hit = pieces.get(sub);
+      if (hit) { any = true; const sc = best[i] + hit[1]; if (sc > best[i + L]) { best[i + L] = sc; back[i + L] = [i, hit[0]]; } }
+    }
+    if (!any) { const sc = best[i] + unkScore; if (sc > best[i + 1]) { best[i + 1] = sc; back[i + 1] = [i, UNK]; } }
+  }
+  const ids = [];
+  for (let j = n; j > 0; ) { const [i, id] = back[j]; ids.push(id); j = i; }
+  ids.reverse();
+  return ids.filter((id, k) => !(id === UNK && ids[k - 1] === UNK));   // fuse consecutive <unk>
+}
+function encode(text) {
+  const t = text.normalize("NFKC");
+  const ids = [BOS];
+  for (const w of t.split(/\s+/).filter(Boolean)) ids.push(...viterbi("▁" + w));
+  ids.push(EOS);
+  return ids;
+}
+
+// ---------- model ----------
+let session, temps, lo, hi;
+function windows(ids) {
+  if (ids.length <= 256) return [ids];
+  const body = ids.slice(1, -1), n = 254;
+  return [[ids[0], ...body.slice(0, n), ids[ids.length - 1]], [ids[0], ...body.slice(-n), ids[ids.length - 1]]];
+}
+async function probs(text) {
+  let p = null;
+  for (const ids of windows(encode(text))) {
+    const a = BigInt64Array.from(ids.map(BigInt));
+    const feeds = {input_ids: new ort.Tensor("int64", a, [1, ids.length]),
+                   attention_mask: new ort.Tensor("int64", new BigInt64Array(ids.length).fill(1n), [1, ids.length])};
+    const out = Array.from((await session.run(feeds)).probs.data);
+    p = p ? p.map((v, i) => Math.max(v, out[i])) : out;
+  }
+  return p;
+}
+function flags(p) {
+  const raw = HEADS.filter((h, i) => p[i] >= 0.5);
+  const cal = p.map((v, i) => { const q = Math.min(Math.max(v, 1e-6), 1 - 1e-6); return 1 / (1 + Math.exp(-Math.log(q / (1 - q)) / temps[i])); });
+  let m = 0; cal.forEach((v, i) => { if (v > cal[m]) m = i; });
+  const band = cal[m] >= hi ? "possible" : cal[m] >= lo ? "unsure" : null;
+  return {raw, band, sign: band === "possible" ? LABEL[HEADS[m]] : null, top: cal[m]};
+}
+
+let ydev = [];
+async function init() {
+  const t0 = performance.now();
+  const [modelBuf, tj, cfg, yd] = await Promise.all([
+    fetch("phone/model.onnx").then(r => r.arrayBuffer()), fetch("phone/tokenizer.json").then(r => r.json()),
+    fetch("phone/board_model.json").then(r => r.json()), fetch("phone/ydev.json").then(r => r.json())]);
+  const t1 = performance.now();
+  initTok(tj);
+  temps = HEADS.map(h => cfg.temperatures[h]); lo = cfg.lo; hi = cfg.hi; ydev = yd;
+  session = await ort.InferenceSession.create(modelBuf, {executionProviders: ["wasm"], graphOptimizationLevel: "all",
+    extra: {session: {disable_quant_qdq: "1"}}});   // fold the 8-bit weights to FP32 once at load, not on every run
+  const t2 = performance.now();
+  await probs("mtoto miezi 18 ana homa");
+  $("load").textContent = `ready (${(modelBuf.byteLength / 1048576).toFixed(1)} MB)`;
+  $("loadk").textContent = `download ${((t1 - t0) / 1000).toFixed(1)} s, model load ${((t2 - t1) / 1000).toFixed(1)} s. Everything is now in memory: it keeps working with no network.`;
+  ["read", "bench", "parity"].forEach(id => $(id).disabled = false);
+  window.__load = {download_s: (t1 - t0) / 1000, load_s: (t2 - t1) / 1000};
+}
+
+$("read").onclick = async () => {
+  const p = await probs($("txt").value);
+  const f = flags(p);
+  const line = f.band === "possible" ? `model: possible ${f.sign}, check` : f.band === "unsure" ? "model unsure: please read" : "no model line";
+  $("out").innerHTML = `<div class="flag">${line}</div><div class="k">heads at p &ge; 0.5: ${f.raw.join(", ") || "none"}</div>`;
+};
+
+$("bench").onclick = async () => {
+  const ts = [];
+  for (const m of ydev.slice(0, 50)) { const a = performance.now(); await probs(m.message); ts.push(performance.now() - a); }
+  ts.sort((a, b) => a - b);
+  const r = {n: ts.length, p50_ms: +ts[Math.floor(ts.length / 2)].toFixed(1), p95_ms: +ts[Math.ceil(ts.length * 0.95) - 1].toFixed(1),
+             ua: navigator.userAgent, ...window.__load};
+  $("res").textContent = `50 Y-dev messages: p50 ${r.p50_ms} ms, p95 ${r.p95_ms} ms`;
+  try { await fetch("phone/report", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify(r)}); } catch (e) {}
+};
+
+$("parity").onclick = async () => {
+  const rows = [];
+  for (const m of ydev.slice(0, 20)) { const p = await probs(m.message); rows.push({id: m.id, ids: encode(m.message), probs: p, ...flags(p)}); }
+  try {
+    const r = await (await fetch("phone/parity", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify(rows)})).json();
+    $("res").textContent = `Parity with the Pi: tokens ${r.tokens_match}/${r.n}, flags ${r.flags_match}/${r.n}, bands ${r.bands_match}/${r.n}, max |dp| ${r.max_abs_dp}` +
+      (r.mismatch.length ? `\nmismatch: ${r.mismatch.join(", ")}` : "");
+  } catch (e) { $("res").textContent = "Parity needs the Pi (online)."; }
+};
+
+init().catch(e => { $("load").textContent = "failed: " + e; });
+</script>
+</body>
+</html>

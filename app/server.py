@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -155,3 +155,77 @@ def config():
 @app.get("/")
 def simulator():
     return FileResponse(ROOT / "sim" / "index.html")
+
+
+# ---------- P4: the shipped board model in a phone browser (onnxruntime-web, single-threaded WASM) ----------
+PHONE_FILES = {"model.onnx": None, "tokenizer.json": None, "board_model.json": ROOT / "config" / "board_model.json",
+               "ydev.json": None}
+
+
+def _board_dir():
+    import json as _json
+    return ROOT / _json.loads((ROOT / "config" / "board_model.json").read_text())["model_dir"]
+
+
+@app.get("/phone")
+def phone_page():
+    return FileResponse(ROOT / "sim" / "phone.html")
+
+
+@app.get("/phone/ort/{name}")
+def phone_ort(name: str):
+    p = ROOT / "sim" / "ort" / name
+    if p.parent != ROOT / "sim" / "ort" or not p.exists():
+        return {"error": "not found"}
+    mt = "application/wasm" if name.endswith(".wasm") else "text/javascript" if name.endswith((".mjs", ".js")) else None
+    return FileResponse(p, media_type=mt)
+
+
+@app.get("/phone/{name}")
+def phone_file(name: str):
+    import json as _json
+    if name in ("model.onnx", "tokenizer.json"):
+        return FileResponse(_board_dir() / name)
+    if name == "board_model.json":
+        return FileResponse(ROOT / "config" / "board_model.json")
+    if name == "ydev.json":                     # development set only (never a test set): 50 messages for timing and parity
+        rows = [_json.loads(l) for l in open(ROOT / "data" / "y_dev.jsonl", encoding="utf-8")][:50]
+        return [{"id": r["id"], "message": r["message"]} for r in rows]
+    return {"error": "not found"}
+
+
+@app.post("/phone/report")
+def phone_report(r: dict = Body(...)):
+    import json as _json
+    import time as _time
+    r["received"] = _time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(ROOT / "data" / "phone_report.jsonl", "a", encoding="utf-8") as fh:
+        fh.write(_json.dumps(r) + "\n")
+    return {"ok": True}
+
+
+@app.post("/phone/parity")
+def phone_parity(rows: list = Body(...)):
+    """Compare the phone's token ids, raw head flags and board band with the Pi's, message by message."""
+    import json as _json
+    import numpy as np
+    from app.board_model import BoardModel
+    from app.encoder import HEADS
+    bm = STATE.get("board_model") or BoardModel()
+    msgs = {r["id"]: r["message"] for r in (_json.loads(l) for l in open(ROOT / "data" / "y_dev.jsonl", encoding="utf-8"))}
+    out = {"n": len(rows), "tokens_match": 0, "flags_match": 0, "bands_match": 0, "max_abs_dp": 0.0, "mismatch": []}
+    for r in rows:
+        text = msgs[r["id"]]
+        ids = bm.enc.tok.encode(text).ids
+        p = bm.enc.probs(text)
+        raw = [h for h, v in zip(HEADS, p) if v >= 0.5]
+        band = bm.band(text)["band"]
+        ok_t, ok_f, ok_b = ids == r["ids"], raw == r["raw"], band == r["band"]
+        out["tokens_match"] += ok_t
+        out["flags_match"] += ok_f
+        out["bands_match"] += ok_b
+        out["max_abs_dp"] = round(max(out["max_abs_dp"], float(np.abs(np.array(r["probs"]) - p).max())), 5)
+        if not (ok_t and ok_f and ok_b):
+            out["mismatch"].append(f"{r['id']} (tokens {ok_t}, flags {ok_f}, band {ok_b})")
+    (ROOT / "data" / "phone_parity.json").write_text(_json.dumps(out, indent=1))
+    return out

@@ -11,3 +11,4 @@ logs/
 data/*.db
 models/
 data/ext/
+sim/ort/
