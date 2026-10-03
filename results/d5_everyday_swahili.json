@@ -1,0 +1,104 @@
+{
+ "label": "everyday human-written Swahili, not about sick children",
+ "sources": {
+  "MASSIVE sw-KE test (same 1,000)": {
+   "N": 1000,
+   "triggered: keyword list E2": {
+    "n": 43,
+    "cp95": [
+     3.1,
+     5.7
+    ]
+   },
+   "triggered: v1 FP32 (registered)": {
+    "n": 9,
+    "cp95": [
+     0.4,
+     1.7
+    ]
+   },
+   "triggered: v2 shipped (trim, 8-bit)": {
+    "n": 59,
+    "cp95": [
+     4.5,
+     7.5
+    ]
+   },
+   "board flagged: v2 shipped": {
+    "n": 621,
+    "cp95": [
+     59.0,
+     65.1
+    ],
+    "possible": 8,
+    "unsure": 613
+   }
+  },
+  "FLORES-200 swh_Latn devtest": {
+   "N": 1012,
+   "triggered: keyword list E2": {
+    "n": 94,
+    "cp95": [
+     7.6,
+     11.2
+    ]
+   },
+   "triggered: v1 FP32 (registered)": {
+    "n": 11,
+    "cp95": [
+     0.5,
+     1.9
+    ]
+   },
+   "triggered: v2 shipped (trim, 8-bit)": {
+    "n": 43,
+    "cp95": [
+     3.1,
+     5.7
+    ]
+   },
+   "board flagged: v2 shipped": {
+    "n": 703,
+    "cp95": [
+     66.5,
+     72.3
+    ],
+    "possible": 3,
+    "unsure": 700
+   }
+  },
+  "AfriSenti swa test (tweets)": {
+   "N": 748,
+   "triggered: keyword list E2": {
+    "n": 58,
+    "cp95": [
+     5.9,
+     9.9
+    ]
+   },
+   "triggered: v1 FP32 (registered)": {
+    "n": 9,
+    "cp95": [
+     0.6,
+     2.3
+    ]
+   },
+   "triggered: v2 shipped (trim, 8-bit)": {
+    "n": 63,
+    "cp95": [
+     6.5,
+     10.6
+    ]
+   },
+   "board flagged: v2 shipped": {
+    "n": 594,
+    "cp95": [
+     76.3,
+     82.3
+    ],
+    "possible": 3,
+    "unsure": 591
+   }
+  }
+ }
+}
