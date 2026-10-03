@@ -193,8 +193,7 @@ async function pollLog() {
   try {
     const rows = await (await fetch("log")).json();
     if (rows.length) document.getElementById("loglines").textContent =
-      rows.slice(-5).map(r => `${r.time}  case ${r.code}  ${r.chp}  model ${r.model_ms ?? "-"} ms  band: ${r.band}`).join("
-");
+      rows.slice(-5).map(r => `${r.time}  case ${r.code}  ${r.chp}  model ${r.model_ms ?? "-"} ms  band: ${r.band}`).join("\n");
   } catch (e) {}
 }
 document.getElementById("loglines").style.whiteSpace = "pre";
