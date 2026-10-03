@@ -1,0 +1,112 @@
+{
+ "set": "Y-dev (gpt-5.5, 120)",
+ "variants": {
+  "fp32": {
+   "label": "FP32 (registered default)",
+   "model_mb": 1058.6,
+   "tokenizer_mb": 16.3,
+   "sensitivity": "56/60",
+   "false_go_now": "6/45",
+   "agreement_with_fp32": "120/120",
+   "agreement_pct": 100.0,
+   "danger_missed_vs_fp32": 0,
+   "passes_rule": true
+  },
+  "int8": {
+   "label": "INT8 dynamic, MatMul only (registered INT8)",
+   "model_mb": 815.8,
+   "tokenizer_mb": 16.3,
+   "sensitivity": "26/60",
+   "false_go_now": "3/45",
+   "agreement_with_fp32": "87/120",
+   "agreement_pct": 72.5,
+   "danger_missed_vs_fp32": 30,
+   "passes_rule": false
+  },
+  "search/fp32_mm_pc": {
+   "label": "INT8 dynamic, MatMul only, per-channel",
+   "model_mb": 816.2,
+   "tokenizer_mb": 16.3,
+   "sensitivity": "49/60",
+   "false_go_now": "6/45",
+   "agreement_with_fp32": "113/120",
+   "agreement_pct": 94.2,
+   "danger_missed_vs_fp32": 7,
+   "passes_rule": false
+  },
+  "int8_emb": {
+   "label": "INT8 dynamic incl. embeddings (Gather)",
+   "model_mb": 265.3,
+   "tokenizer_mb": 16.3,
+   "sensitivity": "27/60",
+   "false_go_now": "4/45",
+   "agreement_with_fp32": "89/120",
+   "agreement_pct": 74.2,
+   "danger_missed_vs_fp32": 29,
+   "passes_rule": false
+  },
+  "wq8": {
+   "label": "INT8 weight-only (per-channel), FP32 compute",
+   "model_mb": 266.8,
+   "tokenizer_mb": 16.3,
+   "sensitivity": "56/60",
+   "false_go_now": "6/45",
+   "agreement_with_fp32": "120/120",
+   "agreement_pct": 100.0,
+   "danger_missed_vs_fp32": 0,
+   "passes_rule": true
+  },
+  "trim10k_fp32": {
+   "label": "Vocab trim (9,759 tokens), FP32",
+   "model_mb": 354.8,
+   "tokenizer_mb": 0.6,
+   "sensitivity": "56/60",
+   "false_go_now": "6/45",
+   "agreement_with_fp32": "120/120",
+   "agreement_pct": 100.0,
+   "danger_missed_vs_fp32": 0,
+   "passes_rule": true
+  },
+  "trim10k_int8": {
+   "label": "Vocab trim + INT8 dynamic, MatMul only",
+   "model_mb": 112.0,
+   "tokenizer_mb": 0.6,
+   "sensitivity": "26/60",
+   "false_go_now": "3/45",
+   "agreement_with_fp32": "87/120",
+   "agreement_pct": 72.5,
+   "danger_missed_vs_fp32": 30,
+   "passes_rule": false
+  },
+  "trim10k_int8_emb": {
+   "label": "Vocab trim + INT8 dynamic incl. embeddings",
+   "model_mb": 89.4,
+   "tokenizer_mb": 0.6,
+   "sensitivity": "28/60",
+   "false_go_now": "4/45",
+   "agreement_with_fp32": "90/120",
+   "agreement_pct": 75.0,
+   "danger_missed_vs_fp32": 28,
+   "passes_rule": false
+  },
+  "trim10k_wq8": {
+   "label": "Vocab trim + INT8 weight-only (per-channel)",
+   "model_mb": 89.7,
+   "tokenizer_mb": 0.6,
+   "sensitivity": "56/60",
+   "false_go_now": "6/45",
+   "agreement_with_fp32": "120/120",
+   "agreement_pct": 100.0,
+   "danger_missed_vs_fp32": 0,
+   "passes_rule": true
+  },
+  "keyword_list_v0": {
+   "label": "Keyword list v0 (no model), for reference",
+   "sensitivity": "30/60",
+   "false_go_now": "3/45"
+  }
+ },
+ "registered": "fp32",
+ "deployed": "trim10k_wq8",
+ "int4": "not built: MatMulNBits export failed on the first try (onnxruntime 1.23.2 quantizer API)"
+}
