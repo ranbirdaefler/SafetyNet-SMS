@@ -88,3 +88,22 @@ def table(kw, ours, set_name, ours_label):
 def run(out_dir, set_name, ours_arm, kw_arm="keyword_E2", ours_label="FP32 ONNX on the Pi 5 (8 GB)"):
     d = Path(out_dir)
     return table(load(d / f"{set_name}.{kw_arm}.jsonl"), load(d / f"{set_name}.{ours_arm}.jsonl"), set_name, ours_label)
+
+
+# ---------- exploratory board rows (added after freeze, before tabulation) ----------
+BOARD_LABEL = ("Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the "
+               "board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, "
+               "so the Y-dev guarantee does not formally transfer.")
+
+
+def board_rows(kw, bands):
+    """kw: {id: harness row} for E2; bands: {id: {"label", "band"}}. Returns
+    (a) of the danger messages E2 misses, how many the board flags (possible or unsure);
+    (b) how many no-danger messages the board flags (the health worker's extra reads)."""
+    missed = [i for i, r in kw.items() if r["label"] == "danger" and not r["triggered"]]
+    caught_by_board = sum(bands[i]["band"] in ("possible", "unsure") for i in missed)
+    nod = [i for i, r in kw.items() if r["label"] == "no_danger"]
+    flagged = sum(bands[i]["band"] in ("possible", "unsure") for i in nod)
+    return {"label": BOARD_LABEL,
+            "a_e2_missed_danger_flagged_by_board": caught_by_board, "a_of": len(missed), "a_cp95": cp(caught_by_board, len(missed)),
+            "b_no_danger_flagged": flagged, "b_of": len(nod), "b_cp95": cp(flagged, len(nod))}
