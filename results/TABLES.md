@@ -50,7 +50,7 @@ Error listing:
 
 ### (a) Claude-written from a fixed case grid: Exploratory: deployed v1 (vocab trim + 8-bit weights)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = deployed v1 (vocab trim + 8-bit weights) ONNX on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -64,7 +64,7 @@ Discordant no-danger messages: b (keyword list only) = 0, c (ours only) = 1; exa
 
 ### (a) Claude-written from a fixed case grid: Exploratory: v2 FP32 (second training run)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = v2 FP32 ONNX (second training run) on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -112,7 +112,7 @@ Error listing:
 
 ### (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker: Exploratory: deployed v1 (vocab trim + 8-bit weights)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = deployed v1 (vocab trim + 8-bit weights) ONNX on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -126,7 +126,7 @@ Discordant no-danger messages: b (keyword list only) = 3, c (ours only) = 0; exa
 
 ### (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker: Exploratory: v2 FP32 (second training run)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = v2 FP32 ONNX (second training run) on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -216,7 +216,7 @@ Error listing:
 
 ### Y-test, Claude, caregiver: Exploratory: deployed v1 (vocab trim + 8-bit weights)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = deployed v1 (vocab trim + 8-bit weights) ONNX on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -230,7 +230,7 @@ Discordant no-danger messages: b (keyword list only) = 9, c (ours only) = 1; exa
 
 ### Y-test, Claude, caregiver: Exploratory: v2 FP32 (second training run)
 
-_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB)._
+_Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = v2 FP32 ONNX (second training run) on the Pi 5 (8 GB)._
 
 | Row | Missed go-now | Needless go-now | Shared path | {c4} | "Age not received" alone | Pi p95 |
 |---|---|---|---|---|---|---|
@@ -273,5 +273,5 @@ _Exploratory, not pre-registered: human-written Swahili (translated virtual-assi
 | keyword_E2 | 43/1000 | (3.1-5.7%) |
 | v1 (not shipped) fp32 | 9/1000 | (0.4-1.7%) |
 | v1 (not shipped) trim10k_wq8 | 8/1000 | (0.3-1.6%) |
-| v1 (not shipped) v2_fp32 | 49/1000 | (3.6-6.4%) |
+| v2 FP32 (not shipped) | 49/1000 | (3.6-6.4%) |
 | deployed board model v2 (shipped) | 59/1000 | (4.5-7.5%) |
