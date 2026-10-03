@@ -13,11 +13,27 @@ from pydantic import BaseModel, Field
 from app.registry import Registry
 from app.store import Store
 from app import service
+from app.engine import Protocol, ProtocolRejected
 
 ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = Registry(os.environ.get("SNS_REGISTRY", ROOT / "config" / "registry.yaml"))
 STORE = Store(os.environ.get("SNS_DB", ROOT / "data" / "sms.db"))
 
+PROTOCOL_PATH = Path(os.environ.get("SNS_PROTOCOL", ROOT / "config" / "protocol.yaml"))
+STATE = {"protocol": None, "load_error": None}
+
+
+def load_protocol():
+    """Load the protocol file; must-stay-RED tests run on every load. A rejected file keeps the last valid one."""
+    try:
+        STATE["protocol"] = Protocol.load(PROTOCOL_PATH)
+        STATE["load_error"] = None
+    except (ProtocolRejected, Exception) as e:
+        STATE["load_error"] = str(e)
+    return STATE
+
+
+load_protocol()
 app = FastAPI(title="SafetyNet-SMS")
 
 
@@ -33,7 +49,7 @@ def sms(msg: Inbound):
     before = STORE.last_outbox_id()
     STORE.log_in(msg.sender, msg.to, role, msg.body)
     if role is not None:
-        service.handle(STORE, REGISTRY, role, msg.sender, msg.body)
+        service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
     return {"role": role, "replies": STORE.outbox_since(before)}
 
 
@@ -45,6 +61,13 @@ def outbox(since: int = 0):
 @app.get("/inbox")
 def inbox(since: int = 0):
     return STORE.inbox_since(since)
+
+
+@app.post("/admin/reload")
+def reload():
+    st = load_protocol()
+    return {"loaded": st["load_error"] is None, "error": st["load_error"],
+            "live": st["protocol"].cfg["profile"]["id"] if st["protocol"] else None}
 
 
 @app.get("/config")

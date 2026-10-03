@@ -1,0 +1,42 @@
+# Protocol file. Owned by the Ministry of Health; edits to must_stay_red.list need a second approver.
+# RED only: any PRESENT sign refers. Sources are S-codes from rounds/r0_evidence/protocol.md section 0
+# (S1: WHO/UNICEF CHW manual 2011; S2: chart booklet, high HIV/TB adaptation 2014).
+profile: {id: ke-iccm-red-0.1, based_on: [S1, S2], demo_mode: true}
+
+scope: {age_months: {min: 2, max: 59}}              # S1 p.4
+
+parameters:
+  cough_red_days: {value: 14, allowed: [14, 21]}     # S2 p.6 | S1 p.35
+  diarrhoea_red_days: {value: 14, allowed: [14]}     # S1 p.36
+  fever_red_days: {value: 7, allowed: [7]}           # S1 p.36
+  muac_red_below_mm: {value: 115, allowed: [115]}    # S1 p.30
+
+timeouts: {reply_min: 30, reply_window_min: 60, reply_window_max_min: 120, demo_s: 60, digit_window_h: 24}
+
+# option = number in ASK_SIGNS; observer = who can report it (caregiver or chp only)
+fields:
+  - {id: convulsions,        rule: R5,  option: 1, observer: caregiver, label: "convulsions"}
+  - {id: not_drink_feed,     rule: R6,  option: 2, observer: caregiver, label: "cannot drink or feed"}
+  - {id: vomits_everything,  rule: R7,  option: 3, observer: caregiver, label: "vomits everything"}
+  - {id: sleepy_unconscious, rule: R9,  option: 4, observer: caregiver, label: "very sleepy or cannot wake"}
+  - {id: chest_indrawing,    rule: R8,  option: 5, observer: chp,       label: "chest indrawing"}
+  - {id: blood_stool,        rule: R3,  option: 6, observer: caregiver, label: "blood in stool"}
+  - {id: cough_long,         rule: R1,  option: 7, observer: caregiver, label: "long illness"}
+  - {id: diarrhoea_long,     rule: R2,  option: 7, observer: caregiver, label: "long illness"}
+  - {id: fever_long,         rule: R4,  option: 7, observer: caregiver, label: "long illness"}
+  - {id: muac_red,           rule: R10, option: 8, observer: chp,       label: "MUAC red or swelling of both feet"}
+  - {id: feet_swelling,      rule: R11, option: 8, observer: chp,       label: "MUAC red or swelling of both feet"}
+
+# RED rules: first match wins in the order E1, Z0, O1, O3, O4, O2, F1, F3; re-run after each reply.
+rules:
+  - {id: R1,  if: {cough_long: PRESENT},         then: REFER_NOW, source: "S1 p.35; S2 p.6"}
+  - {id: R2,  if: {diarrhoea_long: PRESENT},     then: REFER_NOW, source: "S1 p.36"}
+  - {id: R3,  if: {blood_stool: PRESENT},        then: REFER_NOW, source: "S1 p.36"}
+  - {id: R4,  if: {fever_long: PRESENT},         then: REFER_NOW, source: "S1 p.36"}
+  - {id: R5,  if: {convulsions: PRESENT},        then: REFER_NOW, source: "S1 p.36"}
+  - {id: R6,  if: {not_drink_feed: PRESENT},     then: REFER_NOW, source: "S1 p.36"}
+  - {id: R7,  if: {vomits_everything: PRESENT},  then: REFER_NOW, source: "S1 p.36"}
+  - {id: R8,  if: {chest_indrawing: PRESENT},    then: REFER_NOW, source: "S1 p.38"}
+  - {id: R9,  if: {sleepy_unconscious: PRESENT}, then: REFER_NOW, source: "S1 p.38"}
+  - {id: R10, if: {muac_red: PRESENT},           then: REFER_NOW, source: "S1 pp.30-31"}
+  - {id: R11, if: {feet_swelling: PRESENT},      then: REFER_NOW, source: "S1 p.33"}

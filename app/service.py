@@ -2,7 +2,11 @@
 from app import messages as M
 
 
-def handle(store, reg, role, sender, body):
+def handle(store, reg, proto, role, sender, body):
+    if proto is None:  # no valid protocol file: service down, never a guess
+        if role == "chp":
+            store.send(sender, "chp", "SERVICE_DOWN", M.SERVICE_DOWN)
+        return
     if role == "chp":
         if sender not in reg.chp_by_phone:
             store.send(sender, "chp", "UNREGISTERED", M.UNREGISTERED)  # E1
