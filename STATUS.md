@@ -89,3 +89,4 @@ On the go:
 - Pending: iPhone parity tap (Florian); "Try it in 60 seconds" section; `submission` tag; HF push only after Florian's OK.
 - 16:20: simulator script bug (literal line break in a JS string, since e712cf6 15:06) fixed in 37f4645, Pi redeployed. Results paragraph and table released (68d54ff), MIT LICENSE added. Banner screenshots, model card and Space README sent to Florian. Waiting: Florian's OK for the HF push, the `submission` tag, the iPhone parity tap. Next: parent-line keyword fix C (report-only first).
 - iPhone v3 parity: 20/20 tokens, flags, bands, reported by Florian from the phone screen (the POST did not arrive). Desktop Chrome v3 parity 20/20 (max dp 0.021). C(i) report-only sent to the planner; no code changed.
+- 16:27: iPhone v3 parity posted back from 192.168.1.227 (the iPhone that sent the timing report, UA iPhone OS 18_7 Safari 18.7.5): 20/20 tokens, flags, bands, max dp 0.02107. Replaces 'reported from the phone screen'.
