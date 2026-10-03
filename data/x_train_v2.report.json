@@ -1,0 +1,12 @@
+{
+ "x_dedup": 1195,
+ "aug_generated": 474,
+ "aug_kept": 462,
+ "removed": {
+  "cg_or_t_probe": 1,
+  "ydev": 0,
+  "dup_in_aug_or_x": 11
+ },
+ "probe_strings_checked": 234,
+ "v2_total": 1657
+}

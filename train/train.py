@@ -19,7 +19,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from model import BASE, HEADS, MAX_LEN, THRESHOLD, SignModel  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "models" / "afroxlmr-8h"
+OUT = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "models" / "afroxlmr-8h"
+DATA = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "data" / "x_train.dedup.jsonl"
 SEED, BATCH, EPOCHS, LR = 42, 16, 3, 3e-5
 
 
@@ -56,7 +57,7 @@ def f1s(model, rows, tok, dev):
 
 def main():
     random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
-    rows = load(ROOT / "data" / "x_train.dedup.jsonl")
+    rows = load(DATA)
     rng = random.Random(SEED)
     rng.shuffle(rows)
     n_val = len(rows) // 10
@@ -87,7 +88,8 @@ def main():
     meta = {"base": BASE, "heads": HEADS, "threshold": THRESHOLD, "max_len": MAX_LEN, "epochs": EPOCHS, "lr": LR,
             "batch": BATCH, "seed": SEED, "n_train": len(train), "n_xval": len(val), "minutes": round((time.time() - t0) / 60, 1),
             "log": log}
-    (ROOT / "data" / "train_log.json").write_text(json.dumps(meta, indent=1))
+    meta["data"] = str(DATA.relative_to(ROOT))
+    (ROOT / "data" / ("train_log.json" if OUT.name == "afroxlmr-8h" else f"train_log_{OUT.name}.json")).write_text(json.dumps(meta, indent=1))
     print(f"saved {OUT}; {meta['minutes']} min")
 
 
