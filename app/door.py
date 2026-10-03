@@ -223,3 +223,23 @@ class DoorFlow:
     def on_chp_refer(self, case):
         if case.get("parent_phone") and self.reg.parent(case["parent_phone"]):
             self.send_parent(case["parent_phone"], "CG_GO_NOW", case["code"])
+
+    # ---------- D19 / D20: the due time passed on a parent-opened case ----------
+    def on_due(self, case):
+        st = case["state"]
+        code, phone = case["code"], case["parent_phone"]
+        chp = self.reg.chp_by_phone.get(case["chp_phone"])
+        self.store.update_case(code, status="REFERRED")
+        if not st.get("chp_replied"):                                         # D19
+            self.ref.alert(self.store.case(code), ["no CHP reply"], parent=True)
+            if chp:
+                b = M.CHP_TIMEOUT.format(head=self.head(code, st), time=M.hhmm(case["due"]), facility=self.fac(), phone=phone)
+                self.store.send(chp["phone"], "chp", "CHP_TIMEOUT", b, code)
+            self.send_parent(phone, "CG_TIMEOUT", code)
+        else:                                                                 # D20: started, not finished
+            reasons = ["not finished by due time"]
+            self.ref.alert(self.store.case(code), reasons, parent=True)
+            if chp:
+                b = M.CHP_GO_NOW.format(head=self.head(code, st), reasons=", ".join(reasons), facility=self.fac(), phone=phone)
+                self.store.send(chp["phone"], "chp", "CHP_GO_NOW", b, code)
+            self.send_parent(phone, "CG_GO_NOW", code)

@@ -4,6 +4,8 @@ SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway
 is a thin mapping onto this endpoint and is not built.
 """
 import os
+import threading
+import time
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -35,6 +37,21 @@ def load_protocol():
 
 load_protocol()
 app = FastAPI(title="SafetyNet-SMS")
+LOCK = threading.Lock()   # one event at a time: the first committed event wins (D29)
+
+
+def _timer():
+    while True:
+        try:
+            with LOCK:
+                service.tick(STORE, REGISTRY, STATE["protocol"])
+        except Exception:
+            pass
+        time.sleep(1)
+
+
+if os.environ.get("SNS_TIMER", "1") == "1":
+    threading.Thread(target=_timer, daemon=True).start()
 
 
 class Inbound(BaseModel):
@@ -46,11 +63,12 @@ class Inbound(BaseModel):
 @app.post("/sms")
 def sms(msg: Inbound):
     role = REGISTRY.role(msg.to)
-    before = STORE.last_outbox_id()
-    STORE.log_in(msg.sender, msg.to, role, msg.body)
-    if role is not None:
-        service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
-    return {"role": role, "replies": STORE.outbox_since(before)}
+    with LOCK:
+        before = STORE.last_outbox_id()
+        STORE.log_in(msg.sender, msg.to, role, msg.body)
+        if role is not None:
+            service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
+        return {"role": role, "replies": STORE.outbox_since(before)}
 
 
 @app.get("/outbox")

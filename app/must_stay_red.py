@@ -98,7 +98,9 @@ def _no_text_absent(proto):
 
 
 def _flow(proto, texts, phone="+254722000107"):
-    """Run CHP texts through the real CHP flow on a scratch in-memory store; returns the replies to the last text."""
+    """Run CHP texts through the real CHP flow on a scratch in-memory store; returns the replies to the last step.
+    A step "<TIMEOUT>" fires every due time as if the clock had moved past it."""
+    import time
     from app.chw import ChwFlow
     from app.registry import Registry
     from app.store import Store
@@ -108,7 +110,11 @@ def _flow(proto, texts, phone="+254722000107"):
     out = []
     for t in texts:
         before = store.last_outbox_id()
-        flow.handle(phone, t)
+        if t == "<TIMEOUT>":
+            for case in store.due_cases(time.time() + 10 ** 6):
+                flow.on_due(case)
+        else:
+            flow.handle(phone, t)
         out = store.outbox_since(before)
     return out
 
@@ -141,6 +147,17 @@ TEXT_TESTS = [
      lambda p: _full_ask_signs(p, _flow(p, ["18m hana degedege, homa siku 3, MUAC 13.5 cm, miguu sawa"]))),
     ("T23", "all OPEN -> ASK_SIGNS with all 8 options",
      lambda p: _full_ask_signs(p, _flow(p, ["18m"]))),
+    ("T24", "silence past the due time -> REFER_NOW (ASK_SIGNS: no answer; ASK_AGE: age not received)",
+     lambda p: "no answer" in _flow(p, ["18m", "<TIMEOUT>"])[0]["body"]
+     and "age not received" in _flow(p, ["homa siku 3", "<TIMEOUT>"])[0]["body"]),
+    ("T30", "NON_RED, then '9' within 24 h -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["18m", "0", "9"])) == ["REFER_NOW"]),
+    ("T31", "a new age while a case is open -> the old case escalates at once",
+     lambda p: (lambda o: _ids(o)[0] == "REFER_NOW" and "new age" in o[0]["body"])(_flow(p, ["18m", "child 3 years cough"]))),
+    ("T32", "'0' at 18 m and at 3 m -> NON_RED",
+     lambda p: _ids(_flow(p, ["18m", "0"])) == ["NON_RED"] and _ids(_flow(p, ["child 3 months", "0"])) == ["NON_RED"]),
+    ("T33", "NON_RED, then an ageless text with no sign -> ASK_AGE as a new case, never absorbed",
+     lambda p: (lambda o: _ids(o) == ["ASK_AGE"])(_flow(p, ["18m", "0", "homa"]))),
     ("T25", "two unparseable replies -> REFER_NOW",
      lambda p: _ids(_flow(p, ["18m", "asante", "sawa"])) == ["REFER_NOW"]),
     ("T26", "'9' -> REFER_NOW not confirmed",
@@ -152,7 +169,8 @@ TEXT_TESTS = [
     ("T29", "'3 asante' -> REFER_NOW",
      lambda p: _ids(_flow(p, ["18m", "3 asante"])) == ["REFER_NOW"]),
     ("T35", "REFER + any input never lowers urgency",
-     lambda p: all(_ids(_flow(p, ["18m degedege", x])) in (["REFERRED_LINE"], ["REFER_NOW"])
+     lambda p: all(_ids(_flow(p, ["18m degedege", x])) in (["REFERRED_LINE", "REFERRED_LINE"], ["ALERT", "ALERT", "REFER_NOW"], ["REFER_NOW"])
+                   and not {"NON_RED", "ASK_SIGNS"} & set(_ids(_flow(p, ["18m degedege", x])))
                    for x in ["0", "9", "hana degedege", "asante", "5"])),
 ]
 

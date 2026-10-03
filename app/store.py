@@ -113,3 +113,10 @@ class Store:
         with self.lock:
             return self._case(self.db.execute(
                 "SELECT * FROM cases WHERE parent_phone = ? ORDER BY created DESC LIMIT 1", (phone,)).fetchone())
+
+    def due_cases(self, now=None):
+        now = now or time.time()
+        with self.lock:
+            rows = self.db.execute("SELECT * FROM cases WHERE status IN ('ASK_AGE', 'ASK_SIGNS') AND due IS NOT NULL "
+                                   "AND due <= ? ORDER BY due", (now,)).fetchall()
+        return [self._case(r) for r in rows]

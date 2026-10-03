@@ -21,3 +21,20 @@ def handle(store, reg, proto, role, sender, body):
         Referral(store, reg).facility_text(sender, body)
     elif role == "parent":
         DoorFlow(store, reg, proto, Referral(store, reg)).handle(sender, body)
+
+
+def tick(store, reg, proto, now=None):
+    """Fire every due time that has passed (also at start-up: overdue ones fire at once, D28)."""
+    if proto is None:
+        return 0
+    ref = Referral(store, reg)
+    door = DoorFlow(store, reg, proto, ref)
+    chw = ChwFlow(store, reg, proto, notify_referral=ref.alert, on_refer=door.on_chp_refer)
+    n = 0
+    for case in store.due_cases(now):
+        if case["origin"] == "parent":
+            door.on_due(case)
+        else:
+            chw.on_due(case)
+        n += 1
+    return n
