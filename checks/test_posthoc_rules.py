@@ -79,9 +79,13 @@ def test_number_words_are_never_ages(text):
     assert act(text) == "GO_NOW_NO_AGE"                    # "go now, age not received" stays
 
 
-def test_new_symptom_word_never_turns_an_age_into_a_duration():
+def test_age_before_a_symptom_verb_is_kept_and_after_it_is_a_duration():
+    # age first (the usual order): kept
+    assert textparse.parse("mtoto wa miezi 8 anaharisha").age_months == 8
+    # a number after a symptom verb is a duration (age-verb fix); with no other age the parent gets go now, no age
     p = textparse.parse("mtoto anaharisha ana miezi 8")
-    assert p.age_months == 8 and not p.durations
+    assert p.age_months is None and p.durations.get("diarrhoea") == 240
+    assert act("mtoto anaharisha ana miezi 8") in ("GO_NOW", "GO_NOW_NO_AGE")
 
 
 def test_frozen_attachment_kept():
@@ -101,3 +105,27 @@ def test_kuna_alone_is_not_blood(text):
 def test_blood_still_read(text):
     assert keyword_extractor(text).get("blood_stool") == "PRESENT"
     assert act(text) == "GO_NOW"
+
+
+# symptom verbs (post-hoc): a number after a Swahili symptom verb is a duration, never a second (younger) age
+@pytest.mark.parametrize("text", ["mtoto wangu wa miezi 18 anaharisha siku 3", "mtoto wangu wa miezi 18 anatapika siku 2",
+                                  "mtoto wangu wa miezi 18 anakohoa siku 4"])
+def test_symptom_verb_number_is_not_an_age(text):
+    assert textparse.parse(text).age_months == 18
+    assert act(text) == "TOLD"
+
+
+@pytest.mark.parametrize("text", ["mtoto wa siku 5 anatapika", "mtoto wa wiki 3 anatapika siku 2",
+                                  "mtoto wa miezi 1 anaharisha siku 2"])
+def test_real_newborn_ages_still_go_now(text):
+    pol = parent_policy(text, PARAMS, (keyword_extractor,))
+    assert pol.action == "GO_NOW" and "under 2 months" in pol.reasons
+
+
+def test_no_age_still_go_now_no_age():
+    assert act("anatapika siku 2") == "GO_NOW_NO_AGE"
+
+
+def test_cough_verb_duration_long_illness():
+    pol = parent_policy("mtoto wa miaka 2 alianza kukohoa siku 16 zilizopita", PARAMS, (keyword_extractor,))
+    assert pol.action == "GO_NOW" and "long illness" in pol.reasons

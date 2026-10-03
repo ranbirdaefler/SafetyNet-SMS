@@ -58,6 +58,7 @@ def test_story_advances_only_on_next(url):
         time.sleep(1.5)
         pg.click("#play")
         pg.wait_for_function("!document.getElementById('story').hidden")
+        pg.click('#storycap .picker button[data-story="0"]')
         pg.click("#storynext")                                   # -> step 1
         pg.wait_for_function("!document.getElementById('storynext').disabled", timeout=20000)
         assert step_no(pg) == 1

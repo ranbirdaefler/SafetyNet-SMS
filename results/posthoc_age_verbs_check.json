@@ -1,0 +1,22 @@
+{
+ "danger_go_now_lost": [],
+ "removed_non_danger": [
+  "ytest/y_test-0145"
+ ],
+ "added": [
+  [
+   "ydev/y_dev-0102",
+   "danger"
+  ],
+  [
+   "ytest/y_test-0089",
+   "danger"
+  ]
+ ],
+ "reason_only": [
+  "b/D10",
+  "ytest/y_test-0098",
+  "y_test2/y_test2-0025",
+  "y_test2/y_test2-0097"
+ ]
+}

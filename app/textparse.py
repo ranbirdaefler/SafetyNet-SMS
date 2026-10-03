@@ -48,6 +48,17 @@ JOTO_AFTER = {"mwilini", "jingi"}
 KUWA = {"kuwa", "amekuwa", "alikuwa", "anakuwa"}
 
 
+# Post-hoc (Sat 3 Oct, wrong age in clinical alerts): Swahili symptom VERBS mark a following number as a duration,
+# so "anaharisha siku 3" is never read as a 3-day-old child. -harisha verbs attach diarrhoea and cough verbs attach
+# cough (in _symptom); vomiting verbs attach no kind (there is no vomiting duration rule).
+SYMPTOM_VERBS = {"anatapika", "akitapika", "ametapika", "alitapika", "kutapika", "anakohoa", "akikohoa", "amekohoa",
+                 "alikohoa", "kukohoa"}
+
+
+def _symptom_verb(t):
+    return t in SYMPTOM_VERBS or (t.endswith("harisha") and not t.startswith("ha"))
+
+
 def _symptom(toks, j):
     """Symptom kind of toks[j] for attaching a duration (the frozen words plus the post-hoc forms), else None."""
     t = toks[j]
@@ -55,6 +66,8 @@ def _symptom(toks, j):
         return SYMPTOM[t]
     if t.endswith("harisha") and not t.startswith("ha"):
         return "diarrhoea"
+    if t in ("anakohoa", "akikohoa", "amekohoa", "alikohoa", "kukohoa"):      # post-hoc: cough verbs attach "cough"
+        return "cough"
     if t == "joto":
         prev = toks[j - 1] if j > 0 else ""
         nxt = toks[j + 1] if j + 1 < len(toks) else ""
@@ -143,7 +156,7 @@ def parse(text):
             after = toks[max(i, ui) + 1] if max(i, ui) + 1 < len(toks) else ""
             age_marked = after == "old" or any(t2 in AGE_MARK for t2 in toks[max(0, start - 2):start])
             dur_marked = any(t2 in DUR_MARK for t2 in toks[max(0, start - 2):start]) or any(
-                t2 in SYMPTOM for t2 in toks[:start])
+                t2 in SYMPTOM or _symptom_verb(t2) for t2 in toks[:start])
             if dur_marked and not age_marked:
                 _add_duration(p, toks, start, v * DAYS[unit], prev_kinds)
             else:
@@ -177,7 +190,7 @@ def parse(text):
                 continue
             before = toks[max(0, i - 2):i]
             age_marked = any(t2 in AGE_MARK for t2 in before)
-            dur_marked = ordinal or any(t2 in DUR_MARK for t2 in before) or any(t2 in SYMPTOM for t2 in toks[:i])
+            dur_marked = ordinal or any(t2 in DUR_MARK for t2 in before) or any(t2 in SYMPTOM or _symptom_verb(t2) for t2 in toks[:i])
             if dur_marked and not age_marked:
                 _add_duration(p, toks, i, v * DAYS[UNITS_SW[t]], prev_kinds)
     if p.newborn:
