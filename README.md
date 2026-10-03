@@ -8,6 +8,26 @@ Designed to sit alongside eCHIS on the health worker's government phone; integra
 
 World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 to 4 October 2026.
 
+## Try it in 60 seconds
+
+Live demo: <SPACE_LINK> (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Three messages written by the team, not taken from any test set:
+
+1. **Instant "go now".** In the Parent pane, send `mtoto wangu wa miaka 2 ana degedege` ("my 2-year-old is having convulsions"). The parent gets the fixed go-now message at once; the facility, the CHA and the health worker get the referral alert.
+2. **A board flag the keywords missed.** Send `mtoto wa mwaka 1 kila kitu anachokula anatapika hata maji` ("1-year-old vomits everything she eats, even water"). The keyword list doesn't trigger, so the parent is told the health worker will contact them (and to go to the facility if no one does in time), and the health worker gets "call now" with the sign checklist. Her board shows the model's flag, "model: possible vomits everything, check", so she reads that case first.
+3. **Facility alert, arrival, reminder.** After message 1, copy the 4-digit code from the Facility pane's alert and send it back from the Facility pane. The health worker and the CHA are told the child arrived; the case shows "arrived" on her board with a follow-up visit date. "Fire timeouts now" skips the waiting times; "Reset demo" clears everything.
+
+## Run it yourself (offline)
+
+Python 3.11, no GPU, no internet after install:
+
+```
+git clone https://github.com/ranbirdaefler/SafetyNet-SMS && cd SafetyNet-SMS
+pip install -r requirements-demo.txt
+python -m uvicorn app.server:app --port 8000      # open http://localhost:8000
+```
+
+This runs the parent line, the rules and the simulator. For the board model, run `python scripts/fetch_model.py` first (92.7 MB from Hugging Face, SHA-256 checked).
+
 > SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi. Synthetic cases; not clinically validated.
 
 ## How it works
