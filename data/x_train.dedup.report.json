@@ -1,0 +1,32 @@
+{
+ "x_in": 1200,
+ "x_kept": 1195,
+ "dropped_dup_in_x": 5,
+ "dropped_equal_to_ydev": 0,
+ "x_present_per_head": {
+  "convulsions": 103,
+  "not_drink_feed": 107,
+  "vomits_everything": 102,
+  "sleepy_unconscious": 109,
+  "blood_stool": 104,
+  "cough_long": 99,
+  "diarrhoea_long": 103,
+  "fever_long": 108
+ },
+ "x_min_per_head": 99,
+ "ydev_present_per_head": {
+  "convulsions": 10,
+  "not_drink_feed": 9,
+  "vomits_everything": 9,
+  "sleepy_unconscious": 10,
+  "blood_stool": 9,
+  "cough_long": 8,
+  "diarrhoea_long": 9,
+  "fever_long": 9
+ },
+ "x_categories": {
+  "no_danger": 418,
+  "danger": 660,
+  "shared": 117
+ }
+}
