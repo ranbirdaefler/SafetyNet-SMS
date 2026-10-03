@@ -13,4 +13,9 @@ except ProtocolRejected as e:
     sys.exit(f"REJECTED (schema): {e}")
 failed = must_stay_red.run(proto, verbose=True)
 print("REJECTED: " + ", ".join(failed) if failed else "LOADED: all must-stay-RED tests pass")
-sys.exit(1 if failed else 0)
+if failed:
+    sys.exit(1)
+from app import cg_tests
+cg_failed = cg_tests.run(proto, verbose=True)
+print("DOOR OFF: " + ", ".join(cg_failed) if cg_failed else "DOOR ON: CG1-CG18 and lints pass")
+sys.exit(2 if cg_failed else 0)

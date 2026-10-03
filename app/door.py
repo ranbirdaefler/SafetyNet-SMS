@@ -159,8 +159,9 @@ class DoorFlow:
         state = {"fields": {}, "age_months": pol.age_months, "u2m": pol.u2m, "pregnancy": False, "adult": False,
                  "durations": {}, "muac_mm": None, "extra": [], "parent_reasons": pol.reasons}
         act = pol.action
+        no_chp = [] if chp else ["no CHP assigned"]
         if act == "GO_NOW":                                                   # D3
-            return self.go_now(phone, chp, state, pol.reasons)
+            return self.go_now(phone, chp, state, pol.reasons + no_chp)
         if act == "OOS":                                                      # D6
             code = self.store.create_case(chp["phone"] if chp else None, "parent", state, "CLOSED", parent_phone=phone)
             if chp:
@@ -170,7 +171,7 @@ class DoorFlow:
                 self.store.send(cha["phone"], "cha", "CHP_OOS", b, code)
             return self.send_parent(phone, "CG_OOS", code)
         if act == "GO_NOW_NO_AGE":                                            # D5: no age -> go now at once
-            return self.go_now(phone, chp, state, ["age not received"])
+            return self.go_now(phone, chp, state, ["age not received"] + no_chp)
         if chp is None:                                                       # D7
             return self.go_now(phone, None, state, ["no CHP assigned"])
         if self.chp_busy(chp["phone"]):                                       # D8 / C6
@@ -192,7 +193,10 @@ class DoorFlow:
         self.ref.alert(case, reasons, parent=True)
         if chp:
             b = M.CHP_GO_NOW.format(head=self.head(code, state), reasons=", ".join(reasons), facility=self.fac(), phone=phone)
-            self.store.send(chp["phone"], "chp", "CHP_GO_NOW", b, code)
+            try:
+                self.store.send(chp["phone"], "chp", "CHP_GO_NOW", b, code)
+            except Exception:
+                pass                                  # the parent is sent anyway; facility and CHA already told
         self.send_parent(phone, "CG_GO_NOW", code)
         return code
 
@@ -202,9 +206,12 @@ class DoorFlow:
         code = self.store.create_case(chp["phone"], "parent", state, "ASK_SIGNS", parent_phone=phone, due=due)
         hh = M.hhmm(due)
         call = M.CHP_CALL.format(head=self.head(code, state), phone=phone, time=hh, code=code)
-        self.store.send(chp["phone"], "chp", "CHP_CALL", call, code)
-        self.store.send(chp["phone"], "chp", "ASK_SIGNS",
-                        M.ask_signs(code, state["age_months"], self.proto.params["cough_red_days"]), code)
+        try:
+            self.store.send(chp["phone"], "chp", "CHP_CALL", call, code)
+            self.store.send(chp["phone"], "chp", "ASK_SIGNS",
+                            M.ask_signs(code, state["age_months"], self.proto.params["cough_red_days"]), code)
+        except Exception:                                                     # D27: never CG_TOLD
+            return self.go_now(phone, None, state, ["CHP send failed"], code=code)
         self.send_parent(phone, "CG_TOLD", code, time_txt=hh)
         return code
 

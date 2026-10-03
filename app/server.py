@@ -22,16 +22,24 @@ REGISTRY = Registry(os.environ.get("SNS_REGISTRY", ROOT / "config" / "registry.y
 STORE = Store(os.environ.get("SNS_DB", ROOT / "data" / "sms.db"))
 
 PROTOCOL_PATH = Path(os.environ.get("SNS_PROTOCOL", ROOT / "config" / "protocol.yaml"))
-STATE = {"protocol": None, "load_error": None}
+STATE = {"protocol": None, "load_error": None, "door_on": False, "cg_failed": []}
 
 
 def load_protocol():
-    """Load the protocol file; must-stay-RED tests run on every load. A rejected file keeps the last valid one."""
+    """Load the protocol file; T1-T35 run on every load (a failure rejects the file and keeps the last valid one).
+    CG1-CG18 and the lints run next; any red CG test switches the parent door off (F4)."""
+    from app import cg_tests
     try:
-        STATE["protocol"] = Protocol.load(PROTOCOL_PATH)
-        STATE["load_error"] = None
+        proto = Protocol.load(PROTOCOL_PATH)
     except (ProtocolRejected, Exception) as e:
         STATE["load_error"] = str(e)
+        return STATE
+    STATE["protocol"], STATE["load_error"] = proto, None
+    try:
+        STATE["cg_failed"] = cg_tests.run(proto)
+    except Exception as e:
+        STATE["cg_failed"] = [f"suite error: {type(e).__name__}"]
+    STATE["door_on"] = not STATE["cg_failed"]
     return STATE
 
 
@@ -66,7 +74,9 @@ def sms(msg: Inbound):
     with LOCK:
         before = STORE.last_outbox_id()
         STORE.log_in(msg.sender, msg.to, role, msg.body)
-        if role is not None:
+        if role == "parent" and not STATE["door_on"]:
+            pass                       # door flag off: the parent line is not offered (logged only)
+        elif role is not None:
             service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
         return {"role": role, "replies": STORE.outbox_since(before)}
 
@@ -84,7 +94,8 @@ def inbox(since: int = 0):
 @app.post("/admin/reload")
 def reload():
     st = load_protocol()
-    return {"loaded": st["load_error"] is None, "error": st["load_error"],
+    return {"loaded": st["load_error"] is None, "error": st["load_error"], "door_on": st["door_on"],
+            "cg_failed": st["cg_failed"],
             "live": st["protocol"].cfg["profile"]["id"] if st["protocol"] else None}
 
 
@@ -92,7 +103,7 @@ def reload():
 def config():
     r = REGISTRY
     return {"lines": r.lines, "parents": list(r.parents), "chps": [c["phone"] for c in r.chps.values()],
-            "facility": r.facility["phone"], "cha": [c["phone"] for c in r.cha.values()]}
+            "facility": r.facility["phone"], "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"]}
 
 
 @app.get("/")
