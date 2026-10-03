@@ -1,0 +1,224 @@
+{
+ "label": "after results, exploratory",
+ "boards": {
+  "v2 as shipped": {
+   "model_dir": "models/onnx/v2_trim_wq8",
+   "lo": 0.068065,
+   "hi": 0.9
+  },
+  "v2 re-tuned": {
+   "model_dir": "models/onnx/v2_trim_wq8",
+   "lo": 0.06806502949832131,
+   "hi": 0.8443638835653922
+  },
+  "v3": {
+   "model_dir": "models/onnx/v3_trim_wq8",
+   "lo": 0.8492201056070879,
+   "hi": 0.9966338610433941
+  }
+ },
+ "a_tests": {
+  "v2 as shipped": {
+   "T": [],
+   "CG": []
+  },
+  "v2 re-tuned": {
+   "T": [],
+   "CG": []
+  },
+  "v3": {
+   "T": [],
+   "CG": []
+  }
+ },
+ "y_test2": {
+  "N": 150,
+  "danger": 80,
+  "no_danger": 55,
+  "keywords_alone": {
+   "missed": 14,
+   "needless": 11
+  },
+  "keywords + v2 as shipped board": {
+   "missed": 2,
+   "missed_cp95": [
+    0.3,
+    8.7
+   ],
+   "no_danger_flagged": 18
+  },
+  "keywords + v2 re-tuned board": {
+   "missed": 2,
+   "missed_cp95": [
+    0.3,
+    8.7
+   ],
+   "no_danger_flagged": 18
+  },
+  "keywords + v3 board": {
+   "missed": 2,
+   "missed_cp95": [
+    0.3,
+    8.7
+   ],
+   "no_danger_flagged": 2
+  },
+  "v2 as shipped alone (parent-line rule)": {
+   "missed": 8,
+   "needless": 9
+  },
+  "v3 alone (parent-line rule)": {
+   "missed": 1,
+   "needless": 7
+  }
+ },
+ "everyday": {
+  "MASSIVE sw-KE test (1,000)": {
+   "N": 1000,
+   "triggered: keywords E2": 43,
+   "board flagged: v2 as shipped": {
+    "n": 626,
+    "pct": 62.6,
+    "cp95": [
+     59.5,
+     65.6
+    ]
+   },
+   "board flagged: v2 re-tuned": {
+    "n": 626,
+    "pct": 62.6,
+    "cp95": [
+     59.5,
+     65.6
+    ]
+   },
+   "board flagged: v3": {
+    "n": 0,
+    "pct": 0.0,
+    "cp95": [
+     0.0,
+     0.4
+    ]
+   },
+   "triggered: v2 as shipped (parent-line rule)": 59,
+   "triggered: v3 (parent-line rule)": 0
+  },
+  "FLORES-200 devtest": {
+   "N": 1012,
+   "triggered: keywords E2": 94,
+   "board flagged: v2 as shipped": {
+    "n": 714,
+    "pct": 70.6,
+    "cp95": [
+     67.6,
+     73.3
+    ]
+   },
+   "board flagged: v2 re-tuned": {
+    "n": 714,
+    "pct": 70.6,
+    "cp95": [
+     67.6,
+     73.3
+    ]
+   },
+   "board flagged: v3": {
+    "n": 1,
+    "pct": 0.1,
+    "cp95": [
+     0.0,
+     0.5
+    ]
+   },
+   "triggered: v2 as shipped (parent-line rule)": 46,
+   "triggered: v3 (parent-line rule)": 4
+  },
+  "AfriSenti swa test": {
+   "N": 748,
+   "triggered: keywords E2": 58,
+   "board flagged: v2 as shipped": {
+    "n": 602,
+    "pct": 80.5,
+    "cp95": [
+     77.5,
+     83.3
+    ]
+   },
+   "board flagged: v2 re-tuned": {
+    "n": 602,
+    "pct": 80.5,
+    "cp95": [
+     77.5,
+     83.3
+    ]
+   },
+   "board flagged: v3": {
+    "n": 0,
+    "pct": 0.0,
+    "cp95": [
+     0.0,
+     0.5
+    ]
+   },
+   "triggered: v2 as shipped (parent-line rule)": 62,
+   "triggered: v3 (parent-line rule)": 2
+  }
+ },
+ "verdict": {
+  "v3": {
+   "a": true,
+   "b": true,
+   "c": true,
+   "passes": true
+  },
+  "v2 re-tuned": {
+   "a": true,
+   "b": true,
+   "c": false,
+   "passes": false
+  }
+ },
+ "board_ships": "v3",
+ "old_sets_report_only": {
+  "v2 as shipped": {
+   "a": {
+    "keywords + board missed": 0,
+    "danger": 12,
+    "no_danger flagged": 6,
+    "no_danger": 13
+   },
+   "b": {
+    "keywords + board missed": 0,
+    "danger": 12,
+    "no_danger flagged": 4,
+    "no_danger": 13
+   },
+   "ytest": {
+    "keywords + board missed": 0,
+    "danger": 80,
+    "no_danger flagged": 19,
+    "no_danger": 55
+   }
+  },
+  "v3": {
+   "a": {
+    "keywords + board missed": 1,
+    "danger": 12,
+    "no_danger flagged": 0,
+    "no_danger": 13
+   },
+   "b": {
+    "keywords + board missed": 1,
+    "danger": 12,
+    "no_danger flagged": 1,
+    "no_danger": 13
+   },
+   "ytest": {
+    "keywords + board missed": 1,
+    "danger": 80,
+    "no_danger flagged": 4,
+    "no_danger": 55
+   }
+  }
+ }
+}
