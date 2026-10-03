@@ -80,7 +80,7 @@ DS = ("fits, difficult or fast breathing, blood in stool, cannot drink or breast
       "is very sleepy or hard to wake, or gets worse.")
 CG_GO_NOW = "Take the child to {facility} NOW. Do not wait for the health worker. Show code {code} there. Your health worker has been told."
 CG_GO_NOW_U = "Take the child to the nearest health facility NOW. Do not wait for the health worker. Show code {code} there. A health worker has been told."
-CG_TOLD = "Your health worker has been told and will contact you. If no one calls or comes by {time}, go to {facility}. Go there NOW if the child has " + DS
+CG_TOLD = "Your health worker has been told and will contact you. If no one calls or comes within {minutes} minutes, go to {facility}. Go there NOW if the child has " + DS
 CG_TIMEOUT = "Your health worker has not replied. Take the child to {facility} NOW. Do not wait. Show code {code} there. The health team has been told."
 CG_OOS = "This number is only for sick children under 5 years. Anyone else who is sick: go to {facility} NOW. Your health worker has been told."
 PARENT_ALLOWLIST = {"CG_GO_NOW": CG_GO_NOW, "CG_GO_NOW_U": CG_GO_NOW_U, "CG_TOLD": CG_TOLD,
@@ -108,7 +108,7 @@ BOARD_UNSURE = "model unsure: please read"
 # CG_GO_NOW, CG_GO_NOW_U, CG_TIMEOUT and CG_OOS are bilingual: Swahili first, English below (authoritative).
 SW_PARENT = {}
 BILINGUAL = ("CG_GO_NOW", "CG_GO_NOW_U", "CG_TIMEOUT", "CG_OOS")
-SEGMENT_LIMIT = {"en": {"CG_TOLD": 2, "CG_GO_NOW": 1, "CG_GO_NOW_U": 1, "CG_TIMEOUT": 1, "CG_OOS": 1},
+SEGMENT_LIMIT = {"en": {"CG_TOLD": 3, "CG_GO_NOW": 1, "CG_GO_NOW_U": 1, "CG_TIMEOUT": 1, "CG_OOS": 1},
                  "sw": {"CG_TOLD": 3},
                  "bi": {"CG_GO_NOW": 2, "CG_GO_NOW_U": 2, "CG_TIMEOUT": 2, "CG_OOS": 3}}
 

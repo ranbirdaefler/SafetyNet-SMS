@@ -1,0 +1,7 @@
+{
+ "CG_GO_NOW": "Mpeleke mtoto {facility} SASA HIVI. Usimngojee mhudumu wa afya. Onyesha msimbo (code) {code} hapo. Mhudumu wako wa afya amearifiwa.",
+ "CG_GO_NOW_U": "Mpeleke mtoto kituo cha afya kilicho karibu zaidi SASA HIVI. Usimngojee mhudumu wa afya. Onyesha msimbo (code) {code} hapo. Mhudumu wa afya amearifiwa.",
+ "CG_TIMEOUT": "Mhudumu wako wa afya hajajibu. Mpeleke mtoto {facility} SASA HIVI. Usingoje. Onyesha msimbo (code) {code} hapo. Timu ya afya imearifiwa.",
+ "CG_OOS": "Nambari hii ni ya watoto wagonjwa walio chini ya miaka 5 pekee. Mtu mwingine yeyote aliye mgonjwa: nenda {facility} SASA HIVI. Mhudumu wako wa afya amearifiwa.",
+ "CG_TOLD": "Mhudumu wako wa afya amearifiwa na atawasiliana nawe. Ikiwa hakuna mtu atakayepiga simu au kuja ndani ya dakika {minutes}, nenda {facility}. Nenda huko SASA HIVI ikiwa mtoto ana degedege, anapumua kwa shida au haraka, ana damu kwenye kinyesi, hawezi kunywa au kunyonya, anatapika kila kitu, ana usingizi usio wa kawaida au ni vigumu kumwamsha, au hali yake inazidi kuwa mbaya."
+}

@@ -105,7 +105,7 @@ Alternative facility source, not used in the demo: Maina et al. 2019, 98,745 pub
 - **No adult or maternal cases.** Children 2 to 59 months only; pregnancy, adult and newborn messages are routed to a person, not read.
 - **MASSIVE has no health content.** It is human-written Swahili (translated virtual-assistant commands), so it can only show false alarms, never danger detection.
 - **Labels come from a protocol grid, not clinicians.** Danger / no-danger labels follow the WHO/UNICEF danger-sign rules applied to case cards; no clinician reviewed them (Y labels are not hand-checked).
-- **Outgoing SMS are English only.** Swahili replies are future work and need a native speaker's back-translation.
+- **Swahili replies are machine-translated.** Parent messages in Swahili were machine-translated (gpt-5.5) and back-translation-checked (claude-opus-5-5); no native speaker or clinician has reviewed them. Messages to health workers, facilities and the CHA are English only.
 - **No real facility or health-worker phone numbers.** Facility names are real (OpenStreetMap); every number, CHU, CHP, CHA and village is synthetic.
 - **The test sets are AI-written and may favour the keyword list.** The keyword list's Swahili words and every test set come from Claude-written text.
 - **Kikuyu and Luo are not covered** by the encoder (M1).
