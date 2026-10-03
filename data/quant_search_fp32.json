@@ -1,0 +1,47 @@
+{
+ "mm_pc": {
+  "dir": "models\\onnx\\search\\fp32_mm_pc",
+  "model_mb": 816.2,
+  "disagreements": 7,
+  "of": 120,
+  "danger_missed_vs_fp32": 7,
+  "excluded_nodes": 0,
+  "passes": false
+ },
+ "mm_pc_last1": {
+  "dir": "models\\onnx\\search\\fp32_mm_pc_last1",
+  "model_mb": 836.4,
+  "disagreements": 7,
+  "of": 120,
+  "danger_missed_vs_fp32": 7,
+  "excluded_nodes": 9,
+  "passes": false
+ },
+ "mm_pc_last2": {
+  "dir": "models\\onnx\\search\\fp32_mm_pc_last2",
+  "model_mb": 856.6,
+  "disagreements": 7,
+  "of": 120,
+  "danger_missed_vs_fp32": 7,
+  "excluded_nodes": 17,
+  "passes": false
+ },
+ "mmg_pc": {
+  "dir": "models\\onnx\\search\\fp32_mmg_pc",
+  "model_mb": 265.7,
+  "disagreements": 7,
+  "of": 120,
+  "danger_missed_vs_fp32": 7,
+  "excluded_nodes": 0,
+  "passes": false
+ },
+ "mmg_pc_last1": {
+  "dir": "models\\onnx\\search\\fp32_mmg_pc_last1",
+  "model_mb": 286.0,
+  "disagreements": 7,
+  "of": 120,
+  "danger_missed_vs_fp32": 7,
+  "excluded_nodes": 9,
+  "passes": false
+ }
+}

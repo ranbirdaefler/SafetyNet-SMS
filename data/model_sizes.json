@@ -1,0 +1,30 @@
+{
+ "fp32": {
+  "model_mb": 1058.6,
+  "tokenizer_mb": 16.3
+ },
+ "int8": {
+  "model_mb": 815.8,
+  "tokenizer_mb": 16.3
+ },
+ "int8_emb": {
+  "model_mb": 265.3,
+  "tokenizer_mb": 16.3
+ },
+ "trim_fp32": {
+  "model_mb": 664.0,
+  "tokenizer_mb": 4.2
+ },
+ "trim_int8": {
+  "model_mb": 421.1,
+  "tokenizer_mb": 4.2
+ },
+ "trim_int8_emb": {
+  "model_mb": 166.7,
+  "tokenizer_mb": 4.2
+ },
+ "_vocab": {
+  "full": 250002,
+  "trimmed": 115283
+ }
+}
