@@ -87,12 +87,69 @@ IDLE_RESET_S = 30 * 60
 ACTIVITY = {"last": time.time()}
 
 
+# "Why this reply?" for the simulator page only. Computed AFTER the reply is sent, from the same parent policy the
+# service uses; returned as a display field next to outbox rows; never part of any SMS (tests check both).
+EXPLAIN = True
+WHY = {}                 # outbox id -> one-line rule explanation for a parent reply
+WHY_FIXED = {"CG_TIMEOUT": "Rules: the health worker did not reply in time → go now (safety net)",
+             "CG_GO_NOW_U": "Rules: this number is not registered → go now; the CHA is told"}
+
+
+def explain_parent(body, msg_id):
+    from app import lexicon, textparse
+    from app.door import DURATION_PARAM, SIGN_LABEL, parent_policy
+    params = STATE["protocol"].params
+    pol = parent_policy(body, params, STATE["extractors"])
+    found = {}
+    for sign, term, neg in lexicon.match_detail(body, lexicon.LIVE["rows"], lexicon.LIVE["k"]):
+        if not neg and sign in pol.signs and sign not in found:
+            found[sign] = term
+    parts = [f"matched '{t}' ({SIGN_LABEL[s]})" for s, t in found.items()]
+    for kind, days in textparse.parse(body).durations.items():
+        if days >= params[DURATION_PARAM[kind][1]]:
+            parts.append(f"{kind} for {days:g} days (long illness)")
+    labels = {SIGN_LABEL[s] for s in pol.signs}
+    parts += [r for r in pol.reasons if r not in labels]
+    age = "under 2 months" if pol.u2m else f"{pol.age_months:g} months" if pol.age_months is not None else None
+    if msg_id == "CG_GO_NOW":
+        if parts:
+            return "Rules: " + "; ".join(parts) + " → go now"
+        return ("Rules: no age found → go now (fail-safe)" if age is None
+                else "Rules: a different age in the open case → go now (new age)")
+    if msg_id == "CG_TOLD":
+        return ("Rules: no danger keyword matched; " + (f"age found: {age}" if age else "age from the earlier message")
+                + " → health worker told")
+    if msg_id == "CG_OOS":
+        return f"Rules: out of scope ({pol.oos or 'not 2 to 59 months'}) → not for this service"
+    return None
+
+
+def why_for(row):
+    """Display-only explanation for a parent reply: the rule line plus the board model's band for that case."""
+    if not EXPLAIN or row.get("role") != "parent":
+        return None
+    lines = [WHY.get(row["id"]) or WHY_FIXED.get(row["msg_id"])]
+    case = STORE.case(row["case_code"]) if row.get("case_code") else None
+    m = (case or {}).get("state", {}).get("model") or {}
+    if m.get("band") == "possible":
+        lines.append(f"Model (health worker's board only): possible, {m.get('sign')}")
+    elif m.get("band") == "unsure":
+        lines.append("Model (health worker's board only): unsure, please read")
+    lines = [x for x in lines if x]
+    return "\n".join(lines) or None
+
+
+def with_why(rows):
+    return [dict(r, why=why_for(r)) if r.get("role") == "parent" else r for r in rows]
+
+
 def reset_demo():
     from app.board_model import LOG
     with STORE.lock:
         for t in ("cases", "inbox", "outbox"):
             STORE.db.execute(f"DELETE FROM {t}")
     LOG.clear()
+    WHY.clear()
     ACTIVITY["last"] = time.time()
 
 
@@ -132,12 +189,33 @@ def sms(msg: Inbound):
         elif role is not None:
             service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body, extractors=STATE["extractors"],
                            board_model=STATE.get("board_model"))
-        return {"role": role, "replies": STORE.outbox_since(before)}
+        replies = STORE.outbox_since(before)
+        if EXPLAIN and role == "chp":
+            for r in replies:
+                if r["role"] == "parent" and r["msg_id"] == "CG_GO_NOW":
+                    WHY[r["id"]] = "Rules: the health worker's checklist answer matched a RED rule → go now"
+        if EXPLAIN and role == "parent" and STATE["door_on"]:
+            for r in replies:
+                if r["role"] == "parent":
+                    try:
+                        w = explain_parent(msg.body, r["msg_id"])
+                    except Exception:
+                        w = None
+                    if w:
+                        WHY[r["id"]] = w
+        return {"role": role, "replies": with_why(replies)}
 
 
 @app.get("/outbox")
 def outbox(since: int = 0):
-    return STORE.outbox_since(since)
+    return with_why(STORE.outbox_since(since))
+
+
+@app.get("/keyword_terms")
+def keyword_terms(sign: str):
+    """Read-only: the live keyword-list terms for one sign (the simulator's rule-check card shows them)."""
+    from app import lexicon
+    return {"sign": sign, "terms": list(lexicon.LIVE["rows"].get(sign, []))}
 
 
 @app.get("/inbox")

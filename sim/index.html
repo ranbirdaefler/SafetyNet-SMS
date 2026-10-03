@@ -91,6 +91,12 @@
   @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(240,160,32,.9); } 100% { box-shadow:0 0 0 12px rgba(240,160,32,0); } }
   @media (prefers-reduced-motion: reduce) { .msg.new { animation:none; } body.story-on .pane, body.story-on .logbox { transition:none; } }
   .ktime { font-size:12px; color:var(--muted); }
+  .why { margin-top:4px; font-size:13px; }
+  .why summary { cursor:pointer; color:var(--sent); }
+  .why div { white-space:pre-line; margin-top:2px; }
+  .rulecard { align-self:stretch; border:2px dashed #f0a020; border-radius:12px; padding:8px 10px; background:#fffaf0; font-size:14px; }
+  .rulecard b { display:block; margin-bottom:2px; }
+  mark { background:#ffd98a; padding:0 2px; border-radius:3px; }
   .story button, .tool.play { font:inherit; font-size:14px; padding:5px 12px; border-radius:8px; border:0; cursor:pointer; }
   .story button { background:#fff; color:#1d2329; }
   .tool.play { background:var(--sent); color:#fff; font-weight:600; }
@@ -195,7 +201,7 @@ function fromTo(pane, cls) {
   if (pane.role === "chp") return storyOn ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
   return "SafetyNet → Facility + CHA";
 }
-function bubble(pane, cls, body, meta, step, fresh) {
+function bubble(pane, cls, body, meta, step, fresh, why) {
   const d = document.createElement("div");
   d.className = "msg " + cls + (fresh && step ? " new" : "");
   d.textContent = body;
@@ -204,6 +210,12 @@ function bubble(pane, cls, body, meta, step, fresh) {
   m.innerHTML = (step ? `<span class="stepb">${step}</span>` : "") + `<span class="from">${fromTo(pane, cls)}</span>` +
     (pane.role === "parent" && cls === "recv" ? '<span class="tag">fixed message</span>' : "") + meta;
   d.appendChild(m);
+  if (why) {                                   // display only: the rule (and model band) behind this fixed reply
+    const w = document.createElement("details"); w.className = "why";
+    w.innerHTML = `<summary>Why this reply?</summary><div></div>`;
+    w.querySelector("div").textContent = why;
+    d.appendChild(w);
+  }
   pane.thread.appendChild(d);
   pane.thread.scrollTop = pane.thread.scrollHeight;
   if (cls === "recv" && primed && mobile.matches && pane.role !== activeRole) {
@@ -284,7 +296,7 @@ async function poll() {
         if (storyOn && m.id > stepStart.o) stepSeen.add(m.msg_id);
         maxOut = Math.max(maxOut, m.id);
         for (const p of Object.values(panes))
-          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed);
+          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed, p.role === "parent" ? m.why : null);
       }
     }
     primed = true;                       // no badges for the history loaded on the first poll
@@ -451,9 +463,10 @@ const LONG = [
 ];
 const STORY = [
   { title: "The rules miss it", text: "Amina texts that her son vomits everything, even water. That's a danger sign, but her words don't match the keyword list, so she gets the fixed 'your health worker has been told' reply.",
-    look: "Parent pane.", roles: ["parent"], tab: "parent", nodes: ["Amina", "Rules"], expect: ["CG_TOLD"],
-    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); } },
-  { title: "The model catches it", text: "The model reads the same text and flags it on Achieng's board: possible, vomits everything. She sees it first. It never changes what Amina is told.",
+    look: "Parent pane and the rule check.", roles: ["parent"], tab: "parent", nodes: ["Amina", "Rules"], expect: ["CG_TOLD"],
+    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); },
+    after: ruleCard },
+  { title: "The model catches it", text: "The model reads the same text and flags it on Achieng's board: possible, vomits everything. She sees it first. It never changes what Amina is told. The model reads meaning, not word order: possible, vomits everything, shown to Achieng only.",
     look: "the amber chip on Achieng's board.", roles: ["chp", "log"], tab: "chp", nodes: ["Model", "Achieng"], expect: [],
     ready: () => !!panes.chp.boardEl.querySelector(".chip.possible"), run: async () => { chwView(true); } },
   { title: "Convulsions: go now", text: "Amina texts 'sasa ana degedege' (now he's convulsing). The rules send 'go now' at once and alert the facility and the supervisor with a 4-digit code.",
@@ -475,6 +488,25 @@ const STORY = [
 ];
 function scrollSpot() {
   requestAnimationFrame(() => Object.values(panes).forEach(p => { p.thread.scrollTop = p.thread.scrollHeight; }));
+}
+// Step 1 rule check: the real live-list terms (fetched from the server), not a paraphrase
+async function ruleCard() {
+  let terms = [];
+  try { terms = (await (await fetch("keyword_terms?sign=vomits_everything")).json()).terms.filter(t => t.includes("anatapika")); } catch (e) {}
+  if (!terms.length) return;
+  const th = panes.parent.thread;
+  const b = [...th.querySelectorAll(".msg.sent")].find(x => x.firstChild && /anachokula/.test(x.firstChild.textContent || ""));
+  if (b) {
+    const span = document.createElement("span");
+    span.innerHTML = esc(b.firstChild.textContent).replace(/kila kitu/g, "<mark>kila kitu</mark>").replace(/anatapika/g, "<mark>anatapika</mark>");
+    b.replaceChild(span, b.firstChild);
+  }
+  const c = document.createElement("div"); c.className = "rulecard";
+  c.innerHTML = `<b>Rule check</b>The keyword rule looks for: ${terms.map(t => `'${esc(t)}'`).join(" or ")} (in this order).<br>` +
+    `Amina wrote: '<mark>kila kitu</mark> anachokula <mark>anatapika</mark>'.<br>` +
+    `Same meaning, different word order: no match. Written 'anatapika kila kitu', the rule would have fired.`;
+  th.appendChild(c);
+  th.scrollTop = th.scrollHeight;
 }
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 function caption(i) {
@@ -526,7 +558,7 @@ document.getElementById("storynext").onclick = async () => {
   caption(i);
   spotlight(s.roles);
   showPane(s.tab);
-  try { await s.run(); await waitReady(s); } finally { btn.disabled = false; advancing = false; scrollSpot(); }
+  try { await s.run(); await waitReady(s); if (s.after) await s.after(); } finally { btn.disabled = false; advancing = false; scrollSpot(); }
   stepTimes[i] = fmt(Date.now() / 1000);
   if (step >= STORY.length) {
     btn.textContent = "Try your own message";
