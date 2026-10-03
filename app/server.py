@@ -173,8 +173,51 @@ def remember_rule_terms(phone, body):
     STORE.update_case(case["code"], state=case["state"])
 
 
+def _slot_regex(tpl):
+    """A template with {facility} {code} {time} {minutes} slots as a regex with named groups (repeats back-reference)."""
+    import re
+    pat, seen = re.escape(tpl), set()
+    for name, rx in (("facility", r"[^\n]{1,28}"), ("code", r"\d{4}"), ("time", r"\d{2}:\d{2}"), ("minutes", r"\d{1,3}")):
+        token = re.escape("{" + name + "}")
+        while token in pat:
+            pat = pat.replace(token, f"(?P={name})" if name in seen else f"(?P<{name}>{rx})", 1)
+            seen.add(name)
+    return re.compile(pat)
+
+
+def en_for(row):
+    """For viewers only (never sent, never stored): our own authoritative English text of a Swahili system message,
+    with the same slots. None when the SMS already contains the English (bilingual or English-registered parent)."""
+    from app import messages as Mm
+    mid, body = row["msg_id"], row["body"]
+    pairs = []                                                          # (sw template, en template)
+    if mid in Mm.QL_TEMPLATES:
+        v = Mm.QL_TEMPLATES[mid]
+        pairs = [(v[1], v[0])] + ([(v[3], v[2])] if len(v) == 4 else [])
+    elif mid == "CG_TOLD" and mid in Mm.SW_PARENT:
+        pairs = [(Mm.SW_PARENT[mid], Mm.PARENT_ALLOWLIST[mid])]
+    elif mid == "CHW_MSG":
+        q = QL_STATE_BANK()
+        if q:
+            for lang in ("sw",):
+                first = q["prefix_chw_referred"][lang] + " "
+                if body.startswith(first):
+                    return q["prefix_chw_referred"]["en"] + " " + body[len(first):]
+        return None
+    for sw, en in pairs:
+        m = _slot_regex(sw).fullmatch(body)
+        if m:
+            return en.format(**{k: v for k, v in m.groupdict().items()}) if "{" in en else en
+    return None
+
+
+def QL_STATE_BANK():
+    from app import questions as QL
+    return QL.STATE["bank"] if QL.is_on() else None
+
+
 def with_why(rows):
-    return [dict(r, why=why_for(r)) if r.get("role") == "parent" else r for r in rows]
+    return [dict(r, why=why_for(r), en=en_for(r)) if r.get("role") == "parent" else r for r in rows]
 
 
 def reset_demo():

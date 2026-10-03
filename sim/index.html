@@ -96,6 +96,11 @@
   @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(240,160,32,.9); } 100% { box-shadow:0 0 0 12px rgba(240,160,32,0); } }
   @media (prefers-reduced-motion: reduce) { .msg.new { animation:none; } body.story-on .pane, body.story-on .logbox { transition:none; } }
   .ktime { font-size:12px; color:var(--muted); }
+  .gloss { display:none; margin-top:5px; padding-top:4px; border-top:1px dashed rgba(0,0,0,.18); font-size:13px; color:#4a535d; white-space:pre-wrap; }
+  .msg.sent .gloss { color:#e8eefc; border-top-color:rgba(255,255,255,.35); }
+  body.show-en .gloss { display:block; }
+  #entoggle { font-size:12px; padding:2px 8px; }
+  .ennote { font-size:12px; color:var(--muted); }
   .qbox { margin-top:6px; border-top:1px dashed var(--line); padding-top:6px; font-size:14px; }
   .qbox .xp { display:inline-block; font-size:11px; font-weight:700; padding:0 6px; border-radius:6px; background:#e8e0ff; color:#3b2a85; margin-left:4px; }
   .qsug { border:1px solid #c9bdf5; border-radius:10px; padding:6px 8px; margin-top:6px; background:#faf8ff; }
@@ -162,7 +167,7 @@
     .board { min-height:0; }
     form { padding:8px 10px calc(8px + env(safe-area-inset-bottom)); }
     form input, .who select, form button { font-size:16px; }
-    .logbox, .osm, .corner { display:none; }
+    .logbox, .osm, .corner, .ennote { display:none; }
   }
 </style>
 </head>
@@ -173,6 +178,8 @@
   <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
   <button type="button" class="tool" id="reset">Reset demo</button>
   <span class="ktime">Times: Kenya time (EAT)</span>
+  <button type="button" class="tool" id="entoggle">Show English: on</button>
+  <span class="ennote">English shown for story and system messages only.</span>
   <button type="button" class="tool" id="idtoggle" hidden>show message IDs</button></header>
 <div class="story" id="story" hidden><div id="storycap"></div><button type="button" id="storynext">Next</button><button type="button" id="storyclose">Close</button></div>
 <div class="mnote" id="mnote" role="button" tabindex="0"></div>
@@ -229,17 +236,30 @@ function fromTo(pane, cls) {
   if (pane.role === "chp") return storyOn && storyParent ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
   return "SafetyNet → Facility + CHA";
 }
-function bubble(pane, cls, body, meta, step, fresh, why) {
+// English for viewers (display only, never sent): the exact EN template of a Swahili system message (from the
+// server), or the pre-written gloss of a story message. Free-typed text is not translated.
+function glossFor(pane, cls, body, en) {
+  if (pane.role !== "parent") return null;
+  const g = (storyOn && CUR && CUR.glosses) || {};
+  if (cls === "sent") return g[body.trim()] || null;
+  if (!en) return null;
+  for (const [sw, e] of Object.entries(g)) if (sw.length > 4 && en.includes(sw)) en = en.replace(sw, e);
+  return en;
+}
+function bubble(pane, cls, body, meta, step, fresh, why, en) {
   const d = document.createElement("div");
   d.className = "msg " + cls + (fresh && step ? " new" : "");
   d.textContent = body;
   const m = document.createElement("div");
   m.className = "meta";
   m.innerHTML = (step ? `<span class="stepb">${step}</span>` : "") + `<span class="from">${fromTo(pane, cls)}</span>` +
-    (pane.role === "parent" && cls === "recv" ? (/· Q_[A-Z]/.test(meta) && !/Q_ACK/.test(meta)
+    (pane.role === "parent" && cls === "recv" ? (/· CHW_MSG/.test(meta) ? '<span class="tag">written by the health worker</span>'
+      : /· Q_[A-Z]/.test(meta) && !/Q_ACK/.test(meta)
       ? '<span class="tag">question approved by the health worker</span>' : '<span class="tag">fixed message</span>') : "") + meta;
   if (/· PREARRIVAL/.test(meta)) d.classList.add("prearrival");
   d.appendChild(m);
+  const gl = glossFor(pane, cls, body, en);
+  if (gl) { const x = document.createElement("div"); x.className = "gloss"; x.textContent = "EN (for viewers, not sent): " + gl; d.appendChild(x); }
   if (why) {                                   // display only: the rule (and model band) behind this fixed reply
     const w = document.createElement("details"); w.className = "why";
     w.innerHTML = `<summary>Why this reply?</summary><div></div>`;
@@ -319,7 +339,7 @@ async function poll() {
         lastIn = Math.max(lastIn, m.id);
         const st = stepFor("i" + m.id, m.id > stepStart.i);
         for (const p of Object.values(panes))
-          if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts), st, primed);
+          if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts), st, primed, null, null);
       } else {
         lastOut = Math.max(lastOut, m.id);
         track(m);
@@ -327,7 +347,7 @@ async function poll() {
         if (storyOn && m.id > stepStart.o) stepSeen.add(m.msg_id);
         maxOut = Math.max(maxOut, m.id);
         for (const p of Object.values(panes))
-          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed, p.role === "parent" ? m.why : null);
+          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed, p.role === "parent" ? m.why : null, p.role === "parent" ? m.en : null);
       }
     }
     primed = true;                       // no badges for the history loaded on the first poll
@@ -346,7 +366,10 @@ function openWrite(qb, r, text, qid) {
   w.querySelector(".err").textContent = writeOpen[r.code].err || "";
   w.querySelector(".start").textContent = "Sent as: " + r.q_write.start + "…  (added by the system)";
   const ta = w.querySelector("textarea"); ta.maxLength = r.q_write.room; ta.value = writeOpen[r.code].text;
-  ta.oninput = () => { writeOpen[r.code].text = ta.value; };
+  const wg = document.createElement("div"); wg.className = "gloss"; w.insertBefore(wg, w.querySelector(".warn"));
+  const showG = () => { const g = (storyOn && CUR && CUR.glosses || {})[ta.value.trim()]; wg.textContent = g ? "EN (for viewers, not sent): " + g : ""; };
+  ta.oninput = () => { writeOpen[r.code].text = ta.value; showG(); };
+  showG();
   const [send, cancel] = w.querySelectorAll("button");
   cancel.onclick = () => { delete writeOpen[r.code]; w.remove(); };
   send.onclick = async () => {
@@ -449,6 +472,11 @@ async function pollLog() {
 document.getElementById("loglines").style.whiteSpace = "pre";
 setInterval(pollLog, 1500);
 
+document.body.classList.add("show-en");
+document.getElementById("entoggle").onclick = e => {
+  const on = document.body.classList.toggle("show-en");
+  e.currentTarget.textContent = "Show English: " + (on ? "on" : "off");
+};
 document.getElementById("reset").onclick = async () => { await fetch("demo/reset", {method: "POST"}); location.reload(); };
 document.getElementById("fire").onclick = async () => { await fetch("demo/fire-timeouts", {method: "POST"}); };
 fetch("config").then(r => r.json()).then(c => { if (c.public) {
@@ -463,7 +491,8 @@ fetch("config").then(r => r.json()).then(c => { if (c.public) {
 }
   // phone layout: banner, caption and attribution in one line that expands on tap
   document.getElementById("mnote").textContent = [c.public ? document.getElementById("banner").textContent : "",
-    document.querySelector(".corner").textContent, document.querySelector(".osm").textContent].filter(Boolean).join(" ");
+    document.querySelector(".corner").textContent, document.querySelector(".osm").textContent,
+    document.querySelector(".ennote").textContent].filter(Boolean).join(" ");
 });
 
 // ---------- referral record (from the messages this page has seen; no names or phone numbers) ----------
@@ -679,7 +708,11 @@ async function qAct(qid, action) {
     body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, qid, action }) });
   poll(); pollBoard();
 }
-const ZAWADI = ({ name: "Clear danger: go now, and the clinic is ready", parent: "Zawadi", needsQuestions: true, steps: [
+const ZAWADI = ({ name: "Clear danger: go now, and the clinic is ready", parent: "Zawadi", needsQuestions: true,
+  glosses: { "mtoto wangu wa miaka 2 ana degedege": "My 2-year-old has convulsions.", "1": "1 (= more than one fit)",
+             "Usijali, nijulishe mkifika kliniki.": "Don't worry, let me know when you reach the clinic.",
+             "Nijulishe mkifika kliniki.": "Let me know when you reach the clinic.", "sawa": "OK." },
+  steps: [
   { title: "Go now", text: "Zawadi texts that her 2-year-old 'ana degedege' (has convulsions). The rules send 'go now' at once and alert the facility and the supervisor.",
     why: "Questions never come before or instead of a go-now.", look: "Zawadi's reply and the facility alert.",
     roles: ["parent", "facility"], tab: "parent", nodes: ["P", "Rules", "Facility/CHA"], expect: ["CG_GO_NOW", "ALERT"],
@@ -717,7 +750,10 @@ const ZAWADI = ({ name: "Clear danger: go now, and the clinic is ready", parent:
     run: async () => { chwView(true); await sms(cfg.parents[0], "parent", "sawa"); },
     after: async () => { const b = panes.chp.boardEl; b.scrollTop = b.scrollHeight; } },
 ] });
-const AKINYI = { name: "Not every cough is an emergency", parent: "Akinyi", steps: [
+const AKINYI = { name: "Not every cough is an emergency", parent: "Akinyi",
+  glosses: { "mtoto wangu wa miaka 3 ana kikohozi siku 3, hana homa, anakula na kucheza vizuri":
+             "My 3-year-old has had a cough for 3 days, no fever, is eating and playing well." },
+  steps: [
   { title: "A cough, no danger sign", text: "Akinyi texts: her 3-year-old has had a cough for 3 days, 'hana homa' (no fever), and is eating and playing well. No danger sign, so she gets the fixed 'your health worker has been told' reply.",
     why: "A cough for 3 days is under the 14-day long-illness cut-off, and nothing in the text matches a danger sign: no alarm.",
     look: "Akinyi's reply.", roles: ["parent"], tab: "parent", nodes: ["P", "Rules"], expect: ["CG_TOLD"],
@@ -737,9 +773,11 @@ const AKINYI = { name: "Not every cough is an emergency", parent: "Akinyi", step
     run: async () => { chwView(false); if (storyCode) await sms(cfg.chps[0], "chp", storyCode + " 0"); chwView(true); } },
 ] };
 STORIES.length = 0;
-STORIES.push({ name: "The rules miss it. The model and the health worker catch it", parent: "Amina", needsQuestions: true, steps: STORY1 },
+STORIES.push({ name: "The rules miss it. The model and the health worker catch it", parent: "Amina", needsQuestions: true, steps: STORY1,
+               glosses: { "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji": "My 14-month-old: everything they eat, they vomit, even water.",
+                          "1": "1 (= vomits everything)" } },
              ZAWADI, AKINYI);
-let STORY = STORY1, storyParent = null;
+let STORY = STORY1, storyParent = null, CUR = null;
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 const NOTE = '<span class="st-note">Examples, not evidence: results on the test sets are in the README. Messages written by the team (AI-assisted).</span>';
 function caption(i) {
@@ -752,7 +790,7 @@ function caption(i) {
 }
 function pickStory(k) {
   document.getElementById("story").classList.toggle("expanded", !mobile.matches);   // sentence open on desktop
-  STORY = STORIES[k].steps; storyParent = STORIES[k].parent;
+  STORY = STORIES[k].steps; storyParent = STORIES[k].parent; CUR = STORIES[k];
   storyMode(true);
   document.getElementById("storycap").innerHTML = `<span class="st-title">${esc(STORIES[k].name)}.</span>Press Next for each step.` + NOTE;
   const nx = document.getElementById("storynext");
