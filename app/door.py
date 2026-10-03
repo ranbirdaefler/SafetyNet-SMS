@@ -236,7 +236,8 @@ class DoorFlow:
         st = case["state"]
         code, phone = case["code"], case["parent_phone"]
         chp = self.reg.chp_by_phone.get(case["chp_phone"])
-        self.store.update_case(code, status="REFERRED")
+        st["no_reply"] = not st.get("chp_replied")
+        self.store.update_case(code, status="REFERRED", state=st)
         if not st.get("chp_replied"):                                         # D19
             self.ref.alert(self.store.case(code), ["no CHP reply"], parent=True)
             if chp:

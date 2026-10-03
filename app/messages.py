@@ -92,3 +92,8 @@ CHP_GO_NOW = "{head}: PARENT SMS: {reasons}. Parent told: go to {facility} NOW. 
 CHP_TIMEOUT = "{head}: no reply by {time}; parent told to go to {facility}. Facility and CHA told. Call {phone}."
 CHP_OOS = "{code}: PARENT SMS, not for this tool ({what}). Parent told: go to {facility} NOW. CHA copied. Call {phone}."
 CHA_UNREG = "PARENT SMS {code}: number not registered, no facility told. Parent told: go now. {reasons}. Call {phone}."
+
+
+# ---------- case board (shown on the board only; never sent as SMS) ----------
+FOLLOWUP_REFERRED = "follow-up visit due {date}. Follow your chart booklet."
+FOLLOWUP_HOME = "check on child due {date}. Follow your chart booklet."

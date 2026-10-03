@@ -10,6 +10,13 @@ class Referral:
 
     def alert(self, case, reasons, parent=False):
         """Written to the outbox before any message that says 'Facility and CHA told'."""
+        import time as _t
+        fresh = self.store.case(case["code"]) or case
+        st0 = fresh["state"]
+        st0["refer_reasons"] = list(dict.fromkeys(st0.get("refer_reasons", []) + list(reasons)))
+        st0.setdefault("referred_at", _t.time())
+        self.store.update_case(case["code"], state=st0)
+        case = dict(case, state={**case["state"], **{k: st0[k] for k in ("refer_reasons", "referred_at")}})
         chp = self.reg.chp_by_phone.get(case["chp_phone"])
         cha = self.reg.cha_of_chp(chp) if chp else self.reg.default_cha
         st = case["state"]
@@ -31,7 +38,10 @@ class Referral:
         case = self.store.case(m.group(1))
         if not case or case["status"] != "REFERRED":
             return
-        self.store.update_case(case["code"], status="CLOSED")
+        import time as _t
+        st_a = case["state"]
+        st_a["arrived_at"] = _t.time()
+        self.store.update_case(case["code"], status="CLOSED", state=st_a)
         st = case["state"]
         chp = self.reg.chp_by_phone.get(case["chp_phone"])
         cha = self.reg.cha_of_chp(chp) if chp else self.reg.default_cha

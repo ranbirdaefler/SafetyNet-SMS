@@ -91,6 +91,15 @@ def inbox(since: int = 0):
     return STORE.inbox_since(since)
 
 
+@app.get("/board")
+def case_board(phone: str):
+    from app import board
+    if STATE["protocol"] is None or phone not in REGISTRY.chp_by_phone:
+        return []
+    with LOCK:
+        return board.board(STORE, phone, STATE["protocol"])
+
+
 @app.post("/admin/reload")
 def reload():
     st = load_protocol()
