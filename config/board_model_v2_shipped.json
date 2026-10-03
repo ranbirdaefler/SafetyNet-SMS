@@ -1,0 +1,21 @@
+{
+ "model_dir": "models/onnx/v2_trim_wq8",
+ "model_hash": "e8e8883382b74bd165ab3eb075a01dca96dd92d5",
+ "temperatures": {
+  "convulsions": 0.6,
+  "not_drink_feed": 0.25,
+  "vomits_everything": 0.35,
+  "sleepy_unconscious": 0.6,
+  "blood_stool": 0.65,
+  "cough_long": 0.4,
+  "diarrhoea_long": 0.5,
+  "fever_long": 0.6
+ },
+ "lo": 0.068065,
+ "hi": 0.9,
+ "fit_on": "X-val (165 messages, held out from x_train_v2.jsonl with seed 42)",
+ "thresholds_on": "Y-dev (gpt-5.5, 120)",
+ "note": "lo = lowest Y-dev danger score; with 60 danger messages this bounds the miss rate at roughly 1/61 on data like Y-dev. hi = highest Y-dev no-danger score.",
+ "hi_data_driven": 0.990449,
+ "hi_decision": "Board threshold hi = 0.9 (chosen on Y-dev before the freeze, Sat 3 Oct). At hi = 0.9904, no Y-dev no-danger message was marked 'possible', but 30.8% of messages went to 'please read' and 'possible' almost never fired. At hi = 0.9, review load falls to 12.5%, at the cost of 2 of 45 Y-dev no-danger messages marked 'possible'. On the board a false 'possible' only moves a case up the health worker's list: no SMS is sent and no case status changes. A review load of about a third of all messages risks the health worker ignoring the flags (mTrac's on-time volunteer reporting fell from 60% to 9%; DFID 2014 via SDSN TReNDS 2018). lo = 0.068 is unchanged, so no Y-dev danger message falls below it. The full sweep is in the table above."
+}
