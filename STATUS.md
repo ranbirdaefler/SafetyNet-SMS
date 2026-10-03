@@ -20,6 +20,7 @@
 - Door ON (T1-T35, CG1-CG18 and both lints pass on every load). Live keyword list: **E2** (k = 4; passes T and CG with E2 loaded).
 - Encoder **not live** on the parent line (rung 3): CG1/CG5/CG5b/CG10/CG18 red with the v1 encoder on; the Y-dev gate fails on needless go-nows. The service applies this automatically on every load.
 - Door-off fail-safe: fixed CG_GO_NOW_U + CHA ALERT copy (never silent).
+- **Board model ON** (v2 trim + weight-only INT8, calibrated): board lines only ("model: possible {sign}, check" / "model unsure: please read"), sort danger > possible > unsure > rest. Parent reply unchanged (tested with the model on and off; CG1-CG18 with the model on). Temperatures (X-val) 0.25-0.65; lo = 0.068, hi = 0.9904 (Y-dev): 30.8% of Y-dev to "please read", 0 danger below lo, 0 no-danger "possible". Model hash in config/board_model.json.
 
 ## Models (Y-dev: missed of 60 danger / needless of 45 no-danger)
 | Model | Role | Y-dev | Notes |
@@ -65,6 +66,7 @@ Bug fixed: "18m ..." inside an open case was read as options 1 and 8.
 
 ## Next
 On the go:
+0. FREEZE.md must also record the board model (config/board_model.json: hash, temperatures, lo, hi).
 1. `train/freeze_record.py models/onnx/fp32 models/onnx/trim10k_wq8`, then commit FREEZE.md, tag `freeze` and push.
-2. `train/run_tests.py` (+ v2 arm) and `train/massive_row.py` on the Pi.
+2. `train/run_tests.py` (+ v2 arm), `train/massive_row.py` and `train/board_row.py` on the Pi.
 3. Sleep, then the B16 tables.

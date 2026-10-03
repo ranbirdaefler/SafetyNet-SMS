@@ -35,6 +35,8 @@ def main():
               f"git hash-object `{git('hash-object', str(dep / 'model.onnx'))}`.",
               "- Base model: Davlan/afro-xlmr-base; generators: X train and Y-dev gpt-5.5; tests claude-opus-5-5.",
               "- Model weights stay out of git.", "",
+              "## Board model (board only; never the parent reply)", "",
+              "```", (ROOT / "config" / "board_model.json").read_text(), "```", "",
               "## Go-live gate on Y-dev (prereg section 9)", "", "```", json.dumps(gate["gate"], indent=1), "```", "",
               "## Live parent line", "",
               "- Encoder live on the parent line: no (CG1/CG5/CG5b/CG10/CG18 red with the encoder on, and the Y-dev gate "
