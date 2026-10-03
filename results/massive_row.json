@@ -13,7 +13,7 @@
     5.7
    ]
   },
-  "encoder:fp32": {
+  "v1 (not shipped) fp32": {
    "triggered": 9,
    "N": 1000,
    "cp95_pct": [
@@ -21,7 +21,7 @@
     1.7
    ]
   },
-  "encoder:trim10k_wq8": {
+  "v1 (not shipped) trim10k_wq8": {
    "triggered": 8,
    "N": 1000,
    "cp95_pct": [
@@ -29,7 +29,7 @@
     1.6
    ]
   },
-  "encoder:v2_fp32": {
+  "v1 (not shipped) v2_fp32": {
    "triggered": 49,
    "N": 1000,
    "cp95_pct": [
@@ -37,5 +37,6 @@
     6.4
    ]
   }
- }
+ },
+ "note": "encoder rows from v1 are labelled 'v1 (not shipped)'; the shipped board model is v2 deployed (results/massive_row_v2_deployed.json)"
 }
