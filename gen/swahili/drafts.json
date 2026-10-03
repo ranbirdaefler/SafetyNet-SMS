@@ -1,0 +1,64 @@
+{
+ "model": "gpt-5.5",
+ "english": {
+  "CG_GO_NOW": "Take the child to {facility} NOW. Do not wait for the health worker. Show code {code} there. Your health worker has been told.",
+  "CG_GO_NOW_U": "Take the child to the nearest health facility NOW. Do not wait for the health worker. Show code {code} there. A health worker has been told.",
+  "CG_TOLD": "Your health worker has been told and will contact you. If no one calls or comes by {time}, go to {facility}. Go there NOW if the child has fits, difficult or fast breathing, blood in stool, cannot drink or breastfeed, vomits everything, is very sleepy or hard to wake, or gets worse.",
+  "CG_TIMEOUT": "Your health worker has not replied. Take the child to {facility} NOW. Do not wait. Show code {code} there. The health team has been told.",
+  "CG_OOS": "This number is only for sick children under 5 years. Anyone else who is sick: go to {facility} NOW. Your health worker has been told."
+ },
+ "swahili": {
+  "CG_GO_NOW": "Mpeleke mtoto {facility} SASA HIVI. Usimngojee mhudumu wa afya. Onyesha msimbo {code} hapo. Mhudumu wako wa afya amearifiwa.",
+  "CG_GO_NOW_U": "Mpeleke mtoto kituo cha afya kilicho karibu zaidi SASA HIVI. Usimngojee mhudumu wa afya. Onyesha msimbo {code} hapo. Mhudumu wa afya amearifiwa.",
+  "CG_TOLD": "Mhudumu wako wa afya amearifiwa na atawasiliana nawe. Ikiwa hakuna mtu atakayepiga simu au kuja kufikia {time}, nenda {facility}. Nenda huko SASA HIVI ikiwa mtoto ana degedege, anapumua kwa shida au haraka, ana damu kwenye kinyesi, hawezi kunywa au kunyonya, anatapika kila kitu, ana usingizi mwingi sana au ni vigumu kumwamsha, au hali yake inazidi kuwa mbaya.",
+  "CG_TIMEOUT": "Mhudumu wako wa afya hajajibu. Mpeleke mtoto {facility} SASA HIVI. Usingoje. Onyesha msimbo {code} hapo. Timu ya afya imearifiwa.",
+  "CG_OOS": "Nambari hii ni ya watoto wagonjwa walio chini ya miaka 5 pekee. Mtu mwingine yeyote aliye mgonjwa: nenda {facility} SASA HIVI. Mhudumu wako wa afya amearifiwa."
+ },
+ "check": {
+  "CG_GO_NOW": {
+   "sw_chars": 140,
+   "sw_segments": 1,
+   "en_chars": 142,
+   "both_chars": 283,
+   "both_segments": 2,
+   "gsm7": true,
+   "placeholders_kept": true
+  },
+  "CG_GO_NOW_U": {
+   "sw_chars": 142,
+   "sw_segments": 1,
+   "en_chars": 138,
+   "both_chars": 281,
+   "both_segments": 2,
+   "gsm7": true,
+   "placeholders_kept": true
+  },
+  "CG_TOLD": {
+   "sw_chars": 378,
+   "sw_segments": 3,
+   "en_chars": 300,
+   "both_chars": 679,
+   "both_segments": 5,
+   "gsm7": true,
+   "placeholders_kept": true
+  },
+  "CG_TIMEOUT": {
+   "sw_chars": 145,
+   "sw_segments": 1,
+   "en_chars": 153,
+   "both_chars": 299,
+   "both_segments": 2,
+   "gsm7": true,
+   "placeholders_kept": true
+  },
+  "CG_OOS": {
+   "sw_chars": 177,
+   "sw_segments": 2,
+   "en_chars": 151,
+   "both_chars": 329,
+   "both_segments": 3,
+   "gsm7": true,
+   "placeholders_kept": true
+  }
+ }
+}
