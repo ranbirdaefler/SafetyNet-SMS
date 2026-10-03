@@ -96,6 +96,15 @@
   @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(240,160,32,.9); } 100% { box-shadow:0 0 0 12px rgba(240,160,32,0); } }
   @media (prefers-reduced-motion: reduce) { .msg.new { animation:none; } body.story-on .pane, body.story-on .logbox { transition:none; } }
   .ktime { font-size:12px; color:var(--muted); }
+  .qbox { margin-top:6px; border-top:1px dashed var(--line); padding-top:6px; font-size:14px; }
+  .qbox .xp { display:inline-block; font-size:11px; font-weight:700; padding:0 6px; border-radius:6px; background:#e8e0ff; color:#3b2a85; margin-left:4px; }
+  .qsug { border:1px solid #c9bdf5; border-radius:10px; padding:6px 8px; margin-top:6px; background:#faf8ff; }
+  .qsug .qwhy { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .qsug button { font:inherit; font-size:13px; padding:3px 10px; margin:4px 6px 0 0; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  .qsug button.ok { background:#3b2a85; color:#fff; border-color:#3b2a85; }
+  .qline { font-size:12.5px; margin-top:3px; }
+  .msg.prearrival { border-left:5px solid #f0a020; }
+  .msg.prearrival::before { content:"Pre-arrival note (parent report, not checked)"; display:block; font-size:12px; font-weight:700; color:#7a4b00; margin-bottom:2px; }
   #idtoggle { font-size:12px; padding:2px 8px; }
   .why { margin-top:4px; font-size:13px; }
   .why summary { cursor:pointer; color:var(--sent); }
@@ -208,7 +217,7 @@ function who(pane) {
 }
 function fromTo(pane, cls) {
   if (cls === "sent") return `${who(pane)} → SafetyNet`;
-  if (pane.role === "parent") return `SafetyNet → ${who(pane)}`;
+  if (pane.role === "parent") return `SafetyNet → ${who(pane)}`;   // (question bubbles add their own tag)
   if (pane.role === "chp") return storyOn && storyParent ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
   return "SafetyNet → Facility + CHA";
 }
@@ -219,7 +228,9 @@ function bubble(pane, cls, body, meta, step, fresh, why) {
   const m = document.createElement("div");
   m.className = "meta";
   m.innerHTML = (step ? `<span class="stepb">${step}</span>` : "") + `<span class="from">${fromTo(pane, cls)}</span>` +
-    (pane.role === "parent" && cls === "recv" ? '<span class="tag">fixed message</span>' : "") + meta;
+    (pane.role === "parent" && cls === "recv" ? (/· Q_[A-Z]/.test(meta) && !/Q_ACK/.test(meta)
+      ? '<span class="tag">question approved by the health worker</span>' : '<span class="tag">fixed message</span>') : "") + meta;
+  if (/· PREARRIVAL/.test(meta)) d.classList.add("prearrival");
   d.appendChild(m);
   if (why) {                                   // display only: the rule (and model band) behind this fixed reply
     const w = document.createElement("details"); w.className = "why";
@@ -343,6 +354,27 @@ async function pollBoard() {
     chips.appendChild(mc);
     c.appendChild(chips);
     if (r.reminder) { const rm = document.createElement("div"); rm.className = "rem"; rm.textContent = r.reminder; c.appendChild(rm); }
+    if ((r.q_suggestions && r.q_suggestions.length) || (r.q_lines && r.q_lines.length)) {
+      const qb = document.createElement("div"); qb.className = "qbox";
+      qb.innerHTML = '<b>Questions before arrival</b><span class="xp">experimental</span>';
+      for (const sg of r.q_suggestions || []) {
+        const box = document.createElement("div"); box.className = "qsug";
+        box.innerHTML = `<div></div><div class="qwhy"></div><button type="button" class="ok">Approve and send</button><button type="button">Decline</button>`;
+        box.children[0].textContent = sg.text_en;
+        box.children[1].textContent = "Why suggested: " + sg.reason;
+        const act = async a => {
+          box.querySelectorAll("button").forEach(x => x.disabled = true);
+          await fetch("chw/question", { method: "POST", headers: { "content-type": "application/json" },
+            body: JSON.stringify({ chp: p.select.value, code: r.code, qid: sg.id, action: a }) });
+          poll(); pollBoard();
+        };
+        box.children[2].onclick = () => act("approve");
+        box.children[3].onclick = () => act("decline");
+        qb.appendChild(box);
+      }
+      for (const l of r.q_lines || []) { const x = document.createElement("div"); x.className = "qline"; x.textContent = l; qb.appendChild(x); }
+      c.appendChild(qb);
+    }
     const mt = document.createElement("div"); mt.className = "meta"; mt.textContent = `opened ${r.opened} · last ${r.time}`;
     c.appendChild(mt);
     p.boardEl.appendChild(c);
@@ -583,6 +615,35 @@ const STORIES = [
       expect: ["CG_GO_NOW", "ALERT", "REFER_NOW"], run: async () => { if (storyCode) await sms(cfg.chps[0], "chp", storyCode + " 4"); } },
   ] },
 ];
+const S5 = "mtoto wangu wa miaka 2 ana degedege";
+async function qAct(qid, action) {
+  await fetch("chw/question", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, qid, action }) });
+  poll(); pollBoard();
+}
+STORIES.push({ name: "Questions before arrival (experimental)", parent: "Zawadi", needsQuestions: true, steps: [
+  { title: "Go now", text: "Zawadi texts that her 2-year-old 'ana degedege' (has convulsions). The rules send 'go now' at once and alert the facility and the supervisor.",
+    why: "Questions never come before or instead of a go-now.", look: "Zawadi's reply and the facility alert.",
+    roles: ["parent", "facility"], tab: "parent", nodes: ["P", "Rules", "Facility/CHA"], expect: ["CG_GO_NOW", "ALERT"],
+    run: async () => { chwView(false); storyCode = firstCode(await sms(cfg.parents[0], "parent", S5)); } },
+  { title: "The model drafts, Achieng decides", text: "On Achieng's board the model suggests two fixed questions from the WHO-based bank, each with the reason it was picked. Nothing is sent until she approves.",
+    why: "The model chooses which approved question is worth asking; the health worker decides whether to ask it. No model-written text reaches a parent.",
+    look: "the two suggestions on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Model", "Achieng"], expect: [],
+    ready: () => !!panes.chp.boardEl.querySelector(".qsug"), run: async () => { chwView(true); } },
+  { title: "She approves one", text: "Achieng approves 'How many fits?'. Zawadi gets it with the fixed first line 'Keep going to the clinic. Do not stop to reply.'",
+    why: "Every message on a referred case starts with that fixed line, so a question can never read as 'wait'.",
+    look: "the question in the parent pane.", roles: ["chp", "parent"], tab: "parent", nodes: ["Achieng", "P"], expect: ["Q_PA_FITS_COUNT"],
+    run: async () => { await qAct("PA_FITS_COUNT", "approve"); } },
+  { title: "The answer travels ahead", text: "Zawadi replies 1 (more than one fit). She gets a fixed thank-you, and the facility gets a pre-arrival note marked 'parent report, not checked'.",
+    why: "Only answers 1 (danger) or 3 (not sure) go to the facility; an answer can never lower urgency or clear a sign.",
+    look: "the pre-arrival note in the facility pane.", roles: ["parent", "facility"], tab: "facility", nodes: ["P", "Facility/CHA"], expect: ["Q_ACK", "PREARRIVAL"],
+    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "1"); } },
+  { title: "She declines the other", text: "Achieng declines the second suggestion; the decline is logged on the case with her name.",
+    why: "Every suggestion leaves a record: drafted by the model, approved or declined by the health worker.",
+    look: "the log on Achieng's case card.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: [],
+    ready: () => /declined by CHP/.test(panes.chp.boardEl.textContent),
+    run: async () => { chwView(true); await qAct("PA_AWAKE", "decline"); } },
+] });
 let STORY = STORY1, storyParent = null;
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 const NOTE = '<span class="st-note">Examples, not evidence: results on the test sets are in the README. Messages written by the team (AI-assisted).</span>';
@@ -623,7 +684,8 @@ document.getElementById("play").onclick = async () => {
   spotlight(["parent", "chp", "facility", "log"]);
   document.getElementById("story").hidden = false;
   document.getElementById("storycap").innerHTML = '<span class="st-title">Pick a story.</span>' +
-    '<div class="picker">' + STORIES.map((x, k) => `<button type="button" data-story="${k}">${k + 1}. ${esc(x.name)} (${x.steps.length} steps)</button>`).join("") + '</div>' + NOTE;
+    '<div class="picker">' + STORIES.map((x, k) => (x.needsQuestions && !cfg.questions_on) ? "" :
+      `<button type="button" data-story="${k}">${k + 1}. ${esc(x.name)} (${x.steps.length} steps)</button>`).join("") + '</div>' + NOTE;
   document.querySelectorAll("#storycap .picker button").forEach(b => b.onclick = () => pickStory(+b.dataset.story));
   document.getElementById("storynext").hidden = true;
   document.getElementById("storyclose").textContent = "Close";

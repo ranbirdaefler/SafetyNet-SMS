@@ -132,6 +132,8 @@ def why_for(row):
     """Display-only explanation for a parent reply: the rule line plus the board model's band for that case."""
     if not EXPLAIN or row.get("role") != "parent":
         return None
+    if row["msg_id"].startswith("Q_"):                                  # question layer (experimental)
+        return why_question(row)
     lines = [WHY.get(row["id"]) or WHY_FIXED.get(row["msg_id"])]
     case = STORE.case(row["case_code"]) if row.get("case_code") else None
     m = (case or {}).get("state", {}).get("model") or {}
@@ -141,6 +143,17 @@ def why_for(row):
         lines.append("Model (health worker's board only): unsure, please read")
     lines = [x for x in lines if x]
     return "\n".join(lines) or None
+
+
+def why_question(row):
+    if row["msg_id"] == "Q_ACK":
+        return "Fixed acknowledgement. Answers 1 or 3 go to the facility as 'parent report, not checked'; 2 goes to the health worker's board only."
+    case = STORE.case(row["case_code"]) if row.get("case_code") else None
+    qid = row["msg_id"][2:]
+    log = [e for e in ((case or {}).get("state", {}).get("q") or {}).get("log", []) if e["qid"] == qid and e["action"] == "approved"]
+    if not log:
+        return "Fixed bank question, approved by the health worker."
+    return f"Bank question {qid}: drafted by the model, approved by CHP {log[-1]['by']}.\nWhy suggested: {log[-1]['reason']}"
 
 
 def with_why(rows):

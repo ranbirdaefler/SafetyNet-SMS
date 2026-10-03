@@ -118,6 +118,15 @@ Results after the pre-registered tests (exploratory). The pre-registered model t
 
 Thresholds behind each column: v2 as shipped lo 0.068 / hi 0.9; v2 re-tuned lo 0.068 / hi 0.844 (same rule as v3); v3 lo 0.849 / hi 0.997. A message counts as flagged when the board marks it 'possible' or 'unsure'. "Alone" figures use p ≥ 0.5, the pre-registered PRESENT rule, never tuned.
 
+### Questions approved by the health worker (experimental, after results)
+
+Off by default (`config/questions.yaml`, `enabled`); not evaluated; needs clinical and native-speaker review before any use. Tier 1 only: questions **before arrival, on cases already referred**.
+
+- **Who does what.** Knowledge: a fixed question bank drawn from the WHO/UNICEF community case management manual, ministry-editable and checked on load (3 options, option 1 always the danger state, 1 SMS, no medicine, advice or diagnosis words; a failing bank switches the layer off). Selection: the board model's per-sign scores and the sign that triggered "go now" pick at most two pre-arrival questions, each with its reason (sign, score, WHO page). Judgment: the health worker approves or declines each one; nothing reaches a parent without her tap, and every suggestion is logged ("drafted by model, approved/declined by CHP 07").
+- **Safety rules** (clinical-safety review M1-M8): no drafts for under 2 months, no age, 5 years or older, pregnancy, adults or unregistered numbers; every message on a referred case starts with the fixed line "Keep going to the clinic. Do not stop to reply."; sending a question is never her reply and never moves a deadline; a parent's answer can only add information: 1 (danger) and 3 (not sure) go to the facility as a pre-arrival note marked "parent report, not checked", 2 goes to her board as "not a check, you still check", and no answer clears a sign; only a bare 1/2/3 (or moja/mbili/tatu) counts, anything else counts as "not sure" and the usual flow runs; one question pending at a time, the latest wins.
+- **Cost:** +1 SMS per question, +1 per acknowledgement, +1 per facility note (each 1 segment).
+- The Swahili question texts are machine translations (gpt-5.5) with a back-translation check, approved by Florian, not reviewed by a native speaker.
+
 ## Runs on a phone-class device
 
 The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
@@ -317,6 +326,7 @@ AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper 
 ## What happens next
 
 - **Clinician advice channel (DESIGN, not built):** a clinician sees an escalated case on a smartphone and sends advice to the health worker only, never automatically to the parent; never in the path of a 'go now' case; logged with the clinician's name; designed not to add to clinic load, since clinics are already overloaded.
+- **Questions, next stages (not built):** checks on cases still waiting for the health worker (Tier 2, wording on file, needs the reviewer's E7 rule), and a larger bank chosen by retrieval with the on-device encoder, trained on her Approve/Decline taps (every tap is a label; no message text logged).
 - **Spoken parent messages:** Spoken versions of the fixed parent messages (IVR call-back) for parents who can't read, after native-speaker and clinician review.
 - **Speech and more languages:** NLLB-200, MMS, Common Voice and FLEURS for voice notes from parents who cannot read, Kikuyu and Luo through MMS, and translating replies; each needs native-speaker review before use.
 - **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.

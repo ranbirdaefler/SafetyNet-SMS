@@ -109,8 +109,8 @@ def load(params, path=None, force=None):
         return STATE
     errs = lint(bank, params)
     on = bank.get("enabled", False) if force is None else force
-    if os.environ.get("SNS_QUESTIONS") == "0":
-        on = False
+    if os.environ.get("SNS_QUESTIONS") in ("0", "1"):            # explicit switch for dev / demo runs
+        on = os.environ["SNS_QUESTIONS"] == "1" if force is None else on
     STATE.update(bank=bank, errors=errs, by_id={q["id"]: q for q in bank.get("questions", [])})
     if errs or not on:
         return STATE
