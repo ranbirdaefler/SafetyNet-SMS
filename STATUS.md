@@ -21,8 +21,10 @@
 - SEAL0 not used (the 30 parent cards don't exist); card dedupe skipped.
 - Set (b) label_line format: "{id} danger|no danger: {sign|none}"; labels from the grid ID.
 
+- **B2 live on the Pi** (florian@192.168.1.208, `sh scripts/pi_run.sh`, port 8000): desktop -> Pi HELP round trip 39-63 ms (3 curl runs); unregistered CHP number -> UNREGISTERED; simulator at http://192.168.1.208:8000/ round trip checked in the desktop browser. Must-stay-RED suite passes on the Pi.
+
 ## Open issues
-- **Pi SSH:** `FloFlo@192.168.1.208` (and floflo/pi/flo/florian) refuse the desktop key (publickey,password). B2 deploy needs Florian to add `~/.ssh/id_ed25519.pub` to the Pi's `authorized_keys`, or confirm the username.
+- none
 
 ## Next
 B2: generic `{from, to, body}` endpoint + outbox + pre-seeded registry; built and tested locally, deployed to the Pi once SSH works.
