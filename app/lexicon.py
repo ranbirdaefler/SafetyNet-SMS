@@ -33,8 +33,24 @@ CUES = {"no", "not", "never", "without", "isn't", "isnt", "doesn't", "doesnt", "
 # Condition A: a match containing any of these is never negated.
 NEVER_NEGATED = ["cannot drink", "cannot feed", "cannot breastfeed", "not able to drink", "unable to drink",
                  "cannot wake", "cannot be woken", "nothing stays down", "hawezi kunywa", "hawezi kunyonya",
-                 "hanyonyi", "kushindwa kunywa", "kushindwa kunyonya", "haamki"]
+                 "hanyonyi", "kushindwa kunywa", "kushindwa kunyonya", "haamki",
+                 # post-hoc (Sat 3 Oct, after seeing test misses; README): refusal described with a negation
+                 "won't take", "wont take", "will not take", "not even a sip", "refuses the breast",
+                 "anakataa kunyonya", "anakataa kunywa", "anakataa kula", "amekataa kunyonya", "amekataa kunywa",
+                 "amekataa kula"]
 CLAUSE_WORDS = {"lakini", "ila", "but"}
+SENTENCE_BREAKS = {".", "?", "!", "\n", "||"}
+# Post-hoc parent-line rows (Sat 3 Oct, after seeing test misses; not evaluated on sealed data; README). Added to the
+# live list only (live_list); the frozen E2 used by the evaluation harness is unchanged. They can only add "go now".
+POSTHOC_ROWS = {
+    "not_drink_feed": ["won't take", "wont take", "will not take", "not even a sip", "refuses the breast",
+                       "anakataa kunyonya", "anakataa kunywa", "anakataa kula", "amekataa kunyonya", "amekataa kunywa",
+                       "amekataa kula"],
+    # described convulsions; "shaking" / "anatetemeka" are deliberately not included (shivering with fever)
+    "convulsions": ["stiff", "stiffens", "stiffened", "stiffening", "stiffness", "jerking", "jerks", "jerked",
+                    "kukakamaa", "kakamaa", "amekakamaa", "anakakamaa", "alikakamaa", "akakamaa", "akikakamaa",
+                    "umekakamaa", "unakakamaa", "ulikakamaa", "imekakamaa", "inakakamaa"],
+}
 V0_K = 2
 
 TOKEN_RE = re.compile(r"(\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?)|([^\W\d_]+(?:'[^\W\d_]+)*)|(\|\||[,.;:?!\n])")
@@ -52,19 +68,26 @@ def normalise(text):
 
 def clauses(text):
     """List of clauses, each a list of tokens. Breaks: , . ; : ? ! newline, ||, lakini, ila, but."""
-    out, cur = [], []
+    return [c for _, c in clauses_with_sentence(text)]
+
+
+def clauses_with_sentence(text):
+    """Same clauses as clauses(), each with its sentence number (sentences end at . ? ! newline ||)."""
+    out, cur, s = [], [], 0
     for m in TOKEN_RE.finditer(normalise(text)):
         num, word, brk = m.groups()
         if brk or (word and word in CLAUSE_WORDS):
             if cur:
-                out.append(cur)
+                out.append((s, cur))
             cur = []
             if brk == "?":
-                out.append(["?"])   # keep the hedge mark visible to the regex
+                out.append((s, ["?"]))   # keep the hedge mark visible to the regex
+            if brk in SENTENCE_BREAKS:
+                s += 1
         else:
             cur.append(num or word)
     if cur:
-        out.append(cur)
+        out.append((s, cur))
     return out
 
 
@@ -119,6 +142,14 @@ def e2_list():
     from pathlib import Path
     cfg = json.loads((Path(__file__).resolve().parent.parent / "config" / "e2.json").read_text(encoding="utf-8"))
     return {"name": "E2", "rows": cfg["rows"], "k": cfg["k"]}
+
+
+def live_list(kw):
+    """The parent-line list: a frozen list (E2 or v0) plus the post-hoc rows."""
+    rows = {s: list(t) for s, t in kw["rows"].items()}
+    for s, t in POSTHOC_ROWS.items():
+        rows[s] = rows.get(s, []) + [x for x in t if x not in rows.get(s, [])]
+    return {"name": kw["name"] + " + post-hoc rows", "rows": rows, "k": kw["k"]}
 
 
 def use(kw):

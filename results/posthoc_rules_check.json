@@ -1,0 +1,45 @@
+{
+ "by_set": {
+  "ydev": {
+   "N": 120,
+   "added_go_now_danger": 3,
+   "added_go_now_no_danger": 0,
+   "added_go_now_other": 0,
+   "go_now_reasons_added": 1,
+   "other_changes": 0
+  },
+  "a": {
+   "N": 25,
+   "added_go_now_danger": 1,
+   "added_go_now_no_danger": 0,
+   "added_go_now_other": 0,
+   "go_now_reasons_added": 0,
+   "other_changes": 0
+  },
+  "b": {
+   "N": 25,
+   "added_go_now_danger": 2,
+   "added_go_now_no_danger": 0,
+   "added_go_now_other": 0,
+   "go_now_reasons_added": 0,
+   "other_changes": 0
+  },
+  "ytest": {
+   "N": 150,
+   "added_go_now_danger": 4,
+   "added_go_now_no_danger": 0,
+   "added_go_now_other": 0,
+   "go_now_reasons_added": 1,
+   "other_changes": 0
+  },
+  "y_test2": {
+   "N": 150,
+   "added_go_now_danger": 6,
+   "added_go_now_no_danger": 0,
+   "added_go_now_other": 0,
+   "go_now_reasons_added": 3,
+   "other_changes": 0
+  }
+ },
+ "other_changes": 0
+}

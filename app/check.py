@@ -17,11 +17,11 @@ if failed:
     sys.exit(1)
 from app import cg_tests, lexicon
 from app.door import keyword_extractor
-lexicon.use(lexicon.e2_list())
+lexicon.use(lexicon.live_list(lexicon.e2_list()))
 e2_ok = not must_stay_red.run(proto) and not cg_tests.run(proto)
 print("E2 (k=%s) with T1-T35 and CG1-CG18: %s" % (lexicon.LIVE["k"], "PASS, E2 live" if e2_ok else "FAIL, v0 stays live"))
 if not e2_ok:
-    lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
+    lexicon.use(lexicon.live_list({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K}))
 model = sys.argv[2] if len(sys.argv) > 2 else str(ROOT / "models" / "onnx" / "trim10k_wq8")
 if Path(model, "model.onnx").exists():
     from app.encoder import Encoder

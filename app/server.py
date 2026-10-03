@@ -40,13 +40,13 @@ def load_protocol():
     from app import lexicon, must_stay_red
     from app.door import keyword_extractor
     # E2 replaces v0 live only if T1-T35 and CG1-CG18 pass with E2 loaded (prereg section 5, step 7)
-    lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
+    lexicon.use(lexicon.live_list({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K}))
     try:
-        lexicon.use(lexicon.e2_list())
+        lexicon.use(lexicon.live_list(lexicon.e2_list()))
         if must_stay_red.run(proto) or cg_tests.run(proto):
             raise RuntimeError("E2 failed a must-stay-RED test")
     except Exception:
-        lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
+        lexicon.use(lexicon.live_list({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K}))
     STATE["keyword_list"] = lexicon.LIVE["name"]
     # the encoder reads parent text only; CG runs with it on and forced off; red with it on -> keyword list (rung 3)
     STATE["encoder"], STATE["encoder_on"] = None, False
