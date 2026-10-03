@@ -1,0 +1,1 @@
+93 MB model, offline in a phone browser: 165 ms (iPhone, best case). Raspberry Pi 5, 1 core: 215 ms. Not yet measured on an entry-level Android.
