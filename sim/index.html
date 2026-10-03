@@ -8,7 +8,7 @@
   :root { --bg:#eef0f3; --pane:#fff; --ink:#1d2329; --muted:#6b7480; --line:#d6dae0;
           --sent:#1f6feb; --sent-ink:#fff; --recv:#e9ecef; --accent:#b42318; }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  body { margin:0; font:16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
   header { padding:10px 16px; display:flex; align-items:center; gap:12px; }
   header h1 { font-size:17px; margin:0; }
   header .hint { color:var(--muted); font-size:13px; }
@@ -49,6 +49,27 @@
   .osm { position:fixed; left:12px; bottom:46px; font-size:11px; color:var(--muted); }
   .corner { position:fixed; left:12px; right:12px; bottom:10px; background:rgba(29,35,41,.88); color:#fff; font-size:12.5px;
             padding:6px 10px; border-radius:8px; text-align:center; }
+  @media (min-width: 901px) { body { display:flex; flex-direction:column; height:100vh; } main, body.public main { flex:1; min-height:0; height:auto; } }
+  /* labels always carry the meaning; colour only repeats it */
+  .tag { display:inline-block; font-size:11.5px; font-weight:600; padding:0 6px; border-radius:6px; background:#dfe3e8; color:#1d2329; margin-right:4px; }
+  .chip { display:inline-block; font-size:13px; padding:1px 8px; border-radius:10px; margin-top:4px; margin-right:4px; border:1px solid transparent; }
+  .chip.rules { background:#fde7e6; color:#8a1c12; border-color:#f4b4ae; font-weight:600; }
+  .chip.possible { background:#fff1d6; color:#7a4b00; border-color:#f0c56b; font-weight:600; }
+  .chip.unsure { background:#eceff2; color:#3a424b; border-color:#c9cfd6; }
+  .chip.none { background:#f6f7f9; color:#56606b; border-color:#dde1e6; }
+  .card.possible { border-color:#f0c56b; border-left-width:5px; }
+  .card.unsure { border-color:#c9cfd6; border-left-width:5px; }
+  .card .status.done { background:#dcf3e6; color:#11603c; font-weight:600; }
+  .story { display:flex; align-items:center; gap:10px; padding:8px 16px; background:#1d2329; color:#fff; font-size:15px; }
+  .story[hidden] { display:none; }
+  .story #storycap { flex:1; }
+  .story button, .tool.play { font:inherit; font-size:14px; padding:5px 12px; border-radius:8px; border:0; cursor:pointer; }
+  .story button { background:#fff; color:#1d2329; }
+  .tool.play { background:var(--sent); color:#fff; font-weight:600; }
+  .rec { border-bottom:1px solid var(--line); padding:6px 12px; font-size:14px; }
+  .rec summary { cursor:pointer; font-weight:600; }
+  .rec .nums { display:flex; flex-wrap:wrap; gap:6px 14px; margin:6px 0; }
+  .rec button { font:inherit; font-size:13px; padding:4px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; cursor:pointer; }
   /* Phone layout (under 768 px only): one pane at a time behind tabs; 768 px and up is unchanged. */
   .mtabs, .mnote { display:none; }
   @media (max-width: 767px) {
@@ -70,8 +91,11 @@
     .mtabs .badge:empty { display:none; }
     main { display:flex; flex:1; min-height:0; height:auto; padding:0; gap:0; }
     .pane, .pane.phone { display:none; flex:1; min-height:0; border:0; border-radius:0; box-shadow:none; }
+    .pane.phone { border:6px solid #1d2329; border-radius:22px; margin:6px; }
     .pane.active { display:flex; }
     .pane.phone .statusbar, .pane h2 { display:none; }
+    .story { flex-wrap:wrap; padding:8px 12px; gap:6px 8px; flex:none; font-size:14px; }
+    .story #storycap { flex-basis:100%; }
     .who { padding:8px 12px; }
     .thread { height:auto; flex:1; min-height:0; }
     .board { min-height:0; }
@@ -84,8 +108,10 @@
 <body>
 <div class="banner" id="banner" hidden>Demo with synthetic data. Not for medical use. In deployment this runs offline on the health worker's phone; this public demo runs the same code on a cloud server so you can try it.</div>
 <header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span>
+  <button type="button" class="tool play" id="play">Play the story, about 60 s</button>
   <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
   <button type="button" class="tool" id="reset">Reset demo</button></header>
+<div class="story" id="story" hidden><span id="storycap"></span><button type="button" id="storynext">Next</button><button type="button" id="storyclose">Close</button></div>
 <div class="mnote" id="mnote" role="button" tabindex="0"></div>
 <nav class="mtabs" id="mtabs">
   <button type="button" data-role="parent">Parent<span class="badge"></span></button>
@@ -94,14 +120,14 @@
 </nav>
 <main>
   <section class="pane" data-role="parent">
-    <h2>Parent</h2>
+    <h2>Parent: basic phone, SMS</h2>
     <div class="who">Phone <select></select> texts <span class="line"></span></div>
     <div class="thread"></div>
     <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
   </section>
   <section class="pane phone" data-role="chp">
     <div class="statusbar"><span>Health worker</span><span>SMS</span></div>
-    <h2>Health worker</h2>
+    <h2>Health worker: her phone</h2>
     <div class="who">Phone <select></select> texts <span class="line"></span></div>
     <div class="tabs"><button type="button" class="on" data-tab="thread">Messages</button><button type="button" data-tab="board">Cases</button></div>
     <div class="thread"></div>
@@ -111,6 +137,9 @@
   <section class="pane" data-role="facility">
     <h2>Facility + CHA</h2>
     <div class="who">Phone <select></select> texts <span class="line"></span></div>
+    <details class="rec" id="rec"><summary>Referral record, this demo session</summary>
+      <div class="nums" id="recnums">No referrals yet.</div>
+      <button type="button" id="reccsv">Download CSV</button></details>
     <div class="thread"></div>
     <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
   </section>
@@ -130,7 +159,7 @@ function bubble(pane, cls, body, meta) {
   d.textContent = body;
   const m = document.createElement("div");
   m.className = "meta";
-  m.innerHTML = meta;
+  m.innerHTML = (pane.role === "parent" && cls === "recv" ? '<span class="tag">fixed message</span>' : "") + meta;
   d.appendChild(m);
   pane.thread.appendChild(d);
   pane.thread.scrollTop = pane.thread.scrollHeight;
@@ -171,7 +200,7 @@ async function init() {
     const p = { el, role, thread: el.querySelector(".thread"), select: el.querySelector("select") };
     phonesFor(role).forEach(ph => { const o = document.createElement("option"); o.value = ph.split(" ")[0]; o.textContent = ph; p.select.appendChild(o); });
     el.querySelector(".line").textContent = cfg.lines[role];
-    p.select.onchange = () => { p.thread.innerHTML = ""; lastIn = 0; lastOut = 0; };
+    p.select.onchange = () => { p.thread.innerHTML = ""; lastIn = 0; lastOut = 0; primed = false; };
     el.querySelector("form").onsubmit = async e => {
       e.preventDefault();
       const inp = el.querySelector("input");
@@ -205,6 +234,7 @@ async function poll() {
           if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts));
       } else {
         lastOut = Math.max(lastOut, m.id);
+        track(m);
         for (const p of Object.values(panes))
           if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
       }
@@ -216,18 +246,30 @@ async function pollBoard() {
   const p = panes.chp;
   if (!p || p.boardEl.style.display !== "flex") return;
   const rows = await (await fetch("board?phone=" + encodeURIComponent(p.select.value))).json();
+  const ms = {};
+  try { for (const l of await (await fetch("log")).json()) if (l.model_ms != null) ms[l.code] = l.model_ms; } catch (e) {}
   p.boardEl.innerHTML = rows.length ? "" : '<div class="meta">No cases yet.</div>';
   for (const r of rows) {
     const c = document.createElement("div");
-    c.className = "card" + (r.danger ? " danger" : "");
+    c.className = "card" + (r.danger ? " danger" : r.model_band === "possible" ? " possible" : r.model_band === "unsure" ? " unsure" : "");
     const top = document.createElement("div"); top.className = "top";
     top.textContent = `${r.code} · ${r.age}`;
-    const st = document.createElement("span"); st.className = "status"; st.textContent = r.status; top.appendChild(st);
+    const st = document.createElement("span"); st.className = "status" + (/arrived|closed|admitted|treated|referred on/.test(r.status) ? " done" : "");
+    st.textContent = r.status; top.appendChild(st);
     c.appendChild(top);
     const sg = document.createElement("div"); sg.className = "signs";
     sg.textContent = r.signs.length ? (r.danger ? "Danger: " : "") + r.signs.join(", ") : "No sign recorded";
     c.appendChild(sg);
-    if (r.model) { const md = document.createElement("div"); md.className = "rem"; md.style.color = "var(--accent)"; md.textContent = r.model; c.appendChild(md); }
+    const chips = document.createElement("div");
+    if (r.danger) { const k = document.createElement("span"); k.className = "chip rules"; k.textContent = "rules: go now / referral"; chips.appendChild(k); }
+    const where = ms[r.code] != null ? ` · ${ms[r.code]} ms${cfg.public ? ", demo server" : ", on device"}` : "";
+    const mc = document.createElement("span");
+    const sign = (r.model || "").match(/possible (.+), check/);
+    mc.className = "chip " + (r.model_band === "possible" ? "possible" : r.model_band === "unsure" ? "unsure" : "none");
+    mc.textContent = r.model_band === "possible" ? `model · possible: ${sign ? sign[1] : "sign"}${where}`
+      : r.model_band === "unsure" ? `model · unsure, please read${where}` : `model · no flag${where}`;
+    chips.appendChild(mc);
+    c.appendChild(chips);
     if (r.reminder) { const rm = document.createElement("div"); rm.className = "rem"; rm.textContent = r.reminder; c.appendChild(rm); }
     const mt = document.createElement("div"); mt.className = "meta"; mt.textContent = `opened ${r.opened} · last ${r.time}`;
     c.appendChild(mt);
@@ -269,6 +311,109 @@ fetch("config").then(r => r.json()).then(c => { if (c.public) {
   document.getElementById("mnote").textContent = [c.public ? document.getElementById("banner").textContent : "",
     document.querySelector(".corner").textContent, document.querySelector(".osm").textContent].filter(Boolean).join(" ");
 });
+
+// ---------- referral record (from the messages this page has seen; no names or phone numbers) ----------
+const rec = {};
+function track(m) {
+  const b = m.body || "";
+  if (m.msg_id === "ALERT") {
+    const a = b.match(/^REFERRAL (\d{4}): child ([^,]+), (PARENT SMS: )?(.*), CHU ([^,]+), CHP [^,]+, \d\d:\d\d\./);
+    if (a && !rec[a[1]]) rec[a[1]] = { code: a[1], referred: m.ts, age: a[2], source: a[3] ? "parent_sms" : "chp", reason: a[4], chu: a[5] };
+  } else if (m.msg_id === "ARRIVED" && m.role === "cha" && rec[m.case_code]) {
+    rec[m.case_code].arrived = rec[m.case_code].arrived || m.ts;
+  } else if (m.msg_id === "OUTCOME" && m.role === "cha" && rec[m.case_code]) {
+    const t = b.match(/follow-up day (\d+)/);
+    rec[m.case_code].outcome = /admitted/.test(b) ? "A" : /referred on/.test(b) ? "R" : t ? "T" : "";
+    rec[m.case_code].day = t ? +t[1] : "";
+  }
+  renderRec();
+}
+function renderRec() {
+  const rs = Object.values(rec);
+  if (!rs.length) { document.getElementById("recnums").textContent = "No referrals yet."; return; }
+  const arr = rs.filter(r => r.arrived).map(r => (r.arrived - r.referred) / 60).sort((a, b) => a - b);
+  const med = arr.length ? (arr.length % 2 ? arr[(arr.length - 1) / 2] : (arr[arr.length / 2 - 1] + arr[arr.length / 2]) / 2) : null;
+  const n = k => rs.filter(r => r.outcome === k).length;
+  document.getElementById("recnums").textContent =
+    `referred ${rs.length} · arrived ${arr.length} · outcome A ${n("A")}, T ${n("T")}, R ${n("R")} · median time to arrival ${med == null ? "-" : med.toFixed(1) + " min"}`;
+}
+document.getElementById("reccsv").onclick = () => {
+  const iso = ts => ts ? new Date(ts * 1000).toISOString() : "";
+  const cols = ["referral_code", "referral_date", "community_unit", "child_age", "referral_reason", "referral_source",
+                "arrival_date", "minutes_to_arrival", "outcome_code", "followup_day"];
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [cols.join(",")].concat(Object.values(rec).map(r => [r.code, iso(r.referred), r.chu, r.age, r.reason, r.source,
+    iso(r.arrived), r.arrived ? ((r.arrived - r.referred) / 60).toFixed(1) : "", r.outcome || "", r.day || ""].map(q).join(",")));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/csv" }));
+  a.download = "referral_record.csv"; a.click();
+};
+
+// ---------- "Play the story": team-written messages through the same /sms endpoint; user-paced ----------
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function sms(from, role, body) {
+  const r = await fetch("sms", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ from, to: cfg.lines[role], body }) });
+  poll();
+  return r.json();
+}
+function setPhone(role, phone) {
+  const p = panes[role];
+  if (p.select.value !== phone) { p.select.value = phone; p.thread.innerHTML = ""; lastIn = 0; lastOut = 0; primed = false; }
+}
+function chwView(board) {
+  const b = panes.chp.el.querySelector(`.tabs button[data-tab="${board ? "board" : "thread"}"]`);
+  if (b) b.click();
+}
+let storyCode = null, step = 0;
+const STORY = [
+  { cap: "Step 1 of 6. Amina (a fictional mother) texts in Swahili about her 14-month-old: the child vomits everything, even water. No keyword matches, so she gets the fixed reply: her health worker has been told.",
+    tab: "parent", run: async () => { await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); } },
+  { cap: "Step 2 of 6. On the health worker's board, the model marks the case 'possible: vomits everything', so she reads it first. The model never changes what Amina is told.",
+    tab: "chp", run: async () => { chwView(true); } },
+  { cap: "Step 3 of 6. Amina texts again: 'sasa ana degedege' (now the child has convulsions). The rules send a fixed 'go now' at once; the facility and the CHA get an alert with a 4-digit code.",
+    tab: "parent", run: async () => { chwView(false); const r = await sms(cfg.parents[0], "parent", "sasa ana degedege");
+      storyCode = (r.replies || []).map(x => x.case_code).find(Boolean); } },
+  { cap: "Step 4 of 6. At the facility, staff text the code back. The health worker and the CHA are told the child arrived.",
+    tab: "facility", run: async () => { if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode); } },
+  { cap: "Step 5 of 6. The facility sends the code and T5: treated, sent home, follow-up day 5. The reminder on the health worker's board moves to day 5.",
+    tab: "chp", run: async () => { if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode + " T5"); chwView(true); } },
+  { cap: "Step 6 of 6 (optional). Another parent texts; nobody answers. 'Fire timeouts now' skips the wait: the parent is told to go now, and the facility and the CHA are alerted.",
+    tab: "parent", run: async () => { chwView(false); setPhone("parent", cfg.parents[1]);
+      await sms(cfg.parents[1], "parent", "mtoto wangu wa miaka 3 ana upele mwilini"); await sleep(1500);
+      await fetch("demo/fire-timeouts", { method: "POST" }); poll(); } },
+];
+function storyShow(text, nextLabel) {
+  document.getElementById("story").hidden = false;
+  document.getElementById("storycap").textContent = text;
+  document.getElementById("storynext").textContent = nextLabel;
+}
+document.getElementById("play").onclick = async () => {
+  await fetch("demo/reset", { method: "POST" });          // the story starts from a clean demo
+  for (const k in rec) delete rec[k];
+  renderRec();
+  Object.values(panes).forEach(p => p.thread.innerHTML = "");
+  lastIn = 0; lastOut = 0; primed = false;
+  document.querySelectorAll("#mtabs .badge").forEach(b => b.textContent = "");
+  setPhone("parent", cfg.parents[0]); setPhone("chp", cfg.chps[0]); setPhone("facility", cfg.facilities[0].phone);
+  chwView(false);
+  step = 0; storyCode = null;
+  storyShow("Play the story: one family's case, from the first SMS to the facility outcome. Press Next for each step.", "Next");
+};
+document.getElementById("storynext").onclick = async () => {
+  const btn = document.getElementById("storynext");
+  if (step >= STORY.length) { document.getElementById("story").hidden = true; return; }
+  btn.disabled = true;
+  const s = STORY[step++];
+  storyShow(s.cap, step >= STORY.length ? "Try your own message" : "Next");
+  showPane(s.tab);
+  try { await s.run(); } finally { btn.disabled = false; }
+  if (step >= STORY.length) document.getElementById("storyclose").textContent = "Reset";
+};
+document.getElementById("storyclose").onclick = async () => {
+  if (step >= STORY.length) { await fetch("demo/reset", { method: "POST" }); location.reload(); return; }
+  document.getElementById("story").hidden = true;
+};
 
 init().then(setupTabs);
 </script>
