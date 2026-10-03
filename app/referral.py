@@ -17,7 +17,7 @@ class Referral:
         if st.get("u2m") and "under 2 months" not in rs:
             rs.insert(0, "under 2 months")
         body = M.alert(case["code"], st.get("age_months"), rs, chp["chu"] if chp else "-", chp["id"] if chp else "-",
-                       parent=parent)
+                       parent=parent or case.get("origin") == "parent")    # C10: PARENT SMS on parent-opened cases
         self.store.send(self.reg.facility["phone"], "facility", "ALERT", body, case["code"])
         self.store.send(cha["phone"], "cha", "ALERT", body, case["code"])
 

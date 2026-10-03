@@ -73,3 +73,22 @@ def ack(code, ts=None):
 
 def arrived(code, age_months, u2m, ts=None):
     return ARRIVED.format(head=head(code, age_months, u2m), time=hhmm(ts))
+
+
+# ---------- caregiver door (parent line allowlist: these 5 strings only) ----------
+DS = ("fits, difficult or fast breathing, blood in stool, cannot drink or breastfeed, vomits everything, "
+      "is very sleepy or hard to wake, or gets worse.")
+CG_GO_NOW = "Take the child to {facility} NOW. Do not wait for the health worker. Show code {code} there. Your health worker has been told."
+CG_GO_NOW_U = "Take the child to the nearest health facility NOW. Do not wait for the health worker. Show code {code} there. A health worker has been told."
+CG_TOLD = "Your health worker has been told and will contact you. If no one calls or comes by {time}, go to {facility}. Go there NOW if the child has " + DS
+CG_TIMEOUT = "Your health worker has not replied. Take the child to {facility} NOW. Do not wait. Show code {code} there. The health team has been told."
+CG_OOS = "This number is only for sick children under 5 years. Anyone else who is sick: go to {facility} NOW. Your health worker has been told."
+PARENT_ALLOWLIST = {"CG_GO_NOW": CG_GO_NOW, "CG_GO_NOW_U": CG_GO_NOW_U, "CG_TOLD": CG_TOLD,
+                    "CG_TIMEOUT": CG_TIMEOUT, "CG_OOS": CG_OOS}
+
+# ---------- staff strings the door adds ({phone} only in these five) ----------
+CHP_CALL = "{head}: PARENT SMS, not checked. Call {phone} now; see the child by {time}. Start replies with {code}. Cannot see the child? Reply {code} 9."
+CHP_GO_NOW = "{head}: PARENT SMS: {reasons}. Parent told: go to {facility} NOW. Facility and CHA told. Call {phone} now; follow your chart booklet."
+CHP_TIMEOUT = "{head}: no reply by {time}; parent told to go to {facility}. Facility and CHA told. Call {phone}."
+CHP_OOS = "{code}: PARENT SMS, not for this tool ({what}). Parent told: go to {facility} NOW. CHA copied. Call {phone}."
+CHA_UNREG = "PARENT SMS {code}: number not registered, no facility told. Parent told: go now. {reasons}. Call {phone}."

@@ -23,9 +23,10 @@ def parse_reply(body, code):
 
 
 class ChwFlow:
-    def __init__(self, store, reg, proto, notify_referral=None):
+    def __init__(self, store, reg, proto, notify_referral=None, on_refer=None):
         self.store, self.reg, self.proto = store, reg, proto
         self.notify_referral = notify_referral or (lambda case, reasons: None)
+        self.on_refer = on_refer or (lambda case: None)
 
     def send(self, phone, msg_id, body, code=None):
         self.store.send(phone, "chp", msg_id, body, code)
@@ -108,10 +109,12 @@ class ChwFlow:
             case = self.store.case(code)
             self.notify_referral(case, reasons)       # ALERT to facility + CHA first (B5)
             self.send(phone, "REFER_NOW", M.refer_now(code, state["age_months"], d.u2m or state["u2m"], reasons), code)
+            self.on_refer(case)                       # D16: a REFER on a parent-opened case also sends CG_GO_NOW
         elif d.output == "REFER_U2M":
             self.store.update_case(code, status="REFERRED", state=state)
             self.notify_referral(self.store.case(code), ["under 2 months"])
             self.send(phone, "REFER_U2M", M.REFER_U2M.format(code=code), code)
+            self.on_refer(self.store.case(code))
         elif d.output == "OOS_HUMAN":
             self.store.update_case(code, status="CLOSED", state=state)
             self.send(phone, "OOS_HUMAN", M.OOS_HUMAN.format(code=code, what=d.oos), code)

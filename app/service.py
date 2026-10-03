@@ -1,6 +1,7 @@
 """Message routing by role (taken from the `to` line)."""
 from app import messages as M
 from app.chw import ChwFlow
+from app.door import DoorFlow
 from app.referral import Referral
 
 
@@ -14,7 +15,9 @@ def handle(store, reg, proto, role, sender, body):
             store.send(sender, "chp", "UNREGISTERED", M.UNREGISTERED)  # E1
             return
         ref = Referral(store, reg)
-        ChwFlow(store, reg, proto, notify_referral=ref.alert).handle(sender, body)
+        door = DoorFlow(store, reg, proto, ref)
+        ChwFlow(store, reg, proto, notify_referral=ref.alert, on_refer=door.on_chp_refer).handle(sender, body)
     elif role == "facility":
         Referral(store, reg).facility_text(sender, body)
-    # parent line: wired in D1
+    elif role == "parent":
+        DoorFlow(store, reg, proto, Referral(store, reg)).handle(sender, body)
