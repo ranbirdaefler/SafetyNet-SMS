@@ -1,5 +1,5 @@
 ---
-license: other  # TBD by the author
+license: other
 language:
 - sw
 - en
@@ -27,7 +27,7 @@ Reads a parent's SMS about a sick child (Swahili, English or mixed) and gives th
 | `model.onnx` (vocabulary-trimmed, 8-bit weights, per-channel) | 92.7 MB | `0dcaaf1353e76556680f352d13c0de8571a2878394b6ac1ddb9d9b46e933b0e6` |
 | `tokenizer.json` | 0.77 MB (766,645 bytes) | `7146c767e3087e96aa375c590c239a9210172393856eecdc4c0d52a34d398a6b` |
 
-Board thresholds (from `config/board_model.json` in the GitHub repo): lo 0.849, hi 0.997, per-head temperatures calibrated on v3's held-out X-val (547 messages).
+Board thresholds (from `config/board_model.json` in the GitHub repo): lo 0.849, hi 0.997, per-head temperatures fitted on v3's held-out X-val (547 messages).
 
 ## Base model
 
@@ -51,12 +51,12 @@ Fine-tuned from AfroXLMR-base (Alabi et al., COLING 2022), MIT licence.
 | Everyday Swahili, FLORES-200 devtest (1,012): flagged | 70.6% | 0.1% |
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 0.0% |
 
-Caregiver tests (must-stay-RED T1–T35, CG1–CG18) pass with the v3 board on (the board never changes what a parent is told).
+Caregiver tests (must-stay-RED T1–T35, CG1–CG18) pass with v3 running on the board; the parent line doesn't use the model.
 
 ## Known failures
 
 - On the fresh set, keywords + v3 board miss 2 danger messages, both long-duration signs in Swahili (fever, diarrhoea). On the three earlier sealed sets (report-only), keywords + v3 board miss one danger message on each: a "cannot drink or feed" in negative form (mixed Swahili/English) and two long-duration diarrhoea messages in Swahili.
-- On the three earlier sets, keywords + v3 board let 3 of 104 danger messages through that keywords + v2 board caught; v2's board, however, flagged 62.6-80.5% of everyday Swahili.
+- On the three earlier sets, keywords + v3 board let 3 of 104 danger messages through that keywords + v2 board caught (the v2 board caught all three older-set misses); v2's board, however, flagged 62.6-80.5% of everyday Swahili.
 - All test data is AI-written. Thresholds must be re-set on real parents' texts before any use.
 - Swahili is the only local language tested. Kikuyu and Luo are not covered.
 
@@ -66,7 +66,7 @@ v3's training changes were chosen after seeing error types on dev data and, repo
 
 ## Licence
 
-Licence: TBD by the author
+Licence: other. The base model, AfroXLMR-base, is MIT-licensed. The MASSIVE training data is CC BY 4.0 (attribution: Amazon MASSIVE 1.1). AfriSenti's paper restricts commercial and state-actor use without the creators' approval, so these weights are released for research and evaluation only.
 
 ## Device
 

@@ -7,7 +7,7 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: other  # TBD by the author
-short_description: SMS danger-sign assistant for health workers (synthetic demo)
+short_description: Danger-sign SMS assistant for health workers (synthetic data only)
 ---
 
 # SafetyNet-SMS: public demo
