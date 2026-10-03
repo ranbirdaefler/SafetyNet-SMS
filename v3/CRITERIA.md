@@ -52,3 +52,9 @@ Whichever model ends up on the board ships with a vocabulary re-trimmed from the
 ## Hard stop
 
 If v3 is not evaluated by 19:00 ET, it is dropped and reported.
+
+## Addendum (Florian, Sat 3 Oct, committed before any v3 training)
+
+- **Research row:** v2 at thresholds RE-CHOSEN by the same pre-written rule (above) on the same threshold splits, scored in the same single run as v3 and v2 as shipped. This shows whether retraining or re-tuning did the work.
+- **Pre-declared board fallback:** if v3 fails any of (a)-(c) but re-tuned v2 passes all three, the board ships v2 at the re-tuned thresholds. Order: v3, then re-tuned v2, then v2 as shipped (lo 0.068 / hi 0.9).
+- FLORES-200 is never trained on, so FLORES devtest is an unseen-style check.
