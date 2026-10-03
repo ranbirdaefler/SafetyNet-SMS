@@ -44,7 +44,7 @@ def lint(bank, params):
     pre = bank.get("prefix_referred", {})
     if not pre.get("en") or not pre.get("sw"):
         errs.append("prefix_referred: en and sw required")
-    for k in ("ack_referred",):
+    for k in ("ack_referred", "prefix_chw_referred"):
         for lang in ("en", "sw"):
             t = (bank.get(k) or {}).get(lang)
             if not t:

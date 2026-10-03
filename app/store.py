@@ -41,6 +41,20 @@ class Store:
             self.db.execute("INSERT INTO inbox (ts, sender, line, role, body) VALUES (?,?,?,?,?)",
                             (time.time(), sender, line, role, body))
 
+    def send_chw_msg(self, recipient, body, case_code, names, first_lines):
+        """The ONLY way a health worker's own words reach a parent (question layer, review E3). The body must have
+        exactly the shape '[<fixed referred line> ]<registered name>, your health worker: <her text>'. A plain
+        send() of CHW_MSG is refused by the parent allowlist."""
+        import re
+        m = re.fullmatch(r"(?:(?P<first>[^\n]+?\.) )?(?P<name>[^,\n]+), your health worker: (?P<text>.+)", body, flags=re.S)
+        if not m or m.group("name") not in names or (m.group("first") and m.group("first") not in first_lines):
+            raise ValueError("CHW_MSG does not have the system-added shape")
+        with self.lock:
+            cur = self.db.execute(
+                "INSERT INTO outbox (ts, recipient, role, msg_id, body, case_code) VALUES (?,?,?,?,?,?)",
+                (time.time(), recipient, "parent", "CHW_MSG", body, case_code))
+            return cur.lastrowid
+
     def send(self, recipient, role, msg_id, body, case_code=None):
         """Write to the outbox. In this build an outbox write is the 'accepted for sending' event."""
         if role == "parent":

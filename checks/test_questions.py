@@ -260,3 +260,75 @@ def test_normal_messages_pass(on, text):
 def test_only_approved_texts_reach_the_allowlist(on):
     from app import messages as M
     assert "Q_PA_FITS_COUNT" in M.QL_TEMPLATES and "Q_CK_FITS" not in M.QL_TEMPLATES   # Tier 2 not approved
+
+
+# ---------- step 6: her own / edited messages (review E1-E6) ----------
+def own(e, code, text, chp=CHP7, from_qid=None):
+    before = e.store.last_outbox_id()
+    r = qflow.chw_message(e.store, e.reg, PROTO, chp, code, text, from_qid)
+    return r, e.store.outbox_since(before)
+
+
+def test_own_message_has_system_prefixes_and_is_not_a_reply(on):
+    e = Env(PROTO)
+    code = referred(e)
+    c0 = e.store.case(code)
+    r, out = own(e, code, "Nijulishe mkifika kliniki.")
+    assert r["ok"] and ids(out) == [("parent", "CHW_MSG")]
+    assert out[0]["body"] == "Endelea kwenda kliniki. Achieng, your health worker: Nijulishe mkifika kliniki."   # E1, E3
+    c1 = e.store.case(code)
+    assert (c1["status"], c1["due"]) == (c0["status"], c0["due"]) and not c1["state"].get("chp_replied")       # E4
+
+
+def test_plain_send_of_chw_msg_is_refused():
+    e = Env(PROTO)
+    with pytest.raises(ValueError):
+        e.store.send(P1, "parent", "CHW_MSG", "Achieng, your health worker: hello", "1234")
+    with pytest.raises(ValueError):
+        e.store.send_chw_msg(P1, "Mallory, your health worker: hello", "1234", {"Achieng"}, {"Endelea kwenda kliniki."})
+
+
+@pytest.mark.parametrize("text", ["Mpe panadol", "Subiri kidogo", "Usijali, atakuwa sawa", "Wait for me", "Give ORS"])
+def test_own_message_blocked_words_refused(on, text):
+    e = Env(PROTO)
+    code = referred(e)
+    r, out = own(e, code, text)
+    assert r["ok"] is False and r["error"] == "Not sent: for medicines or a change of plan, call the parent." and out == []
+
+
+def test_own_message_too_long_and_system_text_refused(on):
+    e = Env(PROTO)
+    code = referred(e)
+    assert own(e, code, "x " * 120)[0]["error"].startswith("Not sent: too long")
+    from app import messages as M
+    assert own(e, code, M.QL_TEMPLATES["Q_ACK"][1])[0]["ok"] is False
+
+
+def test_reply_to_her_message_is_shown_never_parsed(on):
+    e = Env(PROTO)
+    code = referred(e)
+    approve(e, code, "PA_FITS_COUNT")
+    own(e, code, "Nijulishe mkifika kliniki.")                                         # E5: ends the bank question
+    out = e.send(P1, "parent", "1")
+    assert ("facility", "PREARRIVAL") not in ids(out) and ("parent", "Q_ACK") not in ids(out)
+    assert ids(out) == [("parent", "CG_GO_NOW")]                                       # the old D23 flow
+    assert any("Parent replied: 1" in x for x in qflow.board_lines(e.store.case(code)))
+
+
+def test_edited_question_logged_and_shared_cap(on):
+    e = Env(PROTO)
+    code = referred(e)
+    r, _ = own(e, code, "Amepata degedege mara ngapi leo? Jibu kwa maneno yako.", from_qid="PA_FITS_COUNT")
+    assert r["action"] == "edited"
+    approve(e, code, "PA_FITS_COUNT")
+    approve(e, code, "PA_AWAKE")
+    assert own(e, code, "Nijulishe mkifika.")[0]["ok"] is False                       # 3 per case, shared
+    assert any("edited and sent by CHP 07" in x for x in qflow.board_lines(e.store.case(code)))
+
+
+def test_own_message_not_for_unregistered_or_other_chp(on):
+    e = Env(PROTO)
+    code = referred(e)
+    assert own(e, code, "Nijulishe mkifika.", chp=CHP8)[0]["error"] == "not your case"
+    code_u = e.send("+254799000001", "parent", FITS)[0]["case_code"]                   # unregistered number
+    assert own(e, code_u, "Nijulishe mkifika.")[0]["ok"] is False

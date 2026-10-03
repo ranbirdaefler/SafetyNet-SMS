@@ -103,6 +103,13 @@
   .qsug button { font:inherit; font-size:13px; padding:3px 10px; margin:4px 6px 0 0; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
   .qsug button.ok { background:#3b2a85; color:#fff; border-color:#3b2a85; }
   .qline { font-size:12.5px; margin-top:3px; }
+  .qwrite { margin-top:6px; }
+  .qwrite .start { font-size:12.5px; color:var(--muted); }
+  .qwrite textarea { width:100%; font:inherit; font-size:15px; min-height:52px; border:1px solid var(--line); border-radius:8px; padding:6px; }
+  .qwrite .warn { font-size:12.5px; color:#8a1c12; }
+  .qwrite .err { font-size:13px; color:#8a1c12; font-weight:600; }
+  .qwrite button { font:inherit; font-size:13px; padding:3px 10px; margin-top:4px; border-radius:8px; border:1px solid #3b2a85; background:#3b2a85; color:#fff; cursor:pointer; }
+  .qsug button.ed { background:#fff; }
   .msg.prearrival { border-left:5px solid #f0a020; }
   .msg.prearrival::before { content:"Pre-arrival note (parent report, not checked)"; display:block; font-size:12px; font-weight:700; color:#7a4b00; margin-bottom:2px; }
   #idtoggle { font-size:12px; padding:2px 8px; }
@@ -325,9 +332,35 @@ async function poll() {
     primed = true;                       // no badges for the history loaded on the first poll
   } finally { busy = false; }
 }
+// "Write your own" / "Edit" (question layer, experimental; review E1-E6). The start of the SMS is system-added.
+const writeOpen = {};
+function openWrite(qb, r, text, qid) {
+  if (qb.querySelector(".qwrite")) return;
+  writeOpen[r.code] = writeOpen[r.code] || { text, qid };
+  const w = document.createElement("div"); w.className = "qwrite";
+  w.innerHTML = `<div class="start"></div><textarea></textarea>` +
+    (qid ? `<div class="warn">Edited: answers will not be read automatically. To keep automatic go-now, approve as written.</div>` :
+           `<div class="warn">Replies to your message are shown to you, never read automatically.</div>`) +
+    `<button type="button">Send</button> <button type="button" class="tool">Cancel</button><div class="err"></div>`;
+  w.querySelector(".start").textContent = "Sent as: " + r.q_write.start + "…  (added by the system)";
+  const ta = w.querySelector("textarea"); ta.maxLength = r.q_write.room; ta.value = writeOpen[r.code].text;
+  ta.oninput = () => { writeOpen[r.code].text = ta.value; };
+  const [send, cancel] = w.querySelectorAll("button");
+  cancel.onclick = () => { delete writeOpen[r.code]; w.remove(); };
+  send.onclick = async () => {
+    send.disabled = true;
+    const res = await (await fetch("chw/message", { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ chp: panes.chp.select.value, code: r.code, text: ta.value, from_qid: qid }) })).json();
+    send.disabled = false;
+    if (!res.ok) { w.querySelector(".err").textContent = res.error; return; }
+    delete writeOpen[r.code]; w.remove(); poll(); pollBoard();
+  };
+  qb.appendChild(w);
+}
 async function pollBoard() {
   const p = panes.chp;
   if (!p || p.boardEl.style.display !== "flex") return;
+  if (p.boardEl.contains(document.activeElement) && document.activeElement.tagName === "TEXTAREA") return;
   const rows = await (await fetch("board?phone=" + encodeURIComponent(p.select.value))).json();
   const ms = {};
   try { for (const l of await (await fetch("log")).json()) if (l.model_ms != null) ms[l.code] = l.model_ms; } catch (e) {}
@@ -359,7 +392,8 @@ async function pollBoard() {
       qb.innerHTML = '<b>Questions before arrival</b><span class="xp">experimental</span>';
       for (const sg of r.q_suggestions || []) {
         const box = document.createElement("div"); box.className = "qsug";
-        box.innerHTML = `<div></div><div class="qwhy"></div><button type="button" class="ok">Approve and send</button><button type="button">Decline</button>`;
+        box.innerHTML = `<div></div><div class="qwhy"></div><button type="button" class="ok">Approve and send</button><button type="button">Decline</button>` +
+          (r.q_write ? `<button type="button" class="ed">Edit</button>` : "");
         box.children[0].textContent = sg.text_en;
         box.children[1].textContent = "Why suggested: " + sg.reason;
         const act = async a => {
@@ -370,10 +404,17 @@ async function pollBoard() {
         };
         box.children[2].onclick = () => act("approve");
         box.children[3].onclick = () => act("decline");
+        if (box.children[4]) box.children[4].onclick = () => openWrite(qb, r, sg.text_en, sg.id);
         qb.appendChild(box);
       }
       for (const l of r.q_lines || []) { const x = document.createElement("div"); x.className = "qline"; x.textContent = l; qb.appendChild(x); }
+      if (r.q_write) {
+        const wb = document.createElement("button"); wb.type = "button"; wb.className = "tool"; wb.textContent = "Write your own message";
+        wb.onclick = () => openWrite(qb, r, "", null);
+        qb.appendChild(wb);
+      }
       c.appendChild(qb);
+      if (writeOpen[r.code]) openWrite(qb, r, writeOpen[r.code].text, writeOpen[r.code].qid);
     }
     const mt = document.createElement("div"); mt.className = "meta"; mt.textContent = `opened ${r.opened} · last ${r.time}`;
     c.appendChild(mt);
@@ -643,6 +684,17 @@ STORIES.push({ name: "Questions before arrival (experimental)", parent: "Zawadi"
     look: "the log on Achieng's case card.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: [],
     ready: () => /declined by CHP/.test(panes.chp.boardEl.textContent),
     run: async () => { chwView(true); await qAct("PA_AWAKE", "decline"); } },
+  { title: "She writes her own", text: "Achieng writes 'Nijulishe mkifika kliniki' (tell me when you reach the clinic). The system adds 'Endelea kwenda kliniki.' and her name; medicine or 'wait' words would be refused.",
+    why: "Her own words can reach a parent only through her phone, signed as hers, with the fixed first line on a referred case. Model-written text never does.",
+    look: "the message in the parent pane.", roles: ["chp", "parent"], tab: "parent", nodes: ["Achieng", "P"], expect: ["CHW_MSG"],
+    run: async () => { await fetch("chw/message", { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, text: "Nijulishe mkifika kliniki." }) }); poll(); pollBoard(); } },
+  { title: "The reply goes to her, as written", text: "Zawadi replies 'sawa' (OK). Achieng sees it on her board exactly as written; it is never read automatically, and the system repeats 'go now'.",
+    why: "Only bare answers to approved bank questions are read automatically. Anything else is shown to a person, and the referral stands.",
+    look: "'Parent replied' on Achieng's board and the repeated go-now.", roles: ["parent", "chp"], tab: "chp", nodes: ["P", "Achieng"], expect: ["CG_GO_NOW"],
+    ready: () => /Parent replied/.test(panes.chp.boardEl.textContent),
+    run: async () => { chwView(true); await sms(cfg.parents[0], "parent", "sawa"); },
+    after: async () => { const b = panes.chp.boardEl; b.scrollTop = b.scrollHeight; } },
 ] });
 let STORY = STORY1, storyParent = null;
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }

@@ -134,6 +134,8 @@ def why_for(row):
         return None
     if row["msg_id"].startswith("Q_"):                                  # question layer (experimental)
         return why_question(row)
+    if row["msg_id"] == "CHW_MSG":
+        return "Written by the health worker herself (her name is added by the system). Replies are shown to her, never read automatically."
     lines = [WHY.get(row["id"]) or WHY_FIXED.get(row["msg_id"])]
     case = STORE.case(row["case_code"]) if row.get("case_code") else None
     m = (case or {}).get("state", {}).get("model") or {}
@@ -202,6 +204,25 @@ def chw_question(a: QAction):
             raise HTTPException(status_code=404)
         before = STORE.last_outbox_id()
         r = qflow.chw_action(STORE, REGISTRY, STATE["protocol"], a.chp, a.code, a.qid, a.action)
+        return {**r, "replies": with_why(STORE.outbox_since(before))}
+
+
+class QMessage(BaseModel):
+    chp: str
+    code: str
+    text: str
+    from_qid: str | None = None
+
+
+@app.post("/chw/message")
+def chw_message(a: QMessage):
+    """Health-worker endpoint (question layer, experimental): her own or edited message to the parent (review E1-E6)."""
+    from app import qflow
+    with LOCK:
+        if STATE["protocol"] is None or a.chp not in REGISTRY.chp_by_phone:
+            raise HTTPException(status_code=404)
+        before = STORE.last_outbox_id()
+        r = qflow.chw_message(STORE, REGISTRY, STATE["protocol"], a.chp, a.code, a.text[:400], a.from_qid)
         return {**r, "replies": with_why(STORE.outbox_since(before))}
 
 

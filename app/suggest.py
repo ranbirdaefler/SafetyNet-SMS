@@ -35,7 +35,7 @@ def suggest(state, bank_questions, status):
         return []
     q = state.get("q") or {}
     done = set(q.get("asked", [])) | set(q.get("declined", []))
-    if len(q.get("asked", [])) >= MAX_PER_CASE:
+    if len(q.get("asked", [])) + len(q.get("own", [])) >= MAX_PER_CASE:   # one shared cap (review E5)
         return []
     pre_asked = sum(1 for e in q.get("asked", []) if e.startswith("PA_"))
     signs = triggered_signs(state)

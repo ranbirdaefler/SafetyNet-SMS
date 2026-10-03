@@ -22,10 +22,10 @@ chus:
   - {n: 3, cha: "CHA 1", facility: F1, villages: ["Village 3A", "Village 3B"]}
   - {n: 4, cha: "CHA 1", facility: F2, villages: ["Village 4A"]}
 
-chps:
-  - {id: "07", chu: 3, phone: "+254722000107"}
-  - {id: "08", chu: 3, phone: "+254722000108"}
-  - {id: "09", chu: 4, phone: "+254722000109"}
+chps:                 # name: fictional; used only in her own messages to parents ("<name>, your health worker: ")
+  - {id: "07", chu: 3, phone: "+254722000107", name: "Achieng"}
+  - {id: "08", chu: 3, phone: "+254722000108", name: "Wanjiku"}
+  - {id: "09", chu: 4, phone: "+254722000109", name: "Atieno"}
 
 parents:
   - {phone: "+254733000001", chp: "07"}

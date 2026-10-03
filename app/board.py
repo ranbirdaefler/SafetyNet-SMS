@@ -92,4 +92,12 @@ def _questions(case):
     from app import qflow
     from app import questions as QL
     sugg = [{"id": s["id"], "reason": s["reason"], "text_en": QL.question(s["id"])["en"]} for s in qflow.suggestions(case)]
-    return {"q_suggestions": sugg, "q_lines": qflow.board_lines(case)}
+    from app.registry import Registry
+    from pathlib import Path
+    import os
+    reg = _REG.get("r") or _REG.setdefault("r", Registry(os.environ.get(
+        "SNS_REGISTRY", Path(__file__).resolve().parent.parent / "config" / "registry.yaml")))
+    return {"q_suggestions": sugg, "q_lines": qflow.board_lines(case), "q_write": qflow.write_info(case, reg)}
+
+
+_REG = {}

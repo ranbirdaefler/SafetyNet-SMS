@@ -8,6 +8,11 @@ enabled: false   # off until Florian approves the texts; tests switch it on
 prefix_referred:   # approved by Florian, Sat 3 Oct
   en: "Keep going to the clinic. Do not stop to reply."
   sw: "Endelea kwenda kliniki. Usisimame ili ujibu."
+# Fixed first line on the health worker's OWN messages on a referred case (review E1): the first sentence of the
+# approved prefix above, system-added, not editable by her.
+prefix_chw_referred:
+  en: "Keep going to the clinic."
+  sw: "Endelea kwenda kliniki."
 ack_referred:      # approved by Florian, Sat 3 Oct
   en: "Thank you, your answer was passed on. Keep going to the clinic."
   sw: "Asante, jibu lako limefikishwa. Endelea kwenda kliniki."
