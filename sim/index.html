@@ -81,6 +81,8 @@
   .flow span.on { background:#ffd98a; color:#1d2329; border-color:#ffd98a; font-weight:600; }
   .flow i { color:#56606b; font-style:normal; }
   .recap { margin:4px 0 0; padding-left:18px; font-size:14px; }
+  .st-more { display:none; }
+  .st-title { cursor:pointer; }
   .st-note { display:block; margin-top:4px; font-size:12.5px; color:#c9cfd6; }
   .picker { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
   .picker button { font:inherit; font-size:14px; padding:5px 10px; border-radius:8px; border:0; background:#fff; color:#1d2329; cursor:pointer; }
@@ -94,6 +96,7 @@
   @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(240,160,32,.9); } 100% { box-shadow:0 0 0 12px rgba(240,160,32,0); } }
   @media (prefers-reduced-motion: reduce) { .msg.new { animation:none; } body.story-on .pane, body.story-on .logbox { transition:none; } }
   .ktime { font-size:12px; color:var(--muted); }
+  #idtoggle { font-size:12px; padding:2px 8px; }
   .why { margin-top:4px; font-size:13px; }
   .why summary { cursor:pointer; color:var(--sent); }
   .why div { white-space:pre-line; margin-top:2px; }
@@ -134,6 +137,9 @@
     .story { flex-wrap:wrap; padding:8px 12px; gap:6px 8px; flex:none; font-size:14px; }
     .story #storycap { flex-basis:100%; }
     .story .flow, .story .recap { display:none; }
+    #story:not(.expanded) .st-text, #story:not(.expanded) details, #story:not(.expanded) .st-note { display:none; }
+    .story .st-more { display:inline; color:#ffd98a; font-size:13px; margin-left:4px; }
+    #story.expanded .st-more { display:none; }
     .who { padding:8px 12px; }
     .thread { height:auto; flex:1; min-height:0; }
     .board { min-height:0; }
@@ -145,11 +151,12 @@
 </head>
 <body>
 <div class="banner" id="banner" hidden>Demo with synthetic data. Not for medical use. In deployment this runs offline on the health worker's phone; this public demo runs the same code on a cloud server so you can try it.</div>
-<header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span>
+<header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box.</span>
   <button type="button" class="tool play" id="play">Play the story, about 60 s</button>
   <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
   <button type="button" class="tool" id="reset">Reset demo</button>
-  <span class="ktime">Times: Kenya time (EAT)</span></header>
+  <span class="ktime">Times: Kenya time (EAT)</span>
+  <button type="button" class="tool" id="idtoggle" hidden>show message IDs</button></header>
 <div class="story" id="story" hidden><div id="storycap"></div><button type="button" id="storynext">Next</button><button type="button" id="storyclose">Close</button></div>
 <div class="mnote" id="mnote" role="button" tabindex="0"></div>
 <nav class="mtabs" id="mtabs">
@@ -194,14 +201,15 @@ const KENYA = new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Nairobi", hou
 const fmt = ts => KENYA.format(new Date(ts * 1000));
 
 function who(pane) {
-  if (pane.role === "parent") return storyOn ? (pane.select.value === cfg.parents[1] ? "Parent 2" : storyParent) : "Parent";
-  if (pane.role === "chp") return storyOn ? "Achieng" : "Health worker";
+  const named = storyOn && storyParent;
+  if (pane.role === "parent") return named ? (pane.select.value === cfg.parents[1] ? "Parent 2" : storyParent) : "Parent";
+  if (pane.role === "chp") return named ? "Achieng" : "Health worker";
   return "Facility";
 }
 function fromTo(pane, cls) {
   if (cls === "sent") return `${who(pane)} → SafetyNet`;
   if (pane.role === "parent") return `SafetyNet → ${who(pane)}`;
-  if (pane.role === "chp") return storyOn ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
+  if (pane.role === "chp") return storyOn && storyParent ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
   return "SafetyNet → Facility + CHA";
 }
 function bubble(pane, cls, body, meta, step, fresh, why) {
@@ -220,7 +228,8 @@ function bubble(pane, cls, body, meta, step, fresh, why) {
     d.appendChild(w);
   }
   pane.thread.appendChild(d);
-  pane.thread.scrollTop = pane.thread.scrollHeight;
+  if (storyOn && fresh && step && !pane.firstNew) pane.firstNew = d;
+  if (!storyOn) pane.thread.scrollTop = pane.thread.scrollHeight;
   if (cls === "recv" && primed && mobile.matches && pane.role !== activeRole) {
     const b = document.querySelector(`#mtabs button[data-role="${pane.role}"] .badge`);
     b.textContent = String((+b.textContent || 0) + 1);
@@ -368,6 +377,12 @@ document.getElementById("reset").onclick = async () => { await fetch("demo/reset
 document.getElementById("fire").onclick = async () => { await fetch("demo/fire-timeouts", {method: "POST"}); };
 fetch("config").then(r => r.json()).then(c => { if (c.public) {
   document.getElementById("banner").hidden = false; document.body.classList.add("public");
+  if (!new URLSearchParams(location.search).get("ids")) document.body.classList.add("clean");   // IDs hidden by default
+  const tg = document.getElementById("idtoggle");
+  tg.hidden = false;
+  const label = () => { tg.textContent = document.body.classList.contains("clean") ? "show message IDs" : "hide message IDs"; };
+  label();
+  tg.onclick = () => { document.body.classList.toggle("clean"); label(); };
   document.querySelector(".corner").textContent = "SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.";
 }
   // phone layout: banner, caption and attribution in one line that expands on tap
@@ -435,7 +450,8 @@ function chwView(board) {
   const b = panes.chp.el.querySelector(`.tabs button[data-tab="${board ? "board" : "thread"}"]`);
   if (b) b.click();
 }
-const HEADERS = { parent: () => `${storyParent} · parent · basic phone (SMS)`, chp: () => "Achieng · community health promoter · her phone",
+const HEADERS = { parent: () => storyParent ? `${storyParent} · parent · basic phone (SMS)` : "Parent · basic phone (SMS)",
+                  chp: () => storyParent ? "Achieng · community health promoter · her phone" : "Health worker · her phone",
                   facility: () => "Facility nurse + CHA (supervisor)" };
 function storyMode(on) {
   storyOn = on;
@@ -469,7 +485,7 @@ const STORY1 = [
     look: "Parent pane and the rule check.", roles: ["parent"], tab: "parent", nodes: ["P", "Rules"], expect: ["CG_TOLD"],
     run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); },
     after: ruleCard },
-  { title: "The model catches it", text: "The model reads the same text and flags it on Achieng's board: possible, vomits everything. She sees it first. It never changes what Amina is told. The model reads meaning, not word order: possible, vomits everything, shown to Achieng only.",
+  { title: "The model catches it", text: "The model reads meaning, not word order, and flags it on Achieng's board: possible, vomits everything. She sees it first; it never changes what Amina is told.",
     look: "the amber chip on Achieng's board.", roles: ["chp", "log"], tab: "chp", nodes: ["Model", "Achieng"], expect: [],
     ready: () => !!panes.chp.boardEl.querySelector(".chip.possible"), run: async () => { chwView(true); } },
   { title: "Convulsions: go now", text: "Amina texts 'sasa ana degedege' (now he's convulsing). The rules send 'go now' at once and alert the facility and the supervisor with a 4-digit code.",
@@ -490,7 +506,13 @@ const STORY1 = [
       await fetch("demo/fire-timeouts", { method: "POST" }); poll(); } },
 ];
 function scrollSpot() {
-  requestAnimationFrame(() => Object.values(panes).forEach(p => { p.thread.scrollTop = p.thread.scrollHeight; }));
+  // each pane shows the first bubble this step added (e.g. Amina's own message), else its newest content
+  requestAnimationFrame(() => Object.values(panes).forEach(p => {
+    const t = p.thread;
+    if (p.firstNew && t.contains(p.firstNew))
+      t.scrollTop += p.firstNew.getBoundingClientRect().top - t.getBoundingClientRect().top - 8;
+    else t.scrollTop = t.scrollHeight;
+  }));
 }
 // Step 1 rule check: the real live-list terms (fetched from the server), not a paraphrase
 async function ruleCard() {
@@ -561,17 +583,18 @@ const STORIES = [
       expect: ["CG_GO_NOW", "ALERT", "REFER_NOW"], run: async () => { if (storyCode) await sms(cfg.chps[0], "chp", storyCode + " 4"); } },
   ] },
 ];
-let STORY = STORY1, storyParent = "Amina";
+let STORY = STORY1, storyParent = null;
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 const NOTE = '<span class="st-note">Examples, not evidence: results on the test sets are in the README. Messages written by the team (AI-assisted).</span>';
 function caption(i) {
   const s = STORY[i];
   const flow = NODES.map(n => `<span class="${s.nodes.includes(n) ? "on" : ""}">${n === "P" ? storyParent : n}</span>`).join("<i>→</i>");
   document.getElementById("storycap").innerHTML =
-    `<span class="st-title">${i + 1}/${STORY.length} ${esc(s.title)}.</span>${esc(s.text)}<span class="st-look">Look at: ${esc(s.look)}</span>` +
+    `<span class="st-title">${i + 1}/${STORY.length} ${esc(s.title)}.</span><span class="st-more">(tap for more)</span><span class="st-text">${esc(s.text)}</span><span class="st-look">Look at: ${esc(s.look)}</span>` +
     `<details><summary>Why it matters</summary>${esc(s.why || LONG[i])}</details><div class="flow">${flow}</div>` + NOTE;
 }
 function pickStory(k) {
+  document.getElementById("story").classList.toggle("expanded", !mobile.matches);   // sentence open on desktop
   STORY = STORIES[k].steps; storyParent = STORIES[k].parent;
   storyMode(true);
   document.getElementById("storycap").innerHTML = `<span class="st-title">${esc(STORIES[k].name)}.</span>Press Next for each step.` + NOTE;
@@ -595,7 +618,7 @@ document.getElementById("play").onclick = async () => {
   document.querySelectorAll("#mtabs .badge").forEach(b => b.textContent = "");
   setPhone("parent", cfg.parents[0]); setPhone("chp", cfg.chps[0]); setPhone("facility", cfg.facilities[0].phone);
   chwView(false);
-  step = 0; storyCode = null;
+  step = 0; storyCode = null; storyParent = null;
   storyMode(true);
   spotlight(["parent", "chp", "facility", "log"]);
   document.getElementById("story").hidden = false;
@@ -618,6 +641,7 @@ document.getElementById("storynext").onclick = async () => {
   const s = STORY[i];
   stepSeen.clear();
   stepStart = { i: maxIn, o: maxOut };
+  Object.values(panes).forEach(p => { p.firstNew = null; });
   caption(i);
   spotlight(s.roles);
   showPane(s.tab);
@@ -631,6 +655,9 @@ document.getElementById("storynext").onclick = async () => {
     scrollSpot();
   }
 };
+document.getElementById("storycap").addEventListener("click", e => {
+  if (e.target.closest(".st-title, .st-more")) document.getElementById("story").classList.toggle("expanded");
+});
 function closeStory() {
   document.getElementById("story").hidden = true;
   storyMode(false);
