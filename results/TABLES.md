@@ -79,7 +79,7 @@ Discordant no-danger messages: b (keyword list only) = 0, c (ours only) = 3; exa
 _Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer._
 
 - (a) of the danger messages E2 misses, flagged by the board: 4/4 (39.8-100.0%)
-- (b) no-danger messages flagged by the board (extra reads): 7/13 (25.1-80.8%)
+- (b) no-danger messages flagged by the board: 7/13 (25.1-80.8%)
 
 ### (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker (pre-registered row)
 
@@ -150,7 +150,7 @@ Exploratory, per language (card language, never the text), (b) AI-generated Swah
 _Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer._
 
 - (a) of the danger messages E2 misses, flagged by the board: 2/2 (15.8-100.0%)
-- (b) no-danger messages flagged by the board (extra reads): 4/13 (9.1-61.4%)
+- (b) no-danger messages flagged by the board: 4/13 (9.1-61.4%)
 
 ### Y-test, Claude, caregiver (pre-registered row)
 
@@ -262,7 +262,7 @@ Exploratory, per language (card language, never the text), Y-test, Claude, careg
 _Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer._
 
 - (a) of the danger messages E2 misses, flagged by the board: 14/14 (76.8-100.0%)
-- (b) no-danger messages flagged by the board (extra reads): 19/55 (22.2-48.6%)
+- (b) no-danger messages flagged by the board: 19/55 (22.2-48.6%)
 
 ## Exploratory, not pre-registered: MASSIVE sw-KE
 

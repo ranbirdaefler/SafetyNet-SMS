@@ -8,3 +8,7 @@ Found when reading `results/TABLES.md` after the single tabulation. The tables a
 ## Fixed by text edit (Sat 3 Oct, after the planner's go)
 
 Both labels above were corrected in `results/TABLES.md` by a text edit only (6 table headers and the MASSIVE row label); no number was recomputed and the tabulation was not re-run.
+
+## Wording (text edit, separate commit after `results`)
+
+- Before: "- (b) no-danger messages flagged by the board (extra reads):" (3 times). After: "- (b) no-danger messages flagged by the board:". Reason: "flagged" is the term used everywhere; no number changed.

@@ -99,7 +99,7 @@ BOARD_LABEL = ("Exploratory, added after freeze, before tabulation: deployed boa
 def board_rows(kw, bands):
     """kw: {id: harness row} for E2; bands: {id: {"label", "band"}}. Returns
     (a) of the danger messages E2 misses, how many the board flags (possible or unsure);
-    (b) how many no-danger messages the board flags (the health worker's extra reads)."""
+    (b) how many no-danger messages the board flags."""
     missed = [i for i, r in kw.items() if r["label"] == "danger" and not r["triggered"]]
     caught_by_board = sum(bands[i]["band"] in ("possible", "unsure") for i in missed)
     nod = [i for i, r in kw.items() if r["label"] == "no_danger"]
