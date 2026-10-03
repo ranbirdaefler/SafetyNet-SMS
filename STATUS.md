@@ -1,6 +1,6 @@
 # STATUS
 
-**Updated:** Sat 3 Oct · **Block:** B3 done (local), next B4 · **Last tag:** `prereg`
+**Updated:** Sat 3 Oct · **Block:** B5 done, `slice-chw` tagged; next D1 (parent door) · **Last tag:** `slice-chw`
 
 ## Seal record (commit times are push times from the local clock; GitHub push record is the evidence)
 | Item | Commit | Time (ET) | Notes |
@@ -23,8 +23,12 @@
 
 - **B2 live on the Pi** (florian@192.168.1.208, `sh scripts/pi_run.sh`, port 8000): desktop -> Pi HELP round trip 39-63 ms (3 curl runs); unregistered CHP number -> UNREGISTERED; simulator at http://192.168.1.208:8000/ round trip checked in the desktop browser. Must-stay-RED suite passes on the Pi.
 
+- B4 717125f: CHP sessions, shared age/duration/MUAC regex (word lists in `app/textparse.py` docstring), keyword list v0 typed verbatim (`app/lexicon.py`), shared stage + C4 lists, full ASK_SIGNS (394 chars, 3 segments), numbered parser, REFER_NOW. Text T-tests T13/T15/T16/T18/T20/T22/T23/T25-T29/T35 pass; 54 pytest checks pass.
+- B5 1938809: ALERT to facility + CHA (written before REFER_NOW), facility code -> ARRIVED (CHP + CHA) then ACK; unknown code or unregistered sender gets nothing.
+- `slice-chw`: run over the Pi simulator in the browser (18m homa siku 3 -> ASK_SIGNS -> "7873 5" -> ALERT x2 + REFER_NOW -> facility "7873" -> ARRIVED + ACK). Pi clock America/New_York.
+
 ## Open issues
 - none
 
 ## Next
-B2: generic `{from, to, body}` endpoint + outbox + pre-seeded registry; built and tested locally, deployed to the Pi once SSH works.
+D1: parent policy (C1) on v0 + shared stage, case link, CHP_CALL + ASK_SIGNS, 5 caregiver strings + allowlist -> `slice`.

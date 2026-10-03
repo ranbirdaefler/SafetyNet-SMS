@@ -120,7 +120,7 @@ async function poll() {
       } else {
         lastOut = Math.max(lastOut, m.id);
         for (const p of Object.values(panes))
-          if (p.select.value === m.recipient || (p.role === "facility" && phonesFor("facility").includes(m.recipient))) bubble(p, "recv", m.body, `${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
+          if (p.select.value === m.recipient || (p.role === "facility" && phonesFor("facility").includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
       }
     }
   } finally { busy = false; }
