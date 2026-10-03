@@ -1,0 +1,35 @@
+{
+ "base": 1657,
+ "gen": 710,
+ "duration_negatives_dropped_regex_at_or_over_cutoff": 1,
+ "massive_train_after_filter": 11397,
+ "massive_train_used": 1000,
+ "afrisenti_train_after_filter": 1693,
+ "afrisenti_train_used": 1693,
+ "removed": {
+  "probe": 0,
+  "ydev": 0,
+  "diag": 0,
+  "dup": 86
+ },
+ "total": 5473,
+ "by_source": {
+  "x_train_or_v2": 1657,
+  "contrast": 280,
+  "contrast_denial": 280,
+  "duration_negative": 149,
+  "massive_train": 995,
+  "afrisenti_train": 1684,
+  "sms_noise": 428
+ },
+ "present_per_head": {
+  "convulsions": 222,
+  "not_drink_feed": 252,
+  "vomits_everything": 215,
+  "sleepy_unconscious": 297,
+  "blood_stool": 225,
+  "cough_long": 144,
+  "diarrhoea_long": 166,
+  "fever_long": 160
+ }
+}

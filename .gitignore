@@ -12,3 +12,4 @@ data/*.db
 models/
 data/ext/
 sim/ort/
+data/x_train_v3.jsonl
