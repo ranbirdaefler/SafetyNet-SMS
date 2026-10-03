@@ -58,4 +58,4 @@ def door_off(store, reg, sender):
     cha = reg.cha_of_chp(chp) if chp else reg.default_cha
     body = M.alert(code, None, ["text not read"], chp["chu"] if chp else "-", chp["id"] if chp else "-", parent=True)
     store.send(cha["phone"], "cha", "ALERT", body, code)
-    store.send(sender, "parent", "CG_GO_NOW_U", M.CG_GO_NOW_U.format(code=code), code)
+    store.send(sender, "parent", "CG_GO_NOW_U", M.parent_text("CG_GO_NOW_U", reg.parent_lang(sender), code=code), code)

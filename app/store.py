@@ -17,14 +17,15 @@ CREATE TABLE IF NOT EXISTS outbox (id INTEGER PRIMARY KEY, ts REAL, recipient TE
 def _check_parent(msg_id, body):
     """Allowlist (C3): a parent-line SMS must equal one of the 5 caregiver templates after slot fill."""
     import re
-    from app.messages import PARENT_ALLOWLIST
-    tpl = PARENT_ALLOWLIST.get(msg_id)
-    if tpl is None:
+    from app.messages import PARENT_ALLOWLIST, parent_variants
+    if msg_id not in PARENT_ALLOWLIST:
         raise ValueError(f"not allowlisted for the parent line: {msg_id}")
-    pat = re.escape(tpl).replace(re.escape("{facility}"), r"[^\n]{1,28}").replace(re.escape("{code}"), r"\d{4}")
-    pat = pat.replace(re.escape("{time}"), r"\d{2}:\d{2}")
-    if not re.fullmatch(pat, body):
-        raise ValueError(f"parent SMS does not match its template: {msg_id}")
+    for tpl in parent_variants(msg_id):
+        pat = re.escape(tpl).replace(re.escape("{facility}"), r"[^\n]{1,28}").replace(re.escape("{code}"), r"\d{4}")
+        pat = pat.replace(re.escape("{time}"), r"\d{2}:\d{2}").replace(re.escape("{minutes}"), r"\d{1,3}")
+        if re.fullmatch(pat, body):
+            return
+    raise ValueError(f"parent SMS does not match its template: {msg_id}")
 
 
 class Store:

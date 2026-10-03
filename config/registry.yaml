@@ -32,4 +32,4 @@ parents:
   - {phone: "+254733000002", chp: "07"}
   - {phone: "+254733000003", chp: "08"}
   - {phone: "+254733000004", chp: null}   # registered, no CHP assigned (D7)
-  - {phone: "+254733000005", chp: "09"}
+  - {phone: "+254733000005", chp: "09", lang: en}   # lang: sw (default) or en, for CG_TOLD

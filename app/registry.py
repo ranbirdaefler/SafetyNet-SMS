@@ -39,3 +39,8 @@ class Registry:
 
     def facility_of_chp(self, chp):
         return self.facilities[self.chu[chp["chu"]]["facility"]] if chp else self.facility
+
+    def parent_lang(self, phone):
+        """Registered language for CG_TOLD: sw (default) or en. Unknown numbers get sw."""
+        p = self.parents.get(phone)
+        return (p or {}).get("lang", "sw")

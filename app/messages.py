@@ -100,3 +100,47 @@ FOLLOWUP_HOME = "check on child due {date}. Follow your chart booklet."
 
 BOARD_POSSIBLE = "model: possible {sign}, check"
 BOARD_UNSURE = "model unsure: please read"
+
+
+# ---------- parent language (CLAUDE.md rule 8, Florian 3 Oct) ----------
+# Swahili parent strings are loaded only from config/parent_sw.json (fixed strings approved by Florian). Until that
+# file exists every parent SMS stays English. CG_TOLD goes in the parent's registered language (sw default, or en);
+# CG_GO_NOW, CG_GO_NOW_U, CG_TIMEOUT and CG_OOS are bilingual: Swahili first, English below (authoritative).
+SW_PARENT = {}
+BILINGUAL = ("CG_GO_NOW", "CG_GO_NOW_U", "CG_TIMEOUT", "CG_OOS")
+SEGMENT_LIMIT = {"en": {"CG_TOLD": 2, "CG_GO_NOW": 1, "CG_GO_NOW_U": 1, "CG_TIMEOUT": 1, "CG_OOS": 1},
+                 "sw": {"CG_TOLD": 3},
+                 "bi": {"CG_GO_NOW": 2, "CG_GO_NOW_U": 2, "CG_TIMEOUT": 2, "CG_OOS": 3}}
+
+
+def load_sw(path=None):
+    import json
+    from pathlib import Path
+    p = Path(path) if path else Path(__file__).resolve().parent.parent / "config" / "parent_sw.json"
+    SW_PARENT.clear()
+    if p.exists():
+        SW_PARENT.update(json.loads(p.read_text(encoding="utf-8")))
+
+
+def parent_template(msg_id, lang="sw"):
+    en = PARENT_ALLOWLIST[msg_id]
+    if msg_id not in SW_PARENT:
+        return en
+    if msg_id == "CG_TOLD":
+        return SW_PARENT[msg_id] if lang == "sw" else en
+    return SW_PARENT[msg_id] + "\n" + en
+
+
+def parent_text(msg_id, lang="sw", **slots):
+    return parent_template(msg_id, lang).format(**slots)
+
+
+def parent_variants(msg_id):
+    """Every template the parent line may send for this message ID."""
+    v = [PARENT_ALLOWLIST[msg_id]]
+    if msg_id in SW_PARENT:
+        v.append(parent_template(msg_id, "sw"))
+    return v
+
+
+load_sw()

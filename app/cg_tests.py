@@ -350,10 +350,15 @@ def _segments(s):
 
 def lint_parent(msgs, facility_max="X" * 28):
     """1-4: allowlist, GSM-7, segments at max fill, blocked tokens, sign words only inside DS, repeats after go-now."""
-    for mid, tpl in M.PARENT_ALLOWLIST.items():
-        full = tpl.format(facility=facility_max, code="9999", time="23:59")
-        if not set(full) <= GSM7 or _segments(full) > (2 if mid == "CG_TOLD" else 1):
-            return f"{mid}: GSM-7 or segment count"
+    for mid in M.PARENT_ALLOWLIST:
+        for kind, tpl_v in [("en", M.PARENT_ALLOWLIST[mid])] + (
+                [("sw" if mid == "CG_TOLD" else "bi", M.parent_template(mid, "sw"))] if mid in M.SW_PARENT else []):
+            full = tpl_v.format(facility=facility_max, code="9999", time="23:59", minutes="120")
+            if not set(full) <= GSM7 or _segments(full) > M.SEGMENT_LIMIT[kind][mid]:
+                return f"{mid} ({kind}): GSM-7 or segment count"
+            if kind == "bi" and not tpl_v.endswith("\n" + M.PARENT_ALLOWLIST[mid]):
+                return f"{mid}: the English line must come last, unchanged"
+        tpl = M.PARENT_ALLOWLIST[mid]
         low = tpl.lower()
         for b in BLOCKED:
             if re.search(r"(?<!\w)" + re.escape(b) + r"(?!\w)", low):

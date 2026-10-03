@@ -144,8 +144,14 @@ class DoorFlow:
             return self.awaiting(phone, case, body)
         return self.new(phone, body)                                          # NEW, or CLOSED -> new code (D25)
 
+    def wait_minutes(self):
+        """{minutes} in CG_TOLD: the reply window; in demo mode the demo timeout rounded up to whole minutes (min 1)."""
+        import math
+        return max(1, math.ceil(self.due_seconds() / 60))
+
     def send_parent(self, phone, msg_id, code, time_txt=None):
-        body = M.PARENT_ALLOWLIST[msg_id].format(facility=self.fac(), code=code, time=time_txt or "")
+        body = M.parent_text(msg_id, self.reg.parent_lang(phone), facility=self.fac(), code=code, time=time_txt or "",
+                             minutes=self.wait_minutes())
         self.store.send(phone, "parent", msg_id, body, code)
 
     # ---------- D1 / D2: unregistered ----------
