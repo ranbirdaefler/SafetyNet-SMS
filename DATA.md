@@ -85,7 +85,11 @@ The training and development data were written by GPT; every test set was writte
 | WHO/UNICEF, *Caring for the sick child in the community* (2011): CHW manual (S1) and chart booklet (S2) | https://www.who.int/publications/i/item/9789241548045 | © WHO 2011, all rights reserved (manual copyright page) | | Rule logic only (danger signs, thresholds, follow-up days, with page citations in `config/protocol.yaml`); no text reproduced |
 | MASSIVE 1.1 sw-KE test split | as above | CC BY 4.0 | 1,000 of 2,974 utterances, fixed seed 20261003 | Exploratory false-alarm rows only (MASSIVE row and diagnosis D5) |
 | FLORES-200 swh_Latn devtest | Meta, NLLB Team 2022, the original release https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz (licence: https://github.com/facebookresearch/flores, README "Licenses") | CC BY-SA 4.0 | 1,012 sentences | Diagnosis D5 only (everyday human-written Swahili, not about sick children). The gated Hugging Face copy was not used |
-| AfriSenti swa test split | AfriSenti-SemEval 2023, https://github.com/afrisenti-semeval/afrisent-semeval-2023 (data/swa/test.tsv) | CC BY 4.0 | 748 tweets | Diagnosis D5 only |
+| AfriSenti swa test split | AfriSenti-SemEval 2023, https://github.com/afrisenti-semeval/afrisent-semeval-2023 (data/swa/test.tsv) | Dataset card: CC BY 4.0; the paper restricts commercial and state-actor use without the creators' approval. We found the restriction after v3 was trained. | 748 tweets | Diagnosis D5 and the v3 evaluation |
+| AfriSenti swa train / dev splits | same repo (data/swa/train.tsv, dev.tsv) | as above | 1,810 / 453 tweets (1,693 train tweets kept after the health filter) | v3 training (no-danger examples) / v3 thresholds |
+| MASSIVE 1.1 sw-KE train (v3) | as above | CC BY 4.0 | 1,000 of 11,397 after the health filter | v3 training (no-danger examples) |
+| MASSIVE sw-KE validation, FLORES-200 swh_Latn dev | as above | CC BY 4.0 / CC BY-SA 4.0 | 2,033 / 997 | v3 board thresholds only (FLORES is never trained on) |
+| Nekoto et al., "Participatory Research for Low-resourced Machine Translation", Findings of EMNLP 2020 | https://aclanthology.org/2020.findings-emnlp.195/ | | | Cited (README, Local languages) |
 | Diagnosis contrast pairs (synthetic) | gpt-5.5, `gen/diag/` | ours | 40 pairs | Diagnosis D2 only (denial vs present) |
 | Fresh test set y_test2 (synthetic) | claude-opus-5-5, seed 7007, `tests/y_test2.jsonl` | ours | 150 (80 / 55 / 15) | Sealed unopened (64a4fff, SHA-256 da065131...8035) for a possible v3; not used if v3 does not run |
 

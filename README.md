@@ -25,7 +25,7 @@ The model runs on her phone. Where phones fail, the same model runs on a county 
 
 The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
 
-> The same 90 MB model runs offline in a phone browser (iPhone, Safari: p95 170 ms; a best case, since entry-level Android phones are slower). On a Raspberry Pi 5 limited to 1 core, the whole service peaked at 549 MB of RAM, about a quarter of a 2 GB phone's memory (Android itself uses part of it): p95 516 ms per parent message, end to end. Not yet measured on an entry-level Android; no phone app was built this weekend.
+> Raspberry Pi 5 limited to 1 core: the model answers in 215 ms (p95); a full round trip through the demo service takes 530 ms. Peak memory: model 350 MB; whole demo service 569 MB, including the web simulator a phone app wouldn't carry. In a phone browser (iPhone, Safari) the 90 MB board model ran at p95 170 ms (measured with the v2 board file; a best case, since entry-level Android phones are slower). Not yet measured on an entry-level Android; no phone app was built this weekend.
 
 **In a phone browser (P4).** The shipped board model (v2, trimmed, 8-bit weights, 89.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 109 ms, p95 170 ms; model load 1.3 s (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
 
@@ -74,7 +74,7 @@ The model reads every message and puts the urgent ones in front of the health wo
 
 It reads parent text only and adds one of three board lines, from its calibrated top danger probability: "model: possible {sign}, check" (at or above hi), "model unsure: please read" (between lo and hi), or nothing (below lo). The board sorts rule-flagged danger first, then "possible", then "unsure", then the rest, oldest first within each group. It sends no SMS and changes no case status; a model failure just leaves no model line. Tested: the parent reply is identical with the model on and off (CG1 to CG18 both ways).
 
-Model: v2, vocabulary-trimmed with 8-bit weights (89.7 MB). Calibration: one temperature per head, fit on X-val (held out from the GPT-written training data; never Y-dev or a test set):
+Until v3 (below), the board ran v2, vocabulary-trimmed with 8-bit weights (89.7 MB). Calibration: one temperature per head, fit on X-val (held out from the GPT-written training data; never Y-dev or a test set):
 
 | Head | Temperature | ECE before | ECE after |
 |---|---|---|---|
@@ -103,6 +103,26 @@ Thresholds, set on Y-dev (GPT-written): lo = 0.068 (the lowest Y-dev danger scor
 | 0.5 | 0.95 | 9.2% | 2 | 2 |
 
 Board threshold hi = 0.9 (chosen on Y-dev before the freeze, Sat 3 Oct). At hi = 0.9904, no Y-dev no-danger message was marked 'possible', but 30.8% of messages went to 'please read' and 'possible' almost never fired. At hi = 0.9, review load falls to 12.5%, at the cost of 2 of 45 Y-dev no-danger messages marked 'possible'. On the board a false 'possible' only moves a case up the health worker's list: no SMS is sent and no case status changes. A review load of about a third of all messages risks the health worker ignoring the flags (mTrac's on-time volunteer reporting fell from 60% to 9%; DFID 2014 via SDSN TReNDS 2018). lo = 0.068 is unchanged, so no Y-dev danger message falls below it. The full sweep is in the table above.
+
+### v3 on the board (after results, exploratory)
+
+The board now runs **v3**, a third training run made after the results were tabulated. Its criteria, splits and threshold rule were committed before any v3 data or training (`v3/CRITERIA.md`), and it was evaluated once, together with v2, on splits it had never seen. The parent line is unchanged: the keyword list still decides what the parent is told.
+
+v3 added, to the v2 training data: gpt-5.5 contrast pairs (the same message with a sign present and denied, extra "very sleepy" denials), duration messages under the cut-offs, human-written Swahili with no health content as no-danger examples (MASSIVE sw-KE train and AfriSenti swa train), and SMS-style noise. v3 includes AfriSenti training data; a ministry deployment would retrain without it or seek the creators' approval.
+
+| Evaluation split (never used for training or thresholds) | Keywords + v2 board (as shipped) | Keywords + v2 board (re-tuned) | Keywords + v3 board |
+|---|---|---|---|
+| Fresh test set y_test2 (Claude-written, 80 danger): danger missed | 2 | 2 | 2 |
+| y_test2 (55 no-danger): flagged by the board | 18 | 18 | 2 |
+| Everyday Swahili, MASSIVE test (1,000): flagged | 62.6% | 62.6% | 0.0% |
+| Everyday Swahili, FLORES-200 devtest (1,012; FLORES was never trained on): flagged | 70.6% | 70.6% | 0.1% |
+| Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 80.5% | 0.0% |
+
+v3 passed all three pre-declared criteria (caregiver tests green with it on; no more danger missed than with v2; at most 35% of each everyday split flagged). v2 with thresholds re-chosen by the same rule kept its safe lower threshold and still flagged 60 to 80% of everyday Swahili: thresholds alone could not fix the flood without giving up safety; retraining did. The v3 board thresholds (lo 0.849, hi 0.997) were set by the rule on separate threshold splits.
+
+Reported, not used for any decision: on the three original sealed sets, keywords + the v3 board missed one danger message on each of (a), (b) and Y-test, where keywords + the v2 board (whose flood flagged almost everything) missed none.
+
+On our AI-written tests the v3 board flags 2 of 55 harmless messages on the fresh test set; on everyday Swahili sentences that aren't about sick children it flags 0 to 1 per source. It has never seen a real parent's text; its thresholds have to be set on real parents' texts before use.
 
 ## Safety contract and preconditions
 
@@ -152,6 +172,10 @@ The tool never decides against care. Only a health worker can close a case, and 
 
 When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure), a model that fails to load: each one ends in "go now" for the parent or in the health worker being told, with a deadline. If a caregiver safety test fails at start-up, the parent line falls back to a fixed "go to the nearest health facility NOW" reply and the CHA is told; it is never silent.
 
+### Data sovereignty
+
+Our design is consistent with Masakhane's stated principle that Africans should decide what data represents their communities, keep ownership of it and know how it is used: no message text leaves the deployment, and any future Kenyan-language data would be built with and owned by its speakers.
+
 ### Drift and bias monitor
 
 **Drift and bias monitor (DESIGN).** Each case logs the model's flags next to the health worker's checklist answers. A weekly count of disagreements, by sign and by language, goes to the CHA. A rising count means the model is drifting or failing a group of parents, and is the trigger to review it.
@@ -194,6 +218,7 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - **P2.** P2 (decided Sat 3 Oct after the freeze, on Y-dev only, before any test tabulation): letting the model add a 'go now' to the parent line was not adopted. Every variant failed CG5/CG5b (the models misread Swahili denials) and raised false 'go now' by more than 2 points on Y-dev. The model stays on the health worker's board only.
 - **Parent languages.** Parent messages became bilingual / in the parent's registered language (Florian, Sat 3 Oct, after the freeze; the pre-registered evaluation scores the go-now decision, not the wording). Swahili messages machine-translated (gpt-5.5) and back-translation-checked (claude-opus-5-5); native-speaker and clinician review required before any deployment.
 - **Waiting time.** CG_TOLD now states a waiting time in minutes instead of a clock time, because Swahili clock time runs 6 hours off standard time. The English version grows from 2 to 3 SMS segments at the longest window (120 minutes).
+- **v3 (after results).** A third training run (v3) with denial pairs, duration negatives, human-written Swahili no-danger text (MASSIVE train, AfriSenti train) and SMS noise, under criteria committed before training (`v3/CRITERIA.md`), evaluated once with v2 on unseen splits; it passed and replaced v2 on the board only. The parent line is unchanged. The deployment-variant rule was also widened: the original rule checked agreement only on AI-written text (Y-dev), which missed that the trimmed v2 file raised more false alarms on MASSIVE than the full v2 (59 vs 49 per 1,000); the v3 file was also checked on human-written threshold splits (100% flag agreement).
 - **Exploratory row (not pre-registered).** MASSIVE sw-KE: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.
 
 ## Word lists added on Saturday (from the protocol sources only)
@@ -223,6 +248,20 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - The parent needs access to any phone, often shared; women are less likely than men to own one (DATA.md, F2).
 - The parent must read Swahili or English (replies: see the Swahili note).
 - Facilities must text the arrival code back; a facility that doesn't leaves the case open and escalates to the CHA (BUILT).
+
+## Local languages
+
+AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper only as an evaluation language, so we treat Swahili as the one language we can test today and say so plainly. Masakhane's own work shows how the rest should be done: community members translated their own data and evaluated the outputs (Nekoto et al., Findings of EMNLP 2020), and Swahili speech was collected on Mozilla Common Voice with students from Maseno and Kabarak universities (Nakatumba-Nabende et al., 2024). We couldn't do that this weekend; the pilot is designed to.
+
+**Model provenance.** The Swahili classifier is fine-tuned from AfroXLMR-base, an MIT-licensed model that Jesujoba Alabi, David Adelani, Marius Mosbach and Dietrich Klakow at Saarland University adapted to 17 African languages, Swahili among them (Alabi et al., COLING 2022). Alabi and Adelani are both co-authors of Masakhane's MasakhaNER benchmark, which Adelani first-authored.
+
+## What happens next
+
+- **Clinician advice channel (DESIGN, not built):** a clinician sees an escalated case on a smartphone and sends advice to the health worker only, never automatically to the parent; never in the path of a 'go now' case; logged with the clinician's name; designed not to add to clinic load, since clinics are already overloaded.
+- **Speech and more languages:** NLLB-200, MMS, Common Voice and FLEURS for voice notes from parents who cannot read, Kikuyu and Luo through MMS, and translating replies; each needs native-speaker review before use.
+- **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.
+
+**Related work.** Masakhane Hub's LINGUA Africa 2026 grants include health language-AI work: WHO Kenya's AFYA-LINGUA (Kiswahili plus nine languages), IDI Uganda's Sasa (eight languages including Kiswahili), and Ushahidi's health-and-education resources for Tonga, Tjwao and Doma (https://www.microsoft.com/en-us/research/academic-program/lingua-africa-open-call/).
 
 ## Reuse in another setting
 
