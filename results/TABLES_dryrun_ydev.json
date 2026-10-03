@@ -1,0 +1,192 @@
+{
+ "sets": {
+  "ydev": {
+   "registered": {
+    "set": "ydev",
+    "danger": 60,
+    "no_danger": 45,
+    "shared_path_messages": 10,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 45
+     },
+     "never go now": {
+      "missed": 60,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 10,
+      "missed_cp95": [
+       8.3,
+       28.5
+      ],
+      "needless": 2,
+      "needless_cp95": [
+       0.5,
+       15.1
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_dev-0019",
+       "y_dev-0025",
+       "y_dev-0028",
+       "y_dev-0031",
+       "y_dev-0041",
+       "y_dev-0047",
+       "y_dev-0067",
+       "y_dev-0073",
+       "y_dev-0079",
+       "y_dev-0102",
+       "y_dev-0046",
+       "y_dev-0053"
+      ]
+     },
+     "ours": {
+      "missed": 4,
+      "missed_cp95": [
+       1.8,
+       16.2
+      ],
+      "needless": 6,
+      "needless_cp95": [
+       5.1,
+       26.8
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_dev-0007",
+       "y_dev-0073",
+       "y_dev-0079",
+       "y_dev-0102",
+       "y_dev-0017",
+       "y_dev-0046",
+       "y_dev-0051",
+       "y_dev-0076",
+       "y_dev-0078",
+       "y_dev-0084"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 1,
+     "c_ours_only": 5,
+     "mcnemar_p": 0.2188
+    },
+    "safety_switch": false
+   },
+   "language": {
+    "keyword_E2": {
+     "English": {
+      "danger_caught": 17,
+      "danger": 19,
+      "caught_cp95": [
+       66.9,
+       98.7
+      ],
+      "false_go_now": 1,
+      "no_danger": 18,
+      "false_cp95": [
+       0.1,
+       27.3
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 18,
+      "danger": 23,
+      "caught_cp95": [
+       56.3,
+       92.5
+      ],
+      "false_go_now": 1,
+      "no_danger": 19,
+      "false_cp95": [
+       0.1,
+       26.0
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 15,
+      "danger": 18,
+      "caught_cp95": [
+       58.6,
+       96.4
+      ],
+      "false_go_now": 0,
+      "no_danger": 8,
+      "false_cp95": [
+       0.0,
+       36.9
+      ]
+     }
+    },
+    "ours_fp32": {
+     "English": {
+      "danger_caught": 19,
+      "danger": 19,
+      "caught_cp95": [
+       82.4,
+       100.0
+      ],
+      "false_go_now": 4,
+      "no_danger": 18,
+      "false_cp95": [
+       6.4,
+       47.6
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 21,
+      "danger": 23,
+      "caught_cp95": [
+       72.0,
+       98.9
+      ],
+      "false_go_now": 1,
+      "no_danger": 19,
+      "false_cp95": [
+       0.1,
+       26.0
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 16,
+      "danger": 18,
+      "caught_cp95": [
+       65.3,
+       98.6
+      ],
+      "false_go_now": 1,
+      "no_danger": 8,
+      "false_cp95": [
+       0.3,
+       52.7
+      ]
+     }
+    }
+   },
+   "board": {
+    "label": "Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.",
+    "a_e2_missed_danger_flagged_by_board": 10,
+    "a_of": 10,
+    "a_cp95": [
+     69.2,
+     100.0
+    ],
+    "b_no_danger_flagged": 11,
+    "b_of": 45,
+    "b_cp95": [
+     12.9,
+     39.5
+    ]
+   }
+  }
+ }
+}
