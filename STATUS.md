@@ -81,3 +81,9 @@ On the go:
 1. `train/freeze_record.py models/onnx/fp32 models/onnx/trim10k_wq8`, then commit FREEZE.md, tag `freeze` and push.
 2. `train/run_tests.py` (+ v2 arm), `train/massive_row.py` and `train/board_row.py` on the Pi.
 3. Sleep, then the B16 tables.
+
+## Live demo build (Sat 3 Oct, ~16:15 ET)
+- Public mode committed (84773a0). Drafts for review: hf/model_card.md, space/README.md (199517f). Nothing pushed to HF.
+- Clean clone of main + `pip install -r requirements-demo.txt` (Python 3.11): service starts without the model (board model absent), door on, Swahili convulsions message goes to GO NOW with alerts.
+- Local docker build of space/Dockerfile with TAG=main (the `submission` tag doesn't exist yet) and the v3 files mounted: SHA-256 ok for both files, public: true, door on, banner shown, board shows the v3 band, /phone 200, /admin/reload and /phone/parity 404, a 1,001-char body gets 413, /demo/reset 200.
+- Pending: iPhone parity tap (Florian); "Try it in 60 seconds" section; `submission` tag; HF push only after Florian's OK.
