@@ -1,6 +1,6 @@
 # STATUS
 
-**Updated:** Sat 3 Oct · **Block:** B5 done, `slice-chw` tagged; next D1 (parent door) · **Last tag:** `slice-chw`
+**Updated:** Sat 3 Oct · **Block:** D1 done, `slice` tagged; next B9 (CHW rest) · **Last tag:** `slice`
 
 ## Seal record (commit times are push times from the local clock; GitHub push record is the evidence)
 | Item | Commit | Time (ET) | Notes |
@@ -27,8 +27,11 @@
 - B5 1938809: ALERT to facility + CHA (written before REFER_NOW), facility code -> ARRIVED (CHP + CHA) then ACK; unknown code or unregistered sender gets nothing.
 - `slice-chw`: run over the Pi simulator in the browser (18m homa siku 3 -> ASK_SIGNS -> "7873 5" -> ALERT x2 + REFER_NOW -> facility "7873" -> ARRIVED + ACK). Pi clock America/New_York.
 
+- D1 abfd316: parent door. `app/door.py` `parent_policy()` (the one function live + harness call, F5): v0 caregiver rows + duration regex + shared stage (ignores cues; chest -> "breathing complaint") + C4 + under 2 m; C9 scope order. Paths D1/D2 (unregistered), D3, D4 (CHP_CALL + full ASK_SIGNS, then CG_TOLD), D5 (no age), D6, D7, D8, D13-D15, D16/D17 link, D23. Send-time guard: a parent SMS must match one of the 5 templates. 61 pytest checks pass.
+- `slice`: run on the Pi simulator in the browser (parent text -> CG_TOLD + CHP_CALL + ASK_SIGNS -> CHP "4006 5" -> ALERT x2 + REFER_NOW + CG_GO_NOW -> facility "4006" -> ARRIVED + ACK); parent "degedege" -> ALERT x2 + CHP_GO_NOW + CG_GO_NOW checked by curl on the Pi.
+
 ## Open issues
-- none
+- Wording to confirm (planner/Florian): D7 (no CHP assigned) sends CG_GO_NOW, whose fixed text says "Your health worker has been told" although no CHP exists (the CHA is told). ALERT for a parent with no CHP reads "CHU -, CHP -".
 
 ## Next
-D1: parent policy (C1) on v0 + shared stage, case link, CHP_CALL + ASK_SIGNS, 5 caregiver strings + allowlist -> `slice`.
+B9: CHW rest (A1 24 h digit window, A3-A5, timers, M4, NON_RED, option 8), T22-T35 -> then D2a (timeouts, C2, C4, scope, X6, F2), D2b (CG1-CG18, lints).
