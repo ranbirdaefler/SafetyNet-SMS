@@ -378,7 +378,7 @@ def test_tier2_suggest_order_skips_and_wake_before_drink(tier2):
     ids_ = [s["id"] for s in suggest(st, bank, "ASK_SIGNS")]
     assert ids_ == ["CK_VOMIT", "CK_FITS"]                                   # DRINK waits for WAKE
     st2 = {**st, "q": {"asked": ["CK_WAKE"]}, "fields": {"vomits_everything": "PRESENT"}}
-    assert [s["id"] for s in suggest(st2, bank, "ASK_SIGNS")] == ["CK_DRINK", "CK_FITS"]
+    assert [s["id"] for s in suggest(st2, bank, "ASK_SIGNS")] == ["CK_DRINK"]          # 2 offered at most
     assert all("COUGH" not in s["id"] for s in suggest(st, bank, "ASK_SIGNS"))   # durations only if scored >= 0.5
     r = suggest(st, bank, "ASK_SIGNS")[0]["reason"]
     assert "score 0.80" in r and "WHO/UNICEF" in r
@@ -475,3 +475,12 @@ def test_tier2_m1_no_drafts_for_newborn_or_no_age(tier2):
     e = Env(PROTO)
     code = e.send(P1, "parent", "mtoto wa wiki 3 ana upele")[0]["case_code"]
     assert qflow.suggestions(e.store.case(code)) == []
+
+
+
+def test_tier2_at_most_two_checks_offered(tier2):
+    bank = QL.approved_questions()
+    st = {"age_months": 24, "u2m": False, "q": {"asked": [], "declined": ["CK_FITS", "CK_WAKE"]}}
+    assert suggest(st, bank, "ASK_SIGNS") == []
+    st = {"age_months": 24, "u2m": False, "q": {"asked": ["CK_FITS"], "declined": []}}
+    assert len(suggest(st, bank, "ASK_SIGNS")) == 1

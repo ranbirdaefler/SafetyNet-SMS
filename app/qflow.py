@@ -151,7 +151,8 @@ def on_check_answer(flow, phone, case, body, item, now):
     if go:
         if n == 1:
             st.setdefault("fields", {})[sign] = PRESENT
-        reason = f"{LABEL[sign]} (parent check)" if n == 1 else f"not sure: {LABEL[sign]} (parent check)"
+        reason = (f"parent report, not checked: {LABEL[sign]}" if n == 1
+                  else f"parent report, not checked: not sure, {LABEL[sign]}")
         flow.store.update_case(case["code"], state=st)
         flow.go_now(phone, chp, st, [reason], code=case["code"])
         return case["code"]

@@ -14,11 +14,13 @@ World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 t
 
 ## Try it in 60 seconds
 
-Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Three messages written by the team, not taken from any test set:
+Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Press **Play the story** and pick one; each step waits for you to press Next. The messages were written by the team (AI-assisted) and appear in no test set; they are examples, not evidence.
 
-1. **Instant "go now".** In the Parent pane, send `mtoto wangu wa miaka 2 ana degedege` ("my 2-year-old is having convulsions"). The parent gets the fixed go-now message at once; the facility, the CHA and the health worker get the referral alert.
-2. **A board flag the keywords missed.** Send `mtoto wa mwaka 1 kila kitu anachokula anatapika hata maji` ("1-year-old vomits everything she eats, even water"). The keyword list doesn't trigger, so the parent is told the health worker will contact them (and to go to the facility if no one does in time), and the health worker gets "call now" with the sign checklist. Her board shows the model's flag, "model: possible vomits everything, check", so she reads that case first.
-3. **Facility alert, arrival, reminder.** After message 1, copy the 4-digit code from the Facility pane's alert and send it back from the Facility pane. The health worker and the CHA are told the child arrived; the case shows "arrived" on her board with a follow-up visit date. Then send the code and `T5` (e.g. `4314 T5`): she sees "treated, sent home, follow-up day 5" and the reminder moves to day 5. "Fire timeouts now" skips the waiting times; "Reset demo" clears everything.
+1. **The rules miss it. The model and the health worker catch it.** Amina writes "kila kitu anachokula anatapika hata maji" (everything he eats, he vomits, even water): the keyword rule looks for "anatapika kila kitu", so it misses the different word order and she is told her health worker has been told. The model flags "possible: vomits everything" and drafts a fixed WHO check; Achieng approves it; Amina replies 1 and gets "go now" at once, with the facility alerted ("parent report, not checked"). The facility sends the code back (arrived), then `T5` (treated, follow-up day 5).
+2. **Clear danger: go now, and the clinic is ready.** Zawadi reports convulsions ("degedege"): "go now" at once. The model drafts two pre-arrival questions, crediting the rule that found the sign; Achieng approves one, Zawadi answers, and the facility gets a pre-arrival note. Achieng declines the other draft, tries a message with "usijali" (don't worry), which is refused, removes it, and her message goes out signed as hers after the fixed "Keep going to the clinic.". Zawadi's reply is shown to her as written, never read automatically.
+3. **Not every cough is an emergency.** Akinyi's child has had a cough for 3 days, "hana homa" (no fever), and is eating and playing: no alarm, no model flag. Achieng declines the two standard checks offered (she knows the family), checks the child herself and replies "0": the case closes with a check-in in 3 days.
+
+Or type your own messages in the three panes. Questions to parents are an experimental layer (below).
 
 ## Run it yourself (offline)
 

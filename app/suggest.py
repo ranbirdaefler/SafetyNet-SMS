@@ -78,6 +78,9 @@ def suggest_checks(state, bank_questions):
     if len(asked) + len(q.get("own", [])) >= MAX_PER_CASE:
         return []
     done = set(asked) | set(q.get("declined", []))
+    offered = [x for x in done if x.startswith("CK_")]
+    if len(offered) >= MAX_CHECKS:                               # at most 2 checks offered per case, sent or declined
+        return []
     present = {s for s, v in (state.get("fields") or {}).items() if v == "PRESENT"}
     heads = (state.get("model") or {}).get("heads") or {}
     cands = []
@@ -89,10 +92,10 @@ def suggest_checks(state, bank_questions):
         p = heads.get(item["sign"])
         if item["sign"] in DURATION and (p is None or p < 0.5):
             continue
-        cands.append((-(p if p is not None else 0.0), i, item, p))
+        cands.append((-(p if p is not None and p >= 0.5 else 0.0), i, item, p))   # low scores: fixed bank order
     cands.sort(key=lambda c: (c[0], c[1]))
     out = []
-    for _, _, item, p in cands[:MAX_CHECKS]:
+    for _, _, item, p in cands[:MAX_CHECKS - len(offered)]:
         st = score_text(p)
         reason = (f"The model ranked it: {LABEL[item['sign']]}, score {st}." if st
                   else "One of the WHO danger signs (fixed order).")

@@ -559,27 +559,29 @@ const LONG = [
 const STORY1 = [
   { title: "The rules miss it", text: "Amina texts that her son vomits everything, even water. That's a danger sign, but her words don't match the keyword list, so she gets the fixed 'your health worker has been told' reply.",
     look: "Parent pane and the rule check.", roles: ["parent"], tab: "parent", nodes: ["P", "Rules"], expect: ["CG_TOLD"],
-    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); },
+    run: async () => { chwView(false); storyCode = firstCode(await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji")); },
     after: ruleCard },
-  { title: "The model catches it", text: "The model reads meaning, not word order, and flags it on Achieng's board: possible, vomits everything. She sees it first; it never changes what Amina is told.",
-    look: "the amber chip on Achieng's board.", roles: ["chp", "log"], tab: "chp", nodes: ["Model", "Achieng"], expect: [],
-    ready: () => !!panes.chp.boardEl.querySelector(".chip.possible"), run: async () => { chwView(true); } },
-  { title: "Convulsions: go now", text: "Amina texts 'sasa ana degedege' (now he's convulsing). The rules send 'go now' at once and alert the facility and the supervisor with a 4-digit code.",
-    look: "Amina's reply and the facility alert.", roles: ["parent", "facility"], tab: "parent", nodes: ["P", "Rules", "Facility/CHA"],
-    expect: ["CG_GO_NOW", "ALERT"], run: async () => { chwView(false);
-      const r = await sms(cfg.parents[0], "parent", "sasa ana degedege"); storyCode = (r.replies || []).map(x => x.case_code).find(Boolean); } },
+  { title: "The model catches it and drafts a check", text: "The model reads meaning, not word order: on Achieng's board it flags 'possible: vomits everything' and drafts one fixed check from the WHO-based bank, with its reason. Nothing is sent until she approves.",
+    why: "The model chooses which approved question is worth asking; the health worker decides whether to ask it. No model-written text reaches a parent.",
+    look: "the amber chip and the drafted check on Achieng's board.", roles: ["chp", "log"], tab: "chp", nodes: ["Model", "Achieng"], expect: [], experimental: true,
+    ready: () => !!panes.chp.boardEl.querySelector(".qsug"), run: async () => { chwView(true); } },
+  { title: "Achieng approves; Amina gets the check", text: "Achieng approves 'does the child vomit up every drink and feed?'. Amina receives the fixed check: 1 vomits everything, 2 keeps some down, 3 not sure.",
+    why: "Option 1 is always the danger state. Only a bare 1, 2 or 3 is read; anything else counts as 'not sure'.",
+    look: "the check in the parent pane.", roles: ["chp", "parent"], tab: "parent", nodes: ["Achieng", "P"], expect: ["Q_CK_VOMIT"], experimental: true,
+    run: async () => { await qAct("CK_VOMIT", "approve"); } },
+  { title: "Amina replies 1: go now at once", text: "Amina replies 1. The rules send 'go now' at once, with no thank-you first, and the facility and the supervisor are alerted: 'parent report, not checked: vomits everything'.",
+    why: "A danger answer can only raise urgency. The go-now comes first; nothing is allowed to delay it.",
+    look: "Amina's go-now and the facility alert.", roles: ["parent", "facility"], tab: "parent", nodes: ["P", "Rules", "Facility/CHA"], expect: ["CG_GO_NOW", "ALERT"], experimental: true,
+    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "1"); } },
   { title: "He arrives", text: "Facility staff text the code back; Achieng and the supervisor are told.",
+    why: "The code closes the loop: Achieng knows the child reached the facility without having to ask the mother.",
     look: "'arrived' on Achieng's board.", roles: ["facility", "chp"], tab: "chp", nodes: ["Facility/CHA", "Achieng"], expect: ["ARRIVED", "ACK"],
     run: async () => { chwView(true); if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode); } },
   { title: "The clinic's answer comes back", text: "The facility texts the code + T5: treated, sent home, follow up in 5 days. Achieng's reminder moves to day 5, and the referral record fills in.",
+    why: "Counter-referral: the facility's outcome reaches the health worker as a code, and her follow-up is set from it.",
     look: "the reminder and the record panel.", roles: ["facility", "chp"], tab: "chp", nodes: ["Facility/CHA", "Achieng"], expect: ["OUTCOME", "OUTCOME_ACK"],
     run: async () => { chwView(true); document.getElementById("rec").open = true;
       if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode + " T5"); } },
-  { title: "Nobody answers: the safety net", text: "Another parent texts; no one replies in time. The parent is told to go now and the supervisor is alerted.",
-    look: "the parent's reply and the CHA alert.", roles: ["parent", "facility"], tab: "parent", nodes: ["Rules", "Facility/CHA"], expect: ["CG_TIMEOUT", "ALERT"],
-    run: async () => { chwView(false); setPhone("parent", cfg.parents[1]);
-      await sms(cfg.parents[1], "parent", "mtoto wangu wa miaka 3 ana upele mwilini"); await sleep(1500);
-      await fetch("demo/fire-timeouts", { method: "POST" }); poll(); } },
 ];
 function scrollSpot() {
   // each pane shows the first bubble this step added (e.g. Amina's own message), else its newest content
@@ -677,7 +679,7 @@ async function qAct(qid, action) {
     body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, qid, action }) });
   poll(); pollBoard();
 }
-STORIES.push({ name: "Questions before arrival (experimental)", parent: "Zawadi", needsQuestions: true, steps: [
+const ZAWADI = ({ name: "Clear danger: go now, and the clinic is ready", parent: "Zawadi", needsQuestions: true, steps: [
   { title: "Go now", text: "Zawadi texts that her 2-year-old 'ana degedege' (has convulsions). The rules send 'go now' at once and alert the facility and the supervisor.",
     why: "Questions never come before or instead of a go-now.", look: "Zawadi's reply and the facility alert.",
     roles: ["parent", "facility"], tab: "parent", nodes: ["P", "Rules", "Facility/CHA"], expect: ["CG_GO_NOW", "ALERT"],
@@ -715,6 +717,28 @@ STORIES.push({ name: "Questions before arrival (experimental)", parent: "Zawadi"
     run: async () => { chwView(true); await sms(cfg.parents[0], "parent", "sawa"); },
     after: async () => { const b = panes.chp.boardEl; b.scrollTop = b.scrollHeight; } },
 ] });
+const AKINYI = { name: "Not every cough is an emergency", parent: "Akinyi", steps: [
+  { title: "A cough, no danger sign", text: "Akinyi texts: her 3-year-old has had a cough for 3 days, 'hana homa' (no fever), and is eating and playing well. No danger sign, so she gets the fixed 'your health worker has been told' reply.",
+    why: "A cough for 3 days is under the 14-day long-illness cut-off, and nothing in the text matches a danger sign: no alarm.",
+    look: "Akinyi's reply.", roles: ["parent"], tab: "parent", nodes: ["P", "Rules"], expect: ["CG_TOLD"],
+    run: async () => { chwView(false); storyCode = firstCode(await sms(cfg.parents[0], "parent", S3)); } },
+  { title: "No false alarm; she declines the standard checks", text: "The model shows no flag. The system still offers two standard WHO checks in a fixed order, with no score. Achieng knows this family and declines them: the decision is hers.",
+    why: "Suggestions are offers, never sends. Every decline is logged with her name; nothing reaches the parent.",
+    look: "'model · no flag' and the two declines on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Model", "Achieng"], expect: [], experimental: true,
+    ready: () => (panes.chp.boardEl.textContent.match(/declined by CHP/g) || []).length >= 2,
+    run: async () => { chwView(true); await sleep(2300);
+      const ids = (await (await fetch("board?phone=" + encodeURIComponent(cfg.chps[0]))).json())
+        .filter(r => r.code === storyCode).flatMap(r => (r.q_suggestions || []).map(x => x.id));
+      for (const id of ids) await qAct(id, "decline"); } },
+  { title: "Achieng checks and closes it", text: "Achieng calls, works through the checklist and replies 0 (none of the signs). The case closes and a check-in in 3 days appears on her board.",
+    why: "The health worker makes the call. Her '0' is the only thing that clears a case, and even then a check-in is set.",
+    look: "'closed' and the check-in date on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: ["NON_RED"],
+    ready: () => /closed/.test(panes.chp.boardEl.textContent),
+    run: async () => { chwView(false); if (storyCode) await sms(cfg.chps[0], "chp", storyCode + " 0"); chwView(true); } },
+] };
+STORIES.length = 0;
+STORIES.push({ name: "The rules miss it. The model and the health worker catch it", parent: "Amina", needsQuestions: true, steps: STORY1 },
+             ZAWADI, AKINYI);
 let STORY = STORY1, storyParent = null;
 function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 const NOTE = '<span class="st-note">Examples, not evidence: results on the test sets are in the README. Messages written by the team (AI-assisted).</span>';
@@ -723,7 +747,8 @@ function caption(i) {
   const flow = NODES.map(n => `<span class="${s.nodes.includes(n) ? "on" : ""}">${n === "P" ? storyParent : n}</span>`).join("<i>→</i>");
   document.getElementById("storycap").innerHTML =
     `<span class="st-title">${i + 1}/${STORY.length} ${esc(s.title)}.</span><span class="st-more">(tap for more)</span><span class="st-text">${esc(s.text)}</span><span class="st-look">Look at: ${esc(s.look)}</span>` +
-    `<details><summary>Why it matters</summary>${esc(s.why || LONG[i])}</details><div class="flow">${flow}</div>` + NOTE;
+    `<details><summary>Why it matters</summary>${esc(s.why || LONG[i])}</details><div class="flow">${flow}</div>` +
+    (s.experimental || STORY === ZAWADI.steps ? '<span class="st-note">Question layer: experimental.</span>' : "") + NOTE;
 }
 function pickStory(k) {
   document.getElementById("story").classList.toggle("expanded", !mobile.matches);   // sentence open on desktop
