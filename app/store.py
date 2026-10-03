@@ -1,4 +1,6 @@
 """SQLite state: inbound log, outbox, cases. Due times live here so they survive a restart (D28)."""
+import json
+import random
 import sqlite3
 import threading
 import time
@@ -6,6 +8,8 @@ from pathlib import Path
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS inbox (id INTEGER PRIMARY KEY, ts REAL, sender TEXT, line TEXT, role TEXT, body TEXT);
+CREATE TABLE IF NOT EXISTS cases (code TEXT PRIMARY KEY, chp_phone TEXT, parent_phone TEXT, origin TEXT,
+  status TEXT, state TEXT, created REAL, updated REAL, due REAL, unparseable INTEGER DEFAULT 0);
 CREATE TABLE IF NOT EXISTS outbox (id INTEGER PRIMARY KEY, ts REAL, recipient TEXT, role TEXT, msg_id TEXT, body TEXT, case_code TEXT);
 """
 
@@ -45,3 +49,47 @@ class Store:
         with self.lock:
             r = self.db.execute("SELECT COALESCE(MAX(id), 0) FROM outbox").fetchone()
         return r[0]
+
+    # ---------- cases ----------
+    OPEN_STATUSES = ("ASK_AGE", "ASK_SIGNS")
+
+    def new_code(self):
+        with self.lock:
+            used = {r[0] for r in self.db.execute("SELECT code FROM cases WHERE status != 'CLOSED'")}
+        while True:
+            c = f"{random.randint(1000, 9999)}"
+            if c not in used:
+                return c
+
+    def create_case(self, chp_phone, origin, state, status, parent_phone=None, due=None):
+        code = self.new_code()
+        now = time.time()
+        with self.lock:
+            self.db.execute("INSERT INTO cases (code, chp_phone, parent_phone, origin, status, state, created, updated, due)"
+                            " VALUES (?,?,?,?,?,?,?,?,?)",
+                            (code, chp_phone, parent_phone, origin, status, json.dumps(state), now, now, due))
+        return code
+
+    def update_case(self, code, **kw):
+        if "state" in kw:
+            kw["state"] = json.dumps(kw["state"])
+        kw["updated"] = time.time()
+        cols = ", ".join(f"{k} = ?" for k in kw)
+        with self.lock:
+            self.db.execute(f"UPDATE cases SET {cols} WHERE code = ?", (*kw.values(), code))
+
+    def _case(self, row):
+        if row is None:
+            return None
+        d = dict(row)
+        d["state"] = json.loads(d["state"])
+        return d
+
+    def case(self, code):
+        with self.lock:
+            return self._case(self.db.execute("SELECT * FROM cases WHERE code = ?", (code,)).fetchone())
+
+    def latest_case_for_chp(self, phone):
+        with self.lock:
+            return self._case(self.db.execute(
+                "SELECT * FROM cases WHERE chp_phone = ? ORDER BY created DESC LIMIT 1", (phone,)).fetchone())

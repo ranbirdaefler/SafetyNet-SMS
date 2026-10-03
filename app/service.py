@@ -1,5 +1,6 @@
-"""Message routing by role. B2 stub: the CHP line answers with fixed strings only; the rules engine arrives in B3/B4."""
+"""Message routing by role (taken from the `to` line)."""
 from app import messages as M
+from app.chw import ChwFlow
 
 
 def handle(store, reg, proto, role, sender, body):
@@ -11,5 +12,5 @@ def handle(store, reg, proto, role, sender, body):
         if sender not in reg.chp_by_phone:
             store.send(sender, "chp", "UNREGISTERED", M.UNREGISTERED)  # E1
             return
-        store.send(sender, "chp", "HELP", M.HELP)
-    # parent and facility lines: logged only until D1 / B5 wire them
+        ChwFlow(store, reg, proto).handle(sender, body)
+    # parent and facility lines: wired in D1 / B5

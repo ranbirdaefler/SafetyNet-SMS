@@ -97,6 +97,65 @@ def _no_text_absent(proto):
     return d.output == "ASK_SIGNS" and len(d.open_fields) == len(proto.field_ids)
 
 
+def _flow(proto, texts, phone="+254722000107"):
+    """Run CHP texts through the real CHP flow on a scratch in-memory store; returns the replies to the last text."""
+    from app.chw import ChwFlow
+    from app.registry import Registry
+    from app.store import Store
+    root = Path(__file__).resolve().parent.parent
+    store, reg = Store(":memory:"), Registry(root / "config" / "registry.yaml")
+    flow = ChwFlow(store, reg, proto)
+    out = []
+    for t in texts:
+        before = store.last_outbox_id()
+        flow.handle(phone, t)
+        out = store.outbox_since(before)
+    return out
+
+
+def _ids(out):
+    return [m["msg_id"] for m in out]
+
+
+def _full_ask_signs(proto, out):
+    from app import messages as M
+    if _ids(out) != ["ASK_SIGNS"]:
+        return False
+    code = out[0]["case_code"]
+    return out[0]["body"] == M.ask_signs(code, 18, proto.params["cough_red_days"])
+
+
+TEXT_TESTS = [
+    ("T13", "text: '18m kikohozi wiki 2' -> REFER_NOW long illness",
+     lambda p: _ids(o := _flow(p, ["18m kikohozi wiki 2"])) == ["REFER_NOW"] and "long illness" in o[0]["body"]
+     if p.params["cough_red_days"] == 14 else True),
+    ("T15", "text: 'child 18m fever about a week' -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["child 18m fever about a week"])) == ["REFER_NOW"]),
+    ("T16", "text: 'child 18m MUAC 11.4 cm' -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["child 18m MUAC 11.4 cm"])) == ["REFER_NOW"]),
+    ("T18", "text: 'child 59 days old' -> REFER_U2M",
+     lambda p: _ids(_flow(p, ["child 59 days old"])) == ["REFER_U2M"]),
+    ("T20", "text: 'homa siku 3' (no age) -> ASK_AGE",
+     lambda p: _ids(_flow(p, ["homa siku 3"])) == ["ASK_AGE"]),
+    ("T22", "text: '18m hana degedege, homa siku 3, MUAC 13.5 cm, miguu sawa' -> full ASK_SIGNS, byte-identical",
+     lambda p: _full_ask_signs(p, _flow(p, ["18m hana degedege, homa siku 3, MUAC 13.5 cm, miguu sawa"]))),
+    ("T23", "all OPEN -> ASK_SIGNS with all 8 options",
+     lambda p: _full_ask_signs(p, _flow(p, ["18m"]))),
+    ("T25", "two unparseable replies -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["18m", "asante", "sawa"])) == ["REFER_NOW"]),
+    ("T26", "'9' -> REFER_NOW not confirmed",
+     lambda p: "not confirmed" in (_flow(p, ["18m", "9"]) or [{"body": ""}])[0]["body"]),
+    ("T27", "'hana degedege' in an open case -> still OPEN, nothing sent",
+     lambda p: _flow(p, ["18m", "hana degedege"]) == []),
+    ("T28", "'0 3' -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["18m", "0 3"])) == ["REFER_NOW"]),
+    ("T29", "'3 asante' -> REFER_NOW",
+     lambda p: _ids(_flow(p, ["18m", "3 asante"])) == ["REFER_NOW"]),
+    ("T35", "REFER + any input never lowers urgency",
+     lambda p: all(_ids(_flow(p, ["18m degedege", x])) in (["REFERRED_LINE"], ["REFER_NOW"])
+                   for x in ["0", "9", "hana degedege", "asante", "5"])),
+]
+
 EXTRA = [("FX1", "forced extractor exception", _forced_exception),
          ("FX2", "text never read ABSENT", _no_text_absent)]
 
@@ -124,6 +183,17 @@ def run(proto, ids=None, verbose=False):
             print(f"{tid:4} {'PASS' if ok else 'FAIL'}  {desc}")
         if not ok:
             failed.append(tid)
+    for tid, desc, fn in TEXT_TESTS:
+        if tid not in ids:
+            continue
+        try:
+            ok = fn(proto)
+        except Exception:
+            ok = False
+        if verbose:
+            print(f"{tid:4} {'PASS' if ok else 'FAIL'}  {desc}")
+        if not ok and tid not in failed:
+            failed.append(tid)
     for tid, desc, fn in EXTRA:
         try:
             ok = fn(proto)
@@ -133,5 +203,5 @@ def run(proto, ids=None, verbose=False):
             print(f"{tid:4} {'PASS' if ok else 'FAIL'}  {desc}")
         if not ok:
             failed.append(tid)
-    missing = [i for i in ids if i not in {t[0] for t in TESTS}]
+    missing = [i for i in ids if i not in {t[0] for t in TESTS} | {t[0] for t in TEXT_TESTS}]
     return failed + [f"{m} (no test defined)" for m in missing]
