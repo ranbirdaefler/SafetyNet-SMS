@@ -115,7 +115,8 @@ class DoorFlow:
         self.extractors = extractors
 
     def fac(self):
-        return self.reg.facility["name"]
+        """The facility of the CHU this parent belongs to (no nearest-facility lookup); default if no CHP."""
+        return self.reg.facility_of_chp(getattr(self, "_chp", None))["name"]
 
     def due_seconds(self):
         t = self.proto.cfg["timeouts"]
@@ -126,6 +127,7 @@ class DoorFlow:
 
     # ---------- entry ----------
     def handle(self, phone, body):
+        self._chp = self.reg.chp_of_parent(phone)
         case = self.store.latest_case_for_parent(phone)
         parent = self.reg.parent(phone)
         if parent is None:
@@ -228,11 +230,13 @@ class DoorFlow:
 
     # ---------- link: a CHP REFER on a parent-opened case also tells the parent (D16) ----------
     def on_chp_refer(self, case):
+        self._chp = self.reg.chp_by_phone.get(case["chp_phone"])
         if case.get("parent_phone") and self.reg.parent(case["parent_phone"]):
             self.send_parent(case["parent_phone"], "CG_GO_NOW", case["code"])
 
     # ---------- D19 / D20: the due time passed on a parent-opened case ----------
     def on_due(self, case):
+        self._chp = self.reg.chp_by_phone.get(case["chp_phone"])
         st = case["state"]
         code, phone = case["code"], case["parent_phone"]
         chp = self.reg.chp_by_phone.get(case["chp_phone"])

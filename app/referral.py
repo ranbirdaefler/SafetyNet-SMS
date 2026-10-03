@@ -25,12 +25,12 @@ class Referral:
             rs.insert(0, "under 2 months")
         body = M.alert(case["code"], st.get("age_months"), rs, chp["chu"] if chp else "-", chp["id"] if chp else "-",
                        parent=parent or case.get("origin") == "parent")    # C10: PARENT SMS on parent-opened cases
-        self.store.send(self.reg.facility["phone"], "facility", "ALERT", body, case["code"])
+        self.store.send(self.reg.facility_of_chp(chp)["phone"], "facility", "ALERT", body, case["code"])
         self.store.send(cha["phone"], "cha", "ALERT", body, case["code"])
 
     def facility_text(self, sender, body):
         """Only registered facility or CHA numbers confirm. An unknown code gets no reply (no ACK = not recorded)."""
-        if sender != self.reg.facility["phone"] and sender not in {c["phone"] for c in self.reg.cha.values()}:
+        if sender not in self.reg.facility_phones and sender not in {c["phone"] for c in self.reg.cha.values()}:
             return
         m = re.search(r"\b(\d{4})\b", body)
         if not m:

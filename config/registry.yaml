@@ -1,26 +1,35 @@
-# Pre-seeded registry (X6). Synthetic demo numbers only; no real people.
+# Pre-seeded registry (X6). Facility names are real, hand-picked from one county (Busia) in the healthsites.io
+# Kenya export of OpenStreetMap data on HDX (ODbL; (c) OpenStreetMap contributors), names verbatim, OSM node ids
+# given. Every phone number, CHU, CHP, CHA and village here is synthetic. No nearest-facility lookup: each community
+# health unit (CHU) is linked to one facility.
 # In production the health worker adds the parent number at household registration.
 lines:
   parent: "40100"     # county shortcode the parent texts
   chp: "40101"        # health-worker (CHP) line
   facility: "40102"   # facility + CHA line
 
-facility:
-  name: "Nambale Health Centre"   # {facility}, max 28 GSM-7 chars, checked on load
-  phone: "+254711000100"
+facilities:           # {facility} in SMS: max 28 GSM-7 characters, checked on load
+  - {id: F1, name: "Port Victoria hospital", osm: "node/11586713098", phone: "+254711000100"}
+  - {id: F2, name: "Rukala Health center", osm: "node/11586713089", phone: "+254711000101"}
+  - {id: F3, name: "Lwanyange dispensary", osm: "node/2625564270", phone: "+254711000102"}
+  - {id: F4, name: "Matibabu Hospital", osm: "node/2631115731", phone: "+254711000103"}
+  - {id: F5, name: "Al-Hakeem Medical Services", osm: "node/10939199235", phone: "+254711000104"}
 
 cha:
   - {id: "CHA 1", phone: "+254711000200"}
 
 chus:
-  - {n: 3, cha: "CHA 1"}
+  - {n: 3, cha: "CHA 1", facility: F1, villages: ["Village 3A", "Village 3B"]}
+  - {n: 4, cha: "CHA 1", facility: F2, villages: ["Village 4A"]}
 
 chps:
   - {id: "07", chu: 3, phone: "+254722000107"}
   - {id: "08", chu: 3, phone: "+254722000108"}
+  - {id: "09", chu: 4, phone: "+254722000109"}
 
 parents:
   - {phone: "+254733000001", chp: "07"}
   - {phone: "+254733000002", chp: "07"}
   - {phone: "+254733000003", chp: "08"}
   - {phone: "+254733000004", chp: null}   # registered, no CHP assigned (D7)
+  - {phone: "+254733000005", chp: "09"}

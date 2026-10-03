@@ -98,3 +98,11 @@ def test_miaka_6_out_of_scope():
     params = Protocol.load("config/protocol.yaml", run_suite=False).params
     assert parent_policy("mtoto miaka 6 ana mafua", params).oos == "5 y+"
     assert parent_policy("mtoto miaka 2 ana mafua", params).action == "TOLD"
+
+
+def test_age_text_is_not_a_numbered_reply():
+    from app.chw import parse_reply
+    assert parse_reply("18m homa siku 3", "1234") is None
+    assert parse_reply("1234 2 years", "1234") is None
+    assert parse_reply("3 asante", "1234") == ("digits", {3})
+    assert parse_reply("1234 18", "1234") == ("digits", {1, 8})

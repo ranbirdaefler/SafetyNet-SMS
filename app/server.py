@@ -112,7 +112,8 @@ def reload():
 def config():
     r = REGISTRY
     return {"lines": r.lines, "parents": list(r.parents), "chps": [c["phone"] for c in r.chps.values()],
-            "facility": r.facility["phone"], "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"]}
+            "facility": r.facility["phone"], "facilities": [{"phone": f["phone"], "name": f["name"]} for f in r.facilities.values()],
+            "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"]}
 
 
 @app.get("/")

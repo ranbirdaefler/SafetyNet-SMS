@@ -14,6 +14,9 @@ def parse_reply(body, code):
     if code and t.startswith(code):
         t = t[len(code):]
     t = t.strip(" ,.;/-\t\n")
+    p = extract.textparse.parse(t)
+    if p.age_months is not None or p.u2m:
+        return None                   # "18m ..." is an age (a new child, M4), never options 1 and 8
     if t == "0":
         return ("zero",)
     m = re.match(r"^([0-9][0-9\s,.;/-]*)", t)
