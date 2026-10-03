@@ -1,5 +1,5 @@
 """Encoder benchmark on the box: cold load, p50/p95 per message at ~64 and ~200 tokens, peak RSS.
-Usage: python scripts/bench.py models/onnx/<variant> [runs]   (4 threads, CPU)"""
+Usage: python scripts/bench.py models/onnx/<variant> [runs] [threads]   (default 50 runs, 4 threads, CPU)"""
 import json
 import resource
 import sys
@@ -23,10 +23,12 @@ def text_of(enc, n_tokens):
 def main():
     d = Path(sys.argv[1])
     runs = int(sys.argv[2]) if len(sys.argv) > 2 else 50
+    threads = int(sys.argv[3]) if len(sys.argv) > 3 else 4
     t0 = time.time()
-    enc = Encoder(d)
+    enc = Encoder(d, threads=threads)
     load_s = time.time() - t0
-    out = {"variant": d.name, "load_s": round(load_s, 2)}
+    out = {"variant": d.name, "threads": threads, "load_s": round(load_s, 2),
+           "model_mb": round((d / "model.onnx").stat().st_size / 2**20, 1)}
     for n in (64, 200):
         txt = text_of(enc, n)
         enc.probs(txt)

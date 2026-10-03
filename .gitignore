@@ -10,3 +10,4 @@ venv/
 logs/
 data/*.db
 models/
+data/ext/
