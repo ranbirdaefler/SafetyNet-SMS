@@ -54,6 +54,13 @@ Every figure in the problem and device sections was found by one researcher and 
 | C4 | About 110,000 smartphones provided to CHPs, "locally assembled and provided by Safaricom" | Press-reported: The Standard (https://www.standardmedia.co.ke/health/health-science/article/2001498549/health-ministry-rolls-out-electronic-system-to-boost-services); The Star, 20 Oct 2023 (https://www.the-star.co.ke/news/2023-10-20-state-to-provide-110000-smartphones-for-use-by-chp); Citizen Digital, 8 Nov 2023 (https://citizen.digital/news/cs-nakhumicha-distributes-kenyan-made-phones-to-community-health-promoters-n330897) |
 | C6 | Risk: MPs said over 60% of the phones given to CHPs don't work | The Star, 13 May 2026 (press-reported). https://www.the-star.co.ke/news/2026-05-13-mps-question-quality-of-health-workers-phones |
 
+**Referral feedback (counter-referral), qualitative only; no figure exists, none is cited**
+
+| # | Finding | Source |
+|---|---|---|
+| R1 | Kenya (Busia, Migori; young-infant PSBI programme): heavy workload led some facility providers to skip the MOH-100 form that served as feedback to referring CHVs, so CHVs relied on caregivers' verbal reports (CHVs already recorded referrals in a mobile app) | Odwe G, et al. Health Policy and Planning 2024;39(1):56-65. doi:10.1093/heapol/czad113 (Results, "Inadequate providers"). PMC10775218 |
+| R2 | Mozambique: CHWs and supervisors saw lack of feedback as a barrier to a functional referral system; some CHWs already send feedback informally by SMS and phone | Give C, et al. BMC Health Services Research 2019;19:263. https://pmc.ncbi.nlm.nih.gov/articles/PMC6489304/ (Discussion; Results, "Pragmatic problem-solving approach") |
+
 **Earlier SMS tools named in the brief**
 
 | # | Figure | Source |

@@ -8,87 +8,57 @@ Designed to sit alongside eCHIS on the health worker's government phone; integra
 
 World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 to 4 October 2026.
 
+> **Results at a glance.** Pre-registered test: the model tied a keyword list (20 against 20 danger messages missed), so fixed rules talk to parents. After retraining (exploratory; one evaluation on a fresh sealed set): rules plus the model's board (rules as frozen) left 2 of 80 danger messages unflagged and flagged 2 of 55 harmless messages, and 1 of 1,012 everyday Swahili sentences it never trained on. All test messages are AI-written; native Swahili is not tested. Offline: 93 MB, p95 165 ms in a phone browser.
+
 ## Try it in 60 seconds
 
-Live demo: <SPACE_LINK> (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Three messages written by the team, not taken from any test set:
+Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Three messages written by the team, not taken from any test set:
 
 1. **Instant "go now".** In the Parent pane, send `mtoto wangu wa miaka 2 ana degedege` ("my 2-year-old is having convulsions"). The parent gets the fixed go-now message at once; the facility, the CHA and the health worker get the referral alert.
 2. **A board flag the keywords missed.** Send `mtoto wa mwaka 1 kila kitu anachokula anatapika hata maji` ("1-year-old vomits everything she eats, even water"). The keyword list doesn't trigger, so the parent is told the health worker will contact them (and to go to the facility if no one does in time), and the health worker gets "call now" with the sign checklist. Her board shows the model's flag, "model: possible vomits everything, check", so she reads that case first.
-3. **Facility alert, arrival, reminder.** After message 1, copy the 4-digit code from the Facility pane's alert and send it back from the Facility pane. The health worker and the CHA are told the child arrived; the case shows "arrived" on her board with a follow-up visit date. "Fire timeouts now" skips the waiting times; "Reset demo" clears everything.
+3. **Facility alert, arrival, reminder.** After message 1, copy the 4-digit code from the Facility pane's alert and send it back from the Facility pane. The health worker and the CHA are told the child arrived; the case shows "arrived" on her board with a follow-up visit date. Then send the code and `T5` (e.g. `4314 T5`): she sees "treated, sent home, follow-up day 5" and the reminder moves to day 5. "Fire timeouts now" skips the waiting times; "Reset demo" clears everything.
 
 ## Run it yourself (offline)
 
-Python 3.11, no GPU, no internet after install:
+Python 3.11, no GPU:
 
 ```
 git clone https://github.com/ranbirdaefler/SafetyNet-SMS && cd SafetyNet-SMS
 pip install -r requirements-demo.txt
+python scripts/fetch_model.py   # board model, 92.7 MB, SHA-256 checked; needs internet once
 python -m uvicorn app.server:app --port 8000      # open http://localhost:8000
 ```
 
-This runs the parent line, the rules and the simulator. For the board model, run `python scripts/fetch_model.py` first (92.7 MB from Hugging Face, SHA-256 checked).
+After this, it runs with no internet.
 
-> SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi. Synthetic cases; not clinically validated.
+> SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.
 
 ## How it works
 
-The model runs on her phone. Where phones fail, the same model runs on a county box behind the SMS number. That box is what we demoed. The parent still gets "go now" and the facility is still alerted when her phone is off or broken.
+```mermaid
+flowchart LR
+  P["Parent SMS (Swahili, English or mixed)"] --> R["Fixed rules: regex + keyword list"]
+  P --> M["Board model on the device: AfroXLMR v3, 93 MB"]
+  R -->|"danger sign, no age, under 2 months"| G["Parent: fixed 'go now'; facility + CHA alert with code"]
+  R -->|"otherwise"| T["Parent: fixed 'your health worker has been told'"]
+  M --> B["Health worker's board: 'possible: sign' / 'unsure: please read'"]
+  T --> B
+  B --> C["She answers the WHO checklist; RED rules decide referral"]
+  C --> G
+  G --> A["Facility texts the code back: ARRIVED"] --> O["Facility outcome code: A / T n / R"] --> F["Follow-up reminder"]
+```
 
+Designed to run on her phone: the same model ran offline in a phone browser; no phone app was built. Where phones fail, the same model runs on a county box behind the SMS number. That box is what we demoed. The parent still gets "go now" and the facility is still alerted when her phone is off or broken.
+
+- **Two readers, one message.** Every parent text is read twice, on the device, with no internet. Fixed rules (regex + keyword list from the WHO/UNICEF danger signs) decide the parent's instant reply and any referral; they can be checked line by line, so they talk to parents. The board model (AfroXLMR-base fine-tuned, v3, 92.7 MB, 8-bit) reads the same text and adds one band to her board; it never changes what the parent is told, sends no SMS and changes no case status (tested: the parent reply is identical with the model on and off). Why both: on a fresh sealed set, the board flagged 12 of the 14 danger messages the rules missed (rules as frozen; exploratory; AI-written test messages; see Results).
 - **One endpoint.** `POST /sms {from, to, body}`; the role (parent, health worker, facility) comes from the number texted. A 3-pane web simulator (Parent / Health worker / Facility + CHA) is the demo client. A gateway adapter (Africa's Talking or a county shortcode in Kenya; Twilio elsewhere) is a thin mapping onto this endpoint and is not built.
 - **Parent line.** The parent only ever gets one of five fixed messages: go now, go now (unregistered number), your health worker has been told (with a waiting time and the danger-sign list), the health worker did not reply (go now), or not for this number. The parent is never asked a question and never gets advice, reassurance, a diagnosis, a medicine or a dose. A send-time check refuses any other text to a parent.
-- **Health-worker line.** Deterministic: a regex and a fixed keyword list read the text for signs that are present; nothing is ever read as absent. The health worker gets the full 8-option checklist and only a numbered reply ("0") clears a sign. Any sign, "9", silence or two unreadable replies refer.
-- **Case board.** In the health-worker pane: her cases with code, age, a danger flag, the signs recorded, status (to check / referred / no reply / arrived / closed) and time, danger first, then oldest. Built only from stored case records; nothing generated. After an arrival it shows "follow-up visit due {date}", after she closes a case with "0" "check on child due {date}" (3 days, WHO/UNICEF CHW manual pp.98 and 116); these say only when to go back and are never sent as SMS.
-- **Referral loop.** Every referral sends an alert with a 4-digit code to the facility and the community health assistant (CHA). The facility texts the code on arrival; the health worker and CHA are told the child arrived. The facility owns the arrival code. No reply to a code means it was not recorded: resend.
+- **Health-worker line.** Deterministic. The parent's texts are read on the parent line (above); on this line her numbered replies answer the checklist, and any other text she sends (a child she reports herself, or a note on an open case) is read by the same regex and keyword list for signs that are present; nothing is ever read as absent, and text inside an open case can only add a sign. The model never reads her texts. The health worker gets the full 8-option checklist and only a numbered reply ("0") clears a sign. Any sign, "9", silence or two unreadable replies refer.
+- **Case board.** In the health-worker pane: her cases with code, age, a danger flag, the signs recorded, status (to check / referred / no reply / arrived / closed) and time. Rule-flagged danger first, then model 'possible', then model 'unsure', then the rest, oldest first within each group. Model lines are fixed band words, never generated text. Built only from stored case records; nothing generated. After an arrival it shows "follow-up visit due {date}", after she closes a case with "0" "check on child due {date}" (3 days, WHO/UNICEF CHW manual pp.98 and 116); these say only when to go back and are never sent as SMS.
+- **Referral loop.** Every referral sends an alert with a 4-digit code to the facility and the community health assistant (CHA). The facility texts the code on arrival; the health worker and CHA are told the child arrived. The facility owns the arrival code. No reply to a code means it was not recorded: resend. **Counter-referral:** after arrival, a registered facility number can text the code with an outcome: `A` (admitted), `T` and a number of days 1 to 30 (treated, sent home, e.g. `T5`) or `R` (referred on). The health worker and CHA are told; the parent is never messaged; codes only (any other text is read as before). The follow-up reminder is never removed: `T5` moves it to day 5, `A` and `R` keep the 3-day check-in. In a Kenyan young-infant referral programme, heavy workload led some facility providers to skip the MOH-100 form that served as feedback to referring CHVs, so CHVs relied on caregivers' verbal reports (Odwe et al., 2024). In Mozambique, CHWs and supervisors saw lack of feedback as a barrier (Give et al., 2019). Some CHWs there already send feedback informally by SMS and phone (Give et al., 2019); our outcome codes make that structured and tie it to a follow-up reminder.
+  - Odwe G, et al. Health Policy and Planning 2024;39(1):56-65. doi:10.1093/heapol/czad113 (Results, "Inadequate providers"). PMC10775218.
+  - Give C, et al. BMC Health Services Research 2019;19:263. https://pmc.ncbi.nlm.nih.gov/articles/PMC6489304/ (Discussion; Results, "Pragmatic problem-solving approach").
 - **Rules.** `config/protocol.yaml` holds the RED (refer) rules from the WHO/UNICEF community case management materials, editable by the ministry. Must-stay-RED tests (T1 to T35, T34 retired) and caregiver tests (CG1 to CG18, CG16 retired) run on every load: a protocol edit that drops a RED rule is refused, and any red caregiver test switches the parent door off.
-
-## Runs on a phone-class device
-
-The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
-
-> The same 93 MB model runs offline in a phone browser (iPhone, Safari: p95 165 ms; a best case, since entry-level Android phones are slower). Raspberry Pi 5 limited to 1 core: the model answers in 215 ms (p95); a full round trip through the demo service takes 530 ms. Peak memory: model 350 MB; whole demo service 569 MB, which also holds the earlier pre-registered model and the web simulator; a phone app would carry neither. Not yet measured on an entry-level Android; no phone app was built this weekend.
-
-The service also loads the earlier pre-registered encoder (v1) at start-up only to run the caregiver tests with it switched on; it failed them, so it is never used, and the parent line stays on the keyword list. It never affects what a parent or health worker sees.
-
-**In a phone browser (P4).** The board model (v3, trimmed, 8-bit weights, 92.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 110 ms, p95 165 ms; model load 1.3 s (the v2 file, 89.7 MB, measured p50 109 ms, p95 170 ms) (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With the v3 file on the same iPhone (posted back to the Pi, 16:27): tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021; desktop Chrome gave the same. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
-
-**Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
-
-The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests. The tables below show the model the tool would ship once it passes the caregiver tests.
-
-### What fits on which phone, and what it costs
-
-All variants come from the same fine-tuned v1 model. Size = model + tokenizer on disk. Peak RAM, cold load and p95 per message (64 tokens) measured on the Pi 5 with ONNX Runtime (4 cores, and pinned to 1 core with `taskset`). Accuracy on Y-dev (GPT-written development set, 120 messages: 60 danger, 45 no-danger), never on a test set. Rule: deploy the smallest variant with >= 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches.
-
-| Variant | Size MB | Peak RAM MB | Load s | p95 ms, 4 cores | p95 ms, 1 core | Danger caught | False go-now | Agrees with FP32 | Danger missed vs FP32 | Passes |
-|---|---|---|---|---|---|---|---|---|---|---|
-| FP32 (registered default) | 1074.9 | 1851 | 2.2 | 126.0 | 373.2 | 56/60 | 6/45 | 120/120 | 0 | yes |
-| INT8 dynamic, MatMul only (registered INT8) | 832.1 | 1610 | 1.75 | 44.4 | 116.8 | 26/60 | 3/45 | 87/120 | 30 | no |
-| INT8 dynamic, MatMul only, per-channel | 832.5 | 1611 | 1.78 | 46.0 | 119.8 | 49/60 | 6/45 | 113/120 | 7 | no |
-| INT8 dynamic incl. embeddings (Gather) | 281.6 | 625 | 1.21 | 45.7 | 117.2 | 27/60 | 4/45 | 89/120 | 29 | no |
-| INT8 weight-only (per-channel), FP32 compute | 283.1 | 1432 | 1.47 | 182.1 | 317.3 | 56/60 | 6/45 | 120/120 | 0 | yes |
-| Vocab trim (9,759 tokens), FP32 | 355.4 | 490 | 0.82 | 158.4 | 364.6 | 56/60 | 6/45 | 120/120 | 0 | yes |
-| Vocab trim + INT8 dynamic, MatMul only | 112.6 | 252 | 0.4 | 46.0 | 116.9 | 26/60 | 3/45 | 87/120 | 30 | no |
-| Vocab trim + INT8 dynamic incl. embeddings | 90.0 | 228 | 0.39 | 45.6 | 117.7 | 28/60 | 4/45 | 90/120 | 28 | no |
-| Vocab trim + INT8 weight-only (per-channel) | 90.3 | 322 | 0.63 | 86.3 | 215.9 | 56/60 | 6/45 | 120/120 | 0 | yes |
-| Keyword list E2 (no model; runs the parent line live), for reference | | | | | | 50/60 | 2/45 | | | |
-| Keyword list v0 (no model), for reference | | | | | | 30/60 | 3/45 | | | |
-
-INT4 (MatMulNBits) was not built: its export failed on the first try. Activation-quantized INT8 (the registered INT8 and its variants) fails the rule badly: it pushes many danger probabilities below 0.5. Weight-only INT8 stores the weights as 8-bit and computes in FP32.
-
-### On-device card (deployed variant)
-
-| | Deployed: vocab trim + weight-only INT8 | Registered: FP32 (reference) |
-|---|---|---|
-| File size | 90.3 MB | 1074.9 MB |
-| Peak RAM | 322 MB (2 GB phone: Android itself uses part of this RAM) | 1851 MB |
-| Cold load | 0.63 s | 2.2 s |
-| p50 / p95 at 64 tokens, 4 cores | 82.7 / 86.3 ms | 125.6 / 126.0 ms |
-| p95 at 64 tokens, 2 cores | 118.2 ms | 192.1 ms |
-| p95 at 64 tokens, 1 core | 215.9 ms | 373.2 ms |
-
-Entry-level Android phone in Kenya: {spec line, cited in DATA.md}
-
-CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit needs root, so only core pinning was used.
 
 ### The model on the health worker's board
 
@@ -143,6 +113,55 @@ Results after the pre-registered tests (exploratory). The pre-registered model t
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 80.5% | 0.0% |
 
 Thresholds behind each column: v2 as shipped lo 0.068 / hi 0.9; v2 re-tuned lo 0.068 / hi 0.844 (same rule as v3); v3 lo 0.849 / hi 0.997. A message counts as flagged when the board marks it 'possible' or 'unsure'. "Alone" figures use p ≥ 0.5, the pre-registered PRESENT rule, never tuned.
+
+## Runs on a phone-class device
+
+The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
+
+> The same 93 MB model runs offline in a phone browser (iPhone, Safari: p95 165 ms; a best case, since entry-level Android phones are slower). Raspberry Pi 5 limited to 1 core: the model answers in 215 ms (p95); a full round trip through the demo service takes 530 ms. Peak memory: model 350 MB; whole demo service 569 MB, which also holds the earlier pre-registered model and the web simulator; a phone app would carry neither. Not yet measured on an entry-level Android; no phone app was built this weekend.
+
+The service also loads the earlier pre-registered encoder (v1) at start-up only to run the caregiver tests with it switched on; it failed them, so it is never used, and the parent line stays on the keyword list. It never affects what a parent or health worker sees.
+
+**In a phone browser (P4).** The board model (v3, trimmed, 8-bit weights, 92.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 110 ms, p95 165 ms; model load 1.3 s (the v2 file, 89.7 MB, measured p50 109 ms, p95 170 ms) (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With the v3 file on the same iPhone (posted back to the Pi, 16:27): tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021; desktop Chrome gave the same. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
+
+**Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
+
+The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests. The tables below show the model the tool would ship once it passes the caregiver tests.
+
+### What fits on which phone, and what it costs
+
+All variants come from the same fine-tuned v1 model. Size = model + tokenizer on disk. Peak RAM, cold load and p95 per message (64 tokens) measured on the Pi 5 with ONNX Runtime (4 cores, and pinned to 1 core with `taskset`). Accuracy on Y-dev (GPT-written development set, 120 messages: 60 danger, 45 no-danger), never on a test set. Rule: deploy the smallest variant with >= 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches.
+
+| Variant | Size MB | Peak RAM MB | Load s | p95 ms, 4 cores | p95 ms, 1 core | Danger caught | False go-now | Agrees with FP32 | Danger missed vs FP32 | Passes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FP32 (registered default) | 1074.9 | 1851 | 2.2 | 126.0 | 373.2 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| INT8 dynamic, MatMul only (registered INT8) | 832.1 | 1610 | 1.75 | 44.4 | 116.8 | 26/60 | 3/45 | 87/120 | 30 | no |
+| INT8 dynamic, MatMul only, per-channel | 832.5 | 1611 | 1.78 | 46.0 | 119.8 | 49/60 | 6/45 | 113/120 | 7 | no |
+| INT8 dynamic incl. embeddings (Gather) | 281.6 | 625 | 1.21 | 45.7 | 117.2 | 27/60 | 4/45 | 89/120 | 29 | no |
+| INT8 weight-only (per-channel), FP32 compute | 283.1 | 1432 | 1.47 | 182.1 | 317.3 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Vocab trim (9,759 tokens), FP32 | 355.4 | 490 | 0.82 | 158.4 | 364.6 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Vocab trim + INT8 dynamic, MatMul only | 112.6 | 252 | 0.4 | 46.0 | 116.9 | 26/60 | 3/45 | 87/120 | 30 | no |
+| Vocab trim + INT8 dynamic incl. embeddings | 90.0 | 228 | 0.39 | 45.6 | 117.7 | 28/60 | 4/45 | 90/120 | 28 | no |
+| Vocab trim + INT8 weight-only (per-channel) | 90.3 | 322 | 0.63 | 86.3 | 215.9 | 56/60 | 6/45 | 120/120 | 0 | yes |
+| Keyword list E2 (no model; runs the parent line live), for reference | | | | | | 50/60 | 2/45 | | | |
+| Keyword list v0 (no model), for reference | | | | | | 30/60 | 3/45 | | | |
+
+INT4 (MatMulNBits) was not built: its export failed on the first try. Activation-quantized INT8 (the registered INT8 and its variants) fails the rule badly: it pushes many danger probabilities below 0.5. Weight-only INT8 stores the weights as 8-bit and computes in FP32.
+
+### On-device card (deployed variant)
+
+| | Deployed: vocab trim + weight-only INT8 | Registered: FP32 (reference) |
+|---|---|---|
+| File size | 90.3 MB | 1074.9 MB |
+| Peak RAM | 322 MB (2 GB phone: Android itself uses part of this RAM) | 1851 MB |
+| Cold load | 0.63 s | 2.2 s |
+| p50 / p95 at 64 tokens, 4 cores | 82.7 / 86.3 ms | 125.6 / 126.0 ms |
+| p95 at 64 tokens, 2 cores | 118.2 ms | 192.1 ms |
+| p95 at 64 tokens, 1 core | 215.9 ms | 373.2 ms |
+
+Entry-level Android phone in Kenya: {spec line, cited in DATA.md}
+
+CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit needs root, so only core pinning was used.
 
 ## Safety contract and preconditions
 
@@ -239,7 +258,7 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - **P2.** P2 (decided Sat 3 Oct after the freeze, on Y-dev only, before any test tabulation): letting the model add a 'go now' to the parent line was not adopted. Every variant failed CG5/CG5b (the models misread Swahili denials) and raised false 'go now' by more than 2 points on Y-dev. The model stays on the health worker's board only.
 - **Parent languages.** Parent messages became bilingual / in the parent's registered language (Florian, Sat 3 Oct, after the freeze; the pre-registered evaluation scores the go-now decision, not the wording). Swahili messages machine-translated (gpt-5.5) and back-translation-checked (claude-opus-5-5); native-speaker and clinician review required before any deployment.
 - **Waiting time.** CG_TOLD now states a waiting time in minutes instead of a clock time, because Swahili clock time runs 6 hours off standard time. The English version grows from 2 to 3 SMS segments at the longest window (120 minutes).
-- **Post-hoc parent-line rules fix (Sat 3 Oct, after results).** Post-hoc rules fix after seeing test misses; not evaluated on sealed data. The five missed messages now pass by construction and are not evidence. Added, and able only to add "go now": Swahili diarrhoea verb forms (-harisha) and "joto" in fixed phrases ("ana joto", "joto mwilini", "joto jingi", "kuwa na joto") as symptom words for durations (they never turn an age into a duration); Swahili number words and "siku ya N" as durations only, never ages; a duration with no symptom word in its clause attaches to the previous sentence's symptoms; refusal phrases ("won't take", "not even a sip", "anakataa kunyonya/kunywa/kula" ...) as never-negated "cannot drink or feed"; described convulsions ("stiff", "jerking", "kukakamaa" and inflections; not "shaking" or "anatetemeka"). The frozen E2 list used for the results is unchanged; the live list is E2 plus these rows. T1-T35 and CG1-CG18 pass. Mechanical check (`scripts/posthoc_rules_check.py`, `results/posthoc_rules_check.json`): every message we have, old rules against new; every changed decision is "no go-now" to "go-now" (or go-now with a reason added), none other:
+- **Post-hoc parent-line rules fix (Sat 3 Oct, after results).** Post-hoc rules fix after seeing test misses; not evaluated on sealed data. The five missed messages now pass by construction and are not evidence. On every message we have, the fix added 'go now' for 16 danger messages and for no harmless message or everyday Swahili sentence. These messages informed the fix, so this shows it is safe, not that it works. Added, and able only to add "go now": Swahili diarrhoea verb forms (-harisha) and "joto" in fixed phrases ("ana joto", "joto mwilini", "joto jingi", "kuwa na joto") as symptom words for durations (they never turn an age into a duration); Swahili number words and "siku ya N" as durations only, never ages; a duration with no symptom word in its clause attaches to the previous sentence's symptoms; refusal phrases ("won't take", "not even a sip", "anakataa kunyonya/kunywa/kula" ...) as never-negated "cannot drink or feed"; described convulsions ("stiff", "jerking", "kukakamaa" and inflections; not "shaking" or "anatetemeka"). The frozen E2 list used for the results is unchanged; the live list is E2 plus these rows. T1-T35 and CG1-CG18 pass. Mechanical check (`scripts/posthoc_rules_check.py`, `results/posthoc_rules_check.json`): every message we have, old rules against new; every changed decision is "no go-now" to "go-now" (or go-now with a reason added), none other:
 
   | Set | Messages | Danger: go-now added | No-danger: go-now added (cost) | Go-now, reason added | Other changes |
   |---|---|---|---|---|---|
