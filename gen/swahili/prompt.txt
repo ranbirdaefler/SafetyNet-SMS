@@ -1,0 +1,11 @@
+Translate each English SMS below into Swahili as used in Kenya, for parents of sick young children.
+
+Rules:
+- Keep every placeholder exactly as written: {facility}, {code}, {time}. Do not translate or change them.
+- Keep every qualifier and the urgency: "NOW", "Do not wait", "if no one calls or comes by {time}", every danger sign in the list, "at all" style limits. Do not add or drop any danger sign, instruction or condition.
+- No advice, reassurance, diagnosis, medicine or dose. Do not add anything that is not in the English.
+- Plain, simple Swahili a parent with basic reading can follow. Use "NOW" as "SASA HIVI" (capitals) where the English has NOW.
+- Use only plain ASCII letters, digits and basic punctuation (GSM-7 safe): no curly quotes, no accented letters, no em dashes.
+- Output JSON: {"translations": {"<ID>": "<Swahili text>", ...}} for the IDs given.
+
+These are drafts for review by a native Kenyan Swahili speaker (back-translation keeping every qualifier) before any use.
