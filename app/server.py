@@ -229,3 +229,16 @@ def phone_parity(rows: list = Body(...)):
             out["mismatch"].append(f"{r['id']} (tokens {ok_t}, flags {ok_f}, band {ok_b})")
     (ROOT / "data" / "phone_parity.json").write_text(_json.dumps(out, indent=1))
     return out
+
+
+
+@app.get("/log")
+def live_log():
+    """Live inset for the demo: model time and band per parent message; CHP ids only, no phone numbers or text."""
+    from app.board_model import LOG
+    out = []
+    for e in list(LOG)[-8:]:
+        chp = REGISTRY.chp_by_phone.get(e["chp_phone"]) if e["chp_phone"] else None
+        out.append({"time": e["time"], "code": e["code"], "chp": f"CHP {chp['id']}" if chp else "no CHP",
+                    "model_ms": e["model_ms"], "band": e["band"]})
+    return out

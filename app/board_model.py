@@ -6,6 +6,8 @@ Bands, from the calibrated max danger-head probability p (temperatures fit on X-
 A model exception gives no band (the case still shows).
 """
 import json
+import time
+from collections import deque
 from pathlib import Path
 
 import numpy as np
@@ -37,18 +39,27 @@ class BoardModel:
         return {"band": None, "sign": None, "p": round(v, 4)}
 
 
+LOG = deque(maxlen=50)   # live inset: time, case code, CHP phone (shown as CHP id only), model ms, band; no parent data
+
+
 def annotate(store, model, parent_phone, text):
     """Store the band on the parent's current case. Never raises: a failure leaves no model line."""
+    case = None
     try:
         case = store.latest_case_for_parent(parent_phone)
         if case is None or model is None:
             return
         st = case["state"]
+        t0 = time.perf_counter()
         b = model.band(text)
+        LOG.append({"time": time.strftime("%H:%M:%S"), "code": case["code"], "chp_phone": case["chp_phone"],
+                    "model_ms": round((time.perf_counter() - t0) * 1000), "band": b["band"] or "none"})
         old = st.get("model")
         order = {"possible": 2, "unsure": 1, None: 0}
         if old is None or order[b["band"]] >= order[old.get("band")]:   # a later text never lowers the band
             st["model"] = b
             store.update_case(case["code"], state=st)
     except Exception:
+        LOG.append({"time": time.strftime("%H:%M:%S"), "code": case["code"] if case else "-", "chp_phone": None,
+                    "model_ms": None, "band": "model error (no line)"})
         return

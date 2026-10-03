@@ -25,11 +25,11 @@ The model runs on her phone. Where phones fail, the same model runs on a county 
 
 The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
 
-> The same 90 MB model runs offline in a phone browser (iPhone, Safari: p95 170 ms; a best case, since entry-level Android phones are slower). On a Raspberry Pi 5 limited to 1 core, the whole service peaked at 549 MB of RAM, inside a 2 GB phone's memory: p95 516 ms per parent message, end to end. Not yet measured on an entry-level Android; no phone app was built this weekend.
+> The same 90 MB model runs offline in a phone browser (iPhone, Safari: p95 170 ms; a best case, since entry-level Android phones are slower). On a Raspberry Pi 5 limited to 1 core, the whole service peaked at 549 MB of RAM, about a quarter of a 2 GB phone's memory (Android itself uses part of it): p95 516 ms per parent message, end to end. Not yet measured on an entry-level Android; no phone app was built this weekend.
 
 **In a phone browser (P4).** The shipped board model (v2, trimmed, 8-bit weights, 89.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 109 ms, p95 170 ms; model load 1.3 s (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
 
-**Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. The measured peak shows the service stays well inside 2 GB.
+**Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
 
 The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests. The tables below show the model the tool would ship once it passes the caregiver tests.
 
@@ -261,6 +261,19 @@ Single pass: each message read once, first reply scored; dialogue not replayed. 
 | Y-test, Claude, caregiver | McNemar (no-danger discordant) | b = 9, c = 1 | p = 0.0215 | | |
 
 Baselines: always go now misses 0 and sends every no-danger child; never go now misses every danger child. Only a native set could produce a Win, so the Y-test McNemar p is not a win.
+
+### Summary for the video (`results/video_table.png`)
+
+| | Keywords | Pre-registered model (v1) | Retrained model, board (v2) |
+|---|---|---|---|
+| Danger missed: (a) grid | 4 / 12 | 2 / 12 | 1 / 12 |
+| Danger missed: (b) Swahili | 2 / 12 | 3 / 12 | 2 / 12 |
+| Danger missed: Y-test | 14 / 80 | 15 / 80 | 2 / 80 |
+| **Danger missed: total** | **20 / 104** | **20 / 104** | **5 / 104** |
+| **Needless trips: total** | **17 / 81** | **7 / 81** | **19 / 81** |
+| **False alarms, 1,000 everyday Swahili sentences written by people (MASSIVE, not about health)** | **43** | **9** | **59** |
+
+The board runs the 90 MB version of the retrained model (agreed with the full-size one on 119 of 120 dev messages); its MASSIVE count is the 90 MB version (full-size: 49). Test sets are AI-written. The v2 column is exploratory (a second training run after the freeze); the pre-registered comparison is keywords vs v1.
 
 ### Exploratory rows (not pre-registered)
 

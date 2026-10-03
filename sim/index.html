@@ -40,6 +40,9 @@
   form { display:flex; gap:8px; padding:10px; border-top:1px solid var(--line); }
   form input { flex:1; font:inherit; padding:8px 10px; border:1px solid var(--line); border-radius:10px; }
   form button { font:inherit; padding:8px 14px; border:0; border-radius:10px; background:var(--sent); color:#fff; cursor:pointer; }
+  .logbox { position:fixed; right:12px; bottom:46px; width:min(420px, calc(100% - 24px)); background:rgba(255,255,255,.95);
+            border:1px solid var(--line); border-radius:10px; padding:6px 10px; font:12px/1.4 ui-monospace, Consolas, monospace; }
+  .logbox b { font-family:system-ui, sans-serif; font-size:12px; }
   .corner { position:fixed; left:12px; right:12px; bottom:10px; background:rgba(29,35,41,.88); color:#fff; font-size:12.5px;
             padding:6px 10px; border-radius:8px; text-align:center; }
 </style>
@@ -69,6 +72,7 @@
     <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
   </section>
 </main>
+<div class="logbox" id="logbox"><b>On the box: model time and band per parent message</b><div id="loglines">waiting for a parent SMS</div></div>
 <div class="corner">SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi. Synthetic cases; not clinically validated.</div>
 <script>
 if (new URLSearchParams(location.search).get("clean")) document.body.classList.add("clean");
@@ -177,6 +181,17 @@ function setupTabs() {
   });
   setInterval(pollBoard, 2000);
 }
+
+async function pollLog() {
+  try {
+    const rows = await (await fetch("log")).json();
+    if (rows.length) document.getElementById("loglines").textContent =
+      rows.slice(-5).map(r => `${r.time}  case ${r.code}  ${r.chp}  model ${r.model_ms ?? "-"} ms  band: ${r.band}`).join("
+");
+  } catch (e) {}
+}
+document.getElementById("loglines").style.whiteSpace = "pre";
+setInterval(pollLog, 1500);
 
 init().then(setupTabs);
 </script>
