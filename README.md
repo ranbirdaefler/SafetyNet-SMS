@@ -2,7 +2,7 @@
 
 **Pre-registered claim (native Swahili): NOT TESTED**
 
-An assistant for Kenya's community health promoters (CHPs). The user is the health worker: she makes every clinical call. Parents in her area text a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. The assistant reads it for danger signs, tells her (with the full checklist), keeps her case board, and writes the referral and arrival record for her. When a danger sign is reported, or she is on a visit or asleep and does not reply in time, the automatic "go now" to the parent and the facility alert are a safety net, not a replacement for her.
+An assistant for Kenya's community health promoters (CHPs). The user is the health worker: she makes every clinical call. Parents in her area text a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. The assistant reads it for danger signs, tells her (with the full checklist), keeps her case board, and writes the referral and arrival record for her. When a danger sign is reported, or she is on a visit or asleep and does not reply in time, the automatic "go now" to the parent and the facility alert are a safety net, not a replacement for her. The model reads every message and puts the urgent ones in front of the health worker; it never decides what the parent is told.
 
 Designed to sit alongside eCHIS on the health worker's government phone; integration not built this weekend. eCHIS records her visits; this assistant reads parents' SMS, flags danger signs, and writes the referral and arrival record for her instead of adding reports for her to send.
 
@@ -66,7 +66,7 @@ CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit
 
 ### The model on the health worker's board
 
-The model never decides what the parent is told. It sorts the health worker's cases and marks the ones it is unsure about for her to read first.
+The model reads every message and puts the urgent ones in front of the health worker; it never decides what the parent is told. It sorts the health worker's cases and marks the ones it is unsure about for her to read first.
 
 It reads parent text only and adds one of three board lines, from its calibrated top danger probability: "model: possible {sign}, check" (at or above hi), "model unsure: please read" (between lo and hi), or nothing (below lo). The board sorts rule-flagged danger first, then "possible", then "unsure", then the rest, oldest first within each group. It sends no SMS and changes no case status; a model failure just leaves no model line. Tested: the parent reply is identical with the model on and off (CG1 to CG18 both ways).
 
