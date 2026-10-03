@@ -1,0 +1,1105 @@
+{
+ "sets": {
+  "a": {
+   "registered": {
+    "set": "a",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 4,
+      "missed_cp95": [
+       9.9,
+       65.1
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 3,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D04",
+       "D05",
+       "D09",
+       "N03",
+       "N11",
+       "N13"
+      ]
+     },
+     "ours": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 4,
+      "needless_cp95": [
+       9.1,
+       61.4
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 2,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D01",
+       "D02",
+       "N02",
+       "N03",
+       "N11",
+       "N13"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 0,
+     "c_ours_only": 1,
+     "mcnemar_p": 1.0
+    },
+    "safety_switch": false
+   },
+   "deployed": {
+    "set": "a",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 4,
+      "missed_cp95": [
+       9.9,
+       65.1
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 3,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D04",
+       "D05",
+       "D09",
+       "N03",
+       "N11",
+       "N13"
+      ]
+     },
+     "ours": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 4,
+      "needless_cp95": [
+       9.1,
+       61.4
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 2,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D01",
+       "D02",
+       "N02",
+       "N03",
+       "N11",
+       "N13"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 0,
+     "c_ours_only": 1,
+     "mcnemar_p": 1.0
+    },
+    "safety_switch": false
+   },
+   "v2": {
+    "set": "a",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 4,
+      "missed_cp95": [
+       9.9,
+       65.1
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 3,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D04",
+       "D05",
+       "D09",
+       "N03",
+       "N11",
+       "N13"
+      ]
+     },
+     "ours": {
+      "missed": 1,
+      "missed_cp95": [
+       0.2,
+       38.5
+      ],
+      "needless": 6,
+      "needless_cp95": [
+       19.2,
+       74.9
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 1,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "N02",
+       "N03",
+       "N08",
+       "N09",
+       "N11",
+       "N13"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 0,
+     "c_ours_only": 3,
+     "mcnemar_p": 0.25
+    },
+    "safety_switch": false
+   },
+   "board": {
+    "label": "Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.",
+    "a_e2_missed_danger_flagged_by_board": 4,
+    "a_of": 4,
+    "a_cp95": [
+     39.8,
+     100.0
+    ],
+    "b_no_danger_flagged": 7,
+    "b_of": 13,
+    "b_cp95": [
+     25.1,
+     80.8
+    ]
+   }
+  },
+  "b": {
+   "registered": {
+    "set": "b",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D12",
+       "N04",
+       "N05",
+       "N10"
+      ]
+     },
+     "ours": {
+      "missed": 3,
+      "missed_cp95": [
+       5.5,
+       57.2
+      ],
+      "needless": 0,
+      "needless_cp95": [
+       0.0,
+       24.7
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D01",
+       "D02",
+       "D12"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 3,
+     "c_ours_only": 0,
+     "mcnemar_p": 0.25
+    },
+    "safety_switch": true
+   },
+   "deployed": {
+    "set": "b",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D12",
+       "N04",
+       "N05",
+       "N10"
+      ]
+     },
+     "ours": {
+      "missed": 3,
+      "missed_cp95": [
+       5.5,
+       57.2
+      ],
+      "needless": 0,
+      "needless_cp95": [
+       0.0,
+       24.7
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D01",
+       "D02",
+       "D12"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 3,
+     "c_ours_only": 0,
+     "mcnemar_p": 0.25
+    },
+    "safety_switch": true
+   },
+   "v2": {
+    "set": "b",
+    "danger": 12,
+    "no_danger": 13,
+    "shared_path_messages": 0,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 13
+     },
+     "never go now": {
+      "missed": 12,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       5.0,
+       53.8
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D12",
+       "N04",
+       "N05",
+       "N10"
+      ]
+     },
+     "ours": {
+      "missed": 2,
+      "missed_cp95": [
+       2.1,
+       48.4
+      ],
+      "needless": 1,
+      "needless_cp95": [
+       0.2,
+       36.0
+      ],
+      "shared_path": "0/0",
+      "c4": 0,
+      "age_not_received_alone": 0,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "D02",
+       "D12",
+       "N08"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 3,
+     "c_ours_only": 1,
+     "mcnemar_p": 0.625
+    },
+    "safety_switch": false
+   },
+   "language": {
+    "keyword_E2": {
+     "Swahili": {
+      "danger_caught": 10,
+      "danger": 12,
+      "caught_cp95": [
+       51.6,
+       97.9
+      ],
+      "false_go_now": 3,
+      "no_danger": 13,
+      "false_cp95": [
+       5.0,
+       53.8
+      ]
+     }
+    },
+    "ours_registered": {
+     "Swahili": {
+      "danger_caught": 9,
+      "danger": 12,
+      "caught_cp95": [
+       42.8,
+       94.5
+      ],
+      "false_go_now": 0,
+      "no_danger": 13,
+      "false_cp95": [
+       0.0,
+       24.7
+      ]
+     }
+    },
+    "deployed": {
+     "Swahili": {
+      "danger_caught": 9,
+      "danger": 12,
+      "caught_cp95": [
+       42.8,
+       94.5
+      ],
+      "false_go_now": 0,
+      "no_danger": 13,
+      "false_cp95": [
+       0.0,
+       24.7
+      ]
+     }
+    },
+    "v2": {
+     "Swahili": {
+      "danger_caught": 10,
+      "danger": 12,
+      "caught_cp95": [
+       51.6,
+       97.9
+      ],
+      "false_go_now": 1,
+      "no_danger": 13,
+      "false_cp95": [
+       0.2,
+       36.0
+      ]
+     }
+    }
+   },
+   "board": {
+    "label": "Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.",
+    "a_e2_missed_danger_flagged_by_board": 2,
+    "a_of": 2,
+    "a_cp95": [
+     15.8,
+     100.0
+    ],
+    "b_no_danger_flagged": 4,
+    "b_of": 13,
+    "b_cp95": [
+     9.1,
+     61.4
+    ]
+   }
+  },
+  "ytest": {
+   "registered": {
+    "set": "ytest",
+    "danger": 80,
+    "no_danger": 55,
+    "shared_path_messages": 10,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 55
+     },
+     "never go now": {
+      "missed": 80,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 14,
+      "missed_cp95": [
+       9.9,
+       27.6
+      ],
+      "needless": 11,
+      "needless_cp95": [
+       10.4,
+       33.0
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0011",
+       "y_test-0015",
+       "y_test-0019",
+       "y_test-0031",
+       "y_test-0032",
+       "y_test-0053",
+       "y_test-0065",
+       "y_test-0089",
+       "y_test-0107",
+       "y_test-0115",
+       "y_test-0126",
+       "y_test-0130",
+       "y_test-0132",
+       "y_test-0137",
+       "y_test-0001",
+       "y_test-0022",
+       "y_test-0043",
+       "y_test-0056",
+       "y_test-0060",
+       "y_test-0062",
+       "y_test-0082",
+       "y_test-0095",
+       "y_test-0116",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     },
+     "ours": {
+      "missed": 15,
+      "missed_cp95": [
+       10.9,
+       29.0
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       1.1,
+       15.1
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0005",
+       "y_test-0011",
+       "y_test-0012",
+       "y_test-0015",
+       "y_test-0032",
+       "y_test-0038",
+       "y_test-0053",
+       "y_test-0057",
+       "y_test-0063",
+       "y_test-0080",
+       "y_test-0089",
+       "y_test-0093",
+       "y_test-0119",
+       "y_test-0130",
+       "y_test-0132",
+       "y_test-0052",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 9,
+     "c_ours_only": 1,
+     "mcnemar_p": 0.0215
+    },
+    "safety_switch": true
+   },
+   "deployed": {
+    "set": "ytest",
+    "danger": 80,
+    "no_danger": 55,
+    "shared_path_messages": 10,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 55
+     },
+     "never go now": {
+      "missed": 80,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 14,
+      "missed_cp95": [
+       9.9,
+       27.6
+      ],
+      "needless": 11,
+      "needless_cp95": [
+       10.4,
+       33.0
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0011",
+       "y_test-0015",
+       "y_test-0019",
+       "y_test-0031",
+       "y_test-0032",
+       "y_test-0053",
+       "y_test-0065",
+       "y_test-0089",
+       "y_test-0107",
+       "y_test-0115",
+       "y_test-0126",
+       "y_test-0130",
+       "y_test-0132",
+       "y_test-0137",
+       "y_test-0001",
+       "y_test-0022",
+       "y_test-0043",
+       "y_test-0056",
+       "y_test-0060",
+       "y_test-0062",
+       "y_test-0082",
+       "y_test-0095",
+       "y_test-0116",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     },
+     "ours": {
+      "missed": 15,
+      "missed_cp95": [
+       10.9,
+       29.0
+      ],
+      "needless": 3,
+      "needless_cp95": [
+       1.1,
+       15.1
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0005",
+       "y_test-0011",
+       "y_test-0012",
+       "y_test-0015",
+       "y_test-0032",
+       "y_test-0053",
+       "y_test-0057",
+       "y_test-0063",
+       "y_test-0076",
+       "y_test-0080",
+       "y_test-0089",
+       "y_test-0093",
+       "y_test-0119",
+       "y_test-0130",
+       "y_test-0132",
+       "y_test-0052",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 9,
+     "c_ours_only": 1,
+     "mcnemar_p": 0.0215
+    },
+    "safety_switch": true
+   },
+   "v2": {
+    "set": "ytest",
+    "danger": 80,
+    "no_danger": 55,
+    "shared_path_messages": 10,
+    "header": "Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).",
+    "rows": {
+     "always go now": {
+      "missed": 0,
+      "needless": 55
+     },
+     "never go now": {
+      "missed": 80,
+      "needless": 0
+     },
+     "keyword list (E2)": {
+      "missed": 14,
+      "missed_cp95": [
+       9.9,
+       27.6
+      ],
+      "needless": 11,
+      "needless_cp95": [
+       10.4,
+       33.0
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0011",
+       "y_test-0015",
+       "y_test-0019",
+       "y_test-0031",
+       "y_test-0032",
+       "y_test-0053",
+       "y_test-0065",
+       "y_test-0089",
+       "y_test-0107",
+       "y_test-0115",
+       "y_test-0126",
+       "y_test-0130",
+       "y_test-0132",
+       "y_test-0137",
+       "y_test-0001",
+       "y_test-0022",
+       "y_test-0043",
+       "y_test-0056",
+       "y_test-0060",
+       "y_test-0062",
+       "y_test-0082",
+       "y_test-0095",
+       "y_test-0116",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     },
+     "ours": {
+      "missed": 2,
+      "missed_cp95": [
+       0.3,
+       8.7
+      ],
+      "needless": 12,
+      "needless_cp95": [
+       11.8,
+       35.0
+      ],
+      "shared_path": "10/10",
+      "c4": 0,
+      "age_not_received_alone": 5,
+      "no_better_than_fixed_rule": false,
+      "errors": [
+       "y_test-0011",
+       "y_test-0032",
+       "y_test-0008",
+       "y_test-0039",
+       "y_test-0043",
+       "y_test-0052",
+       "y_test-0056",
+       "y_test-0064",
+       "y_test-0067",
+       "y_test-0091",
+       "y_test-0099",
+       "y_test-0106",
+       "y_test-0133",
+       "y_test-0145"
+      ]
+     }
+    },
+    "discordant_no_danger": {
+     "b_keyword_only": 7,
+     "c_ours_only": 8,
+     "mcnemar_p": 1.0
+    },
+    "safety_switch": false
+   },
+   "language": {
+    "keyword_E2": {
+     "English": {
+      "danger_caught": 25,
+      "danger": 31,
+      "caught_cp95": [
+       62.5,
+       92.5
+      ],
+      "false_go_now": 2,
+      "no_danger": 13,
+      "false_cp95": [
+       1.9,
+       45.4
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 21,
+      "danger": 27,
+      "caught_cp95": [
+       57.7,
+       91.4
+      ],
+      "false_go_now": 7,
+      "no_danger": 31,
+      "false_cp95": [
+       9.6,
+       41.1
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 20,
+      "danger": 22,
+      "caught_cp95": [
+       70.8,
+       98.9
+      ],
+      "false_go_now": 2,
+      "no_danger": 11,
+      "false_cp95": [
+       2.3,
+       51.8
+      ]
+     }
+    },
+    "ours_registered": {
+     "English": {
+      "danger_caught": 28,
+      "danger": 31,
+      "caught_cp95": [
+       74.2,
+       98.0
+      ],
+      "false_go_now": 1,
+      "no_danger": 13,
+      "false_cp95": [
+       0.2,
+       36.0
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 21,
+      "danger": 27,
+      "caught_cp95": [
+       57.7,
+       91.4
+      ],
+      "false_go_now": 2,
+      "no_danger": 31,
+      "false_cp95": [
+       0.8,
+       21.4
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 16,
+      "danger": 22,
+      "caught_cp95": [
+       49.8,
+       89.3
+      ],
+      "false_go_now": 0,
+      "no_danger": 11,
+      "false_cp95": [
+       0.0,
+       28.5
+      ]
+     }
+    },
+    "deployed": {
+     "English": {
+      "danger_caught": 28,
+      "danger": 31,
+      "caught_cp95": [
+       74.2,
+       98.0
+      ],
+      "false_go_now": 1,
+      "no_danger": 13,
+      "false_cp95": [
+       0.2,
+       36.0
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 21,
+      "danger": 27,
+      "caught_cp95": [
+       57.7,
+       91.4
+      ],
+      "false_go_now": 2,
+      "no_danger": 31,
+      "false_cp95": [
+       0.8,
+       21.4
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 16,
+      "danger": 22,
+      "caught_cp95": [
+       49.8,
+       89.3
+      ],
+      "false_go_now": 0,
+      "no_danger": 11,
+      "false_cp95": [
+       0.0,
+       28.5
+      ]
+     }
+    },
+    "v2": {
+     "English": {
+      "danger_caught": 30,
+      "danger": 31,
+      "caught_cp95": [
+       83.3,
+       99.9
+      ],
+      "false_go_now": 2,
+      "no_danger": 13,
+      "false_cp95": [
+       1.9,
+       45.4
+      ]
+     },
+     "Swahili": {
+      "danger_caught": 26,
+      "danger": 27,
+      "caught_cp95": [
+       81.0,
+       99.9
+      ],
+      "false_go_now": 6,
+      "no_danger": 31,
+      "false_cp95": [
+       7.5,
+       37.5
+      ]
+     },
+     "code-mixed": {
+      "danger_caught": 22,
+      "danger": 22,
+      "caught_cp95": [
+       84.6,
+       100.0
+      ],
+      "false_go_now": 4,
+      "no_danger": 11,
+      "false_cp95": [
+       10.9,
+       69.2
+      ]
+     }
+    }
+   },
+   "board": {
+    "label": "Exploratory, added after freeze, before tabulation: deployed board model (v2, trimmed, 8-bit weights) at the board thresholds (lo 0.068, hi 0.9). Thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.",
+    "a_e2_missed_danger_flagged_by_board": 14,
+    "a_of": 14,
+    "a_cp95": [
+     76.8,
+     100.0
+    ],
+    "b_no_danger_flagged": 19,
+    "b_of": 55,
+    "b_cp95": [
+     22.2,
+     48.6
+    ]
+   }
+  }
+ },
+ "outcome": {
+  "safety_switch": [
+   [
+    "b",
+    3,
+    12,
+    2
+   ],
+   [
+    "ytest",
+    15,
+    80,
+    14
+   ]
+  ],
+  "paragraph": "No native speaker's texts were sealed in time, so my registered claim is not tested. On three stand-in sets, the model sent 10 of 12 children with a danger sign to the clinic in 25 test messages an AI model wrote from a fixed case grid, 9 of 12 in 25 AI-written Swahili texts no native speaker checked, and 65 of 80 in 150 AI-written test texts; the keyword list 8, 10, 66. Needless trips: model 4 of 13, 0 of 13, 3 of 55; keyword list 3, 3, 11. None are real parents' texts, so the model is not shown to beat a keyword list."
+ },
+ "massive": {
+  "v1": {
+   "label": "Exploratory, not pre-registered: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.",
+   "source": "MASSIVE 1.1 sw-KE test split, CC BY 4.0",
+   "seed": 20261003,
+   "N": 1000,
+   "pool": 2974,
+   "arms": {
+    "keyword_E2": {
+     "triggered": 43,
+     "N": 1000,
+     "cp95_pct": [
+      3.1,
+      5.7
+     ]
+    },
+    "v1 (not shipped) fp32": {
+     "triggered": 9,
+     "N": 1000,
+     "cp95_pct": [
+      0.4,
+      1.7
+     ]
+    },
+    "v1 (not shipped) trim10k_wq8": {
+     "triggered": 8,
+     "N": 1000,
+     "cp95_pct": [
+      0.3,
+      1.6
+     ]
+    },
+    "v1 (not shipped) v2_fp32": {
+     "triggered": 49,
+     "N": 1000,
+     "cp95_pct": [
+      3.6,
+      6.4
+     ]
+    }
+   },
+   "note": "encoder rows from v1 are labelled 'v1 (not shipped)'; the shipped board model is v2 deployed (results/massive_row_v2_deployed.json)"
+  },
+  "v2_deployed": {
+   "label": "Exploratory, not pre-registered: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.",
+   "source": "MASSIVE 1.1 sw-KE test split, CC BY 4.0",
+   "seed": 20261003,
+   "N": 1000,
+   "pool": 2974,
+   "arms": {
+    "keyword_E2": {
+     "triggered": 43,
+     "N": 1000,
+     "cp95_pct": [
+      3.1,
+      5.7
+     ]
+    },
+    "encoder:v2_trim_wq8": {
+     "triggered": 59,
+     "N": 1000,
+     "cp95_pct": [
+      4.5,
+      7.5
+     ]
+    }
+   }
+  }
+ }
+}
