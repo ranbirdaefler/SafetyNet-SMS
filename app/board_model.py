@@ -32,11 +32,12 @@ class BoardModel:
         cal = 1 / (1 + np.exp(-np.log(p / (1 - p)) / self.T))
         i = int(cal.argmax())
         v = float(cal[i])
+        heads = {h: round(float(cal[k]), 4) for k, h in enumerate(HEADS)}   # per-sign scores (question suggestions)
         if v >= self.hi:
-            return {"band": "possible", "sign": LABEL[HEADS[i]], "p": round(v, 4)}
+            return {"band": "possible", "sign": LABEL[HEADS[i]], "p": round(v, 4), "heads": heads}
         if v >= self.lo:
-            return {"band": "unsure", "sign": None, "p": round(v, 4)}
-        return {"band": None, "sign": None, "p": round(v, 4)}
+            return {"band": "unsure", "sign": None, "p": round(v, 4), "heads": heads}
+        return {"band": None, "sign": None, "p": round(v, 4), "heads": heads}
 
 
 LOG = deque(maxlen=50)   # live inset: time, case code, CHP phone (shown as CHP id only), model ms, band; no parent data

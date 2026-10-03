@@ -85,6 +85,9 @@ CG_TIMEOUT = "Your health worker has not replied. Take the child to {facility} N
 CG_OOS = "This number is only for sick children under 5 years. Anyone else who is sick: go to {facility} NOW. Your health worker has been told."
 PARENT_ALLOWLIST = {"CG_GO_NOW": CG_GO_NOW, "CG_GO_NOW_U": CG_GO_NOW_U, "CG_TOLD": CG_TOLD,
                     "CG_TIMEOUT": CG_TIMEOUT, "CG_OOS": CG_OOS}
+# Question layer (experimental): msg_id -> the exact fixed texts allowed (bank texts approved by Florian, with and
+# without the referred-case prefix). Filled by app.questions.load only while the layer is on; empty otherwise.
+QL_TEMPLATES = {}
 
 # ---------- staff strings the door adds ({phone} only in these five) ----------
 CHP_CALL = "{head}: PARENT SMS, not checked. Call {phone} now; see the child by {time}. Start replies with {code}. Cannot see the child? Reply {code} 9."
@@ -137,6 +140,8 @@ def parent_text(msg_id, lang="sw", **slots):
 
 def parent_variants(msg_id):
     """Every template the parent line may send for this message ID."""
+    if msg_id in QL_TEMPLATES:
+        return list(QL_TEMPLATES[msg_id])
     v = [PARENT_ALLOWLIST[msg_id]]
     if msg_id in SW_PARENT:
         v.append(parent_template(msg_id, "sw"))

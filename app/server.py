@@ -73,6 +73,10 @@ def load_protocol():
     except Exception as e:
         STATE["cg_failed"] = [f"suite error: {type(e).__name__}"]
     STATE["door_on"] = not STATE["cg_failed"]
+    # question layer (experimental): loaded after the CG suite, which therefore always runs with it off
+    from app import questions as QL
+    QL.load(proto.params)
+    STATE["questions"] = {"on": QL.is_on(), "errors": QL.STATE["errors"]}
     return STATE
 
 
@@ -167,6 +171,25 @@ def _timer():
 
 if os.environ.get("SNS_TIMER", "1") == "1":
     threading.Thread(target=_timer, daemon=True).start()
+
+
+class QAction(BaseModel):
+    chp: str
+    code: str
+    qid: str
+    action: str
+
+
+@app.post("/chw/question")
+def chw_question(a: QAction):
+    """Health-worker endpoint (question layer, experimental): approve or decline one suggested bank question."""
+    from app import qflow
+    with LOCK:
+        if STATE["protocol"] is None or a.chp not in REGISTRY.chp_by_phone:
+            raise HTTPException(status_code=404)
+        before = STORE.last_outbox_id()
+        r = qflow.chw_action(STORE, REGISTRY, STATE["protocol"], a.chp, a.code, a.qid, a.action)
+        return {**r, "replies": with_why(STORE.outbox_since(before))}
 
 
 class Inbound(BaseModel):
@@ -265,7 +288,8 @@ def config():
     r = REGISTRY
     return {"lines": r.lines, "parents": list(r.parents), "chps": [c["phone"] for c in r.chps.values()],
             "facility": r.facility["phone"], "facilities": [{"phone": f["phone"], "name": f["name"]} for f in r.facilities.values()],
-            "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"], "public": PUBLIC}
+            "cha": [c["phone"] for c in r.cha.values()], "door_on": STATE["door_on"], "public": PUBLIC,
+            "questions_on": STATE.get("questions", {}).get("on", False)}
 
 
 @app.get("/")

@@ -138,6 +138,13 @@ class DoorFlow:
         parent = self.reg.parent(phone)
         if parent is None:
             return self.unregistered(phone, body, case)
+        from app import questions as QL
+        if case is not None and QL.is_on():                                 # question layer (experimental): a bare
+            from app import qflow                                             # answer to her approved question is
+            done = qflow.on_parent_text(self, phone, case, body)              # handled first; else the flow below
+            if done is not None:                                              # runs exactly as before
+                return done
+            case = self.store.latest_case_for_parent(phone)
         if case and case["status"] == "REFERRED":
             return self.send_parent(phone, "CG_GO_NOW", case["code"])          # D23 / CG18: repeat only
         if case and case["status"] == "ASK_SIGNS":

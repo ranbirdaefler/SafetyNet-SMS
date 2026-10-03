@@ -1,0 +1,93 @@
+{
+ "prefix_referred": {
+  "en": "Keep going to the clinic. Do not stop to reply.",
+  "sw": "Endelea kwenda kliniki. Usisimame ili ujibu.",
+  "back": "Continue going to the clinic. Do not stop to reply.",
+  "sw_len": 44,
+  "limit": 60
+ },
+ "ack_referred": {
+  "en": "Thank you, your answer was passed on. Keep going to the clinic.",
+  "sw": "Asante, jibu lako limefikishwa. Endelea kwenda kliniki.",
+  "back": "Thank you, your reply has been delivered. Continue going to the clinic.",
+  "sw_len": 55,
+  "limit": 90
+ },
+ "PA_FITS_COUNT": {
+  "en": "How many fits has the child had in this illness? Reply 1 more than one. 2 one. 3 not sure.",
+  "sw": "Mtoto amepata degedege mara ngapi kwa ugonjwa huu? Jibu 1 zaidi ya moja. 2 moja. 3 sijui.",
+  "back": "How many times has the child had convulsions in this illness? Reply 1 more than one. 2 one. 3 I don’t know.",
+  "sw_len": 89,
+  "limit": 106
+ },
+ "PA_AWAKE": {
+  "en": "Look only, do not shake. Reply 1 not awake or fitting now. 2 awake. 3 not sure.",
+  "sw": "Angalia tu, usimtikise. Jibu 1 hajaamka au ana degedege sasa. 2 ameamka. 3 huna hakika.",
+  "back": "Just look, do not shake him/her. Reply 1: he/she has not woken up or is having convulsions now. 2: he/she has woken up. 3: you are not sure.",
+  "sw_len": 87,
+  "limit": 106
+ },
+ "PA_DRINK_SINCE": {
+  "en": "When did the child stop drinking or sucking? Reply 1 yesterday or earlier. 2 today. 3 not sure.",
+  "sw": "Mtoto aliacha kunywa au kunyonya lini? Jibu 1 jana au kabla. 2 leo. 3 huna uhakika.",
+  "back": "When did the child stop drinking or breastfeeding? Reply 1 yesterday or before. 2 today. 3 you are not sure.",
+  "sw_len": 83,
+  "limit": 106
+ },
+ "CK_FITS": {
+  "en": "In this illness, has the child had fits (jerking they could not stop, eyes rolling, body stiff)? Reply 1 yes, fits. 2 no fits. 3 not sure.",
+  "sw": "Katika ugonjwa huu, mtoto amepata kifafa (kutetemeka bila kuzuia, macho kuzunguka, mwili kukakamaa)? Jibu 1 ndio, kifafa. 2 hana kifafa. 3 hujui.",
+  "back": "In this illness, has the child had convulsions (shaking without control, eyes rolling, body becoming stiff)? Reply 1 yes, convulsions. 2 does not have convulsions. 3 you do not know.",
+  "sw_len": 145,
+  "limit": 154
+ },
+ "CK_WAKE": {
+  "en": "Call the child's name and touch gently. Do not shake. Reply 1 if they do not wake or fall back asleep at once. 2 if awake and looking at you. 3 not sure.",
+  "sw": "Mwite mtoto kwa jina lake na mguse taratibu. Usimtikise. Jibu 1 kama haamki au analala tena mara moja. 2 yuko macho na anakutazama. 3 huna uhakika.",
+  "back": "Call the child by his/her name and touch him/her gently. Do not shake him/her. Reply 1 if he/she does not wake up or sleeps again immediately. 2 he/she is awake and looking at you. 3 you are not sure.",
+  "sw_len": 147,
+  "limit": 154
+ },
+ "CK_DRINK": {
+  "en": "Only if the child is awake: offer a drink or the breast, do not force. Reply 1 cannot drink or suck at all, or not awake. 2 drinks or sucks. 3 not sure.",
+  "sw": "Mtoto akiwa macho tu: mpe kinywaji au mnyonyeshe, usilazimishe. Jibu 1 hawezi kunywa/kunyonya kabisa, au hayuko macho. 2 anakunywa/ananyonya. 3 hujui",
+  "back": "Child, only when awake: give a drink or breastfeed, do not force. Reply 1 cannot drink/breastfeed at all, or is not awake. 2 is drinking/breastfeeding. 3 you do not know",
+  "sw_len": 149,
+  "limit": 154
+ },
+ "CK_VOMIT": {
+  "en": "Since this illness began, does the child vomit up every drink and feed? Reply 1 vomits everything. 2 keeps some down. 3 not sure.",
+  "sw": "Tangu ugonjwa huu uanze, mtoto hutapika kila anachokunywa au kula? Jibu 1 hutapika kila kitu. 2 hubakisha vingine. 3 sina hakika.",
+  "back": "Since this illness began, does the child vomit everything they drink or eat? Reply 1 vomits everything. 2 keeps some down. 3 I am not sure.",
+  "sw_len": 129,
+  "limit": 154
+ },
+ "CK_BLOOD": {
+  "en": "Look at the child's last stool (poo). Reply 1 if you see blood, red or dark. 2 no blood. 3 not sure or no stool.",
+  "sw": "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu, rangi nyekundu au nyeusi. 2 hakuna damu. 3 huna uhakika au hakuna kinyesi.",
+  "back": "Look at the child’s last stool. Reply 1 if you see blood, red or black color. 2 no blood. 3 you are not sure or there is no stool.",
+  "sw_len": 132,
+  "limit": 154
+ },
+ "CK_COUGH_DAYS": {
+  "en": "Has the cough lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 not sure.",
+  "sw": "Kikohozi kimekaa siku 14 au zaidi? Jibu 1 ndio, siku 14 au zaidi. 2 chini ya siku 14. 3 sina uhakika.",
+  "back": "Has the cough stayed for 14 days or more? Reply 1 yes, 14 days or more. 2 under 14 days. 3 I am not sure.",
+  "sw_len": 101,
+  "limit": 154
+ },
+ "CK_DIARRHOEA_DAYS": {
+  "en": "Has the diarrhoea lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 not sure.",
+  "sw": "Kuharisha kumedumu siku 14 au zaidi? Jibu 1 ndiyo, siku 14 au zaidi. 2 chini ya siku 14. 3 huna uhakika.",
+  "back": "Has diarrhea lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 you are not sure.",
+  "sw_len": 104,
+  "limit": 154
+ },
+ "CK_FEVER_DAYS": {
+  "en": "Has the fever lasted 7 days or more, counted from when it started, even on and off? Reply 1 yes. 2 less. 3 not sure.",
+  "sw": "Homa imekaa siku 7 au zaidi, ukihesabu tangu ilipoanza, hata kama inakuja na kuisha? Jibu 1 ndio. 2 chini ya 7. 3 sina hakika.",
+  "back": "Has the fever lasted 7 days or more, counting from when it started, even if it comes and goes? Reply 1 yes. 2 less than 7. 3 I am not sure.",
+  "sw_len": 126,
+  "limit": 154
+ }
+}

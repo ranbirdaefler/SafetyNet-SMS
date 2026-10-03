@@ -67,6 +67,7 @@ def row(case, proto):
         "time": M.hhmm(event_ts),
         "reminder": reminder,
         "model": model_line,
+        **(_questions(case) if _ql_on() else {}),
         "model_band": m.get("band"),
         "created": case["created"],
     }
@@ -79,3 +80,16 @@ def board(store, chp_phone, proto):
     group = {"possible": 1, "unsure": 2}
     out.sort(key=lambda r: (0 if r["danger"] else group.get(r["model_band"], 3), r["created"]))
     return out
+
+
+def _ql_on():
+    from app import questions as QL
+    return QL.is_on()
+
+
+def _questions(case):
+    """Question layer (experimental): suggested questions with their reasons, the responsibility log and answers."""
+    from app import qflow
+    from app import questions as QL
+    sugg = [{"id": s["id"], "reason": s["reason"], "text_en": QL.question(s["id"])["en"]} for s in qflow.suggestions(case)]
+    return {"q_suggestions": sugg, "q_lines": qflow.board_lines(case)}

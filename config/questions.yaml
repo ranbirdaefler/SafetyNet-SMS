@@ -1,0 +1,121 @@
+# Question bank (EXPERIMENTAL, after results). Ministry-editable; validated on load (app/questions.py): a failing
+# bank switches the question layer off. Every question: exactly 3 options in the fixed order 1 = danger state,
+# 2 = safe observation, 3 = not sure. Look or recall only: no examination, no medicine, no advice, no diagnosis.
+# English is authoritative. Swahili: gpt-5.5 translation with a back-translation per text; NOT native-reviewed.
+# Wording from the clinical-safety review (quorum/rounds/reconvene/2026-10-03-question-layer-safety.md, M1-M8).
+enabled: false   # off until Florian approves the texts; tests switch it on
+# Fixed first line on every parent message on a REFERRED case (review E1 / section 3), system-added.
+prefix_referred:   # approved by Florian, Sat 3 Oct
+  en: "Keep going to the clinic. Do not stop to reply."
+  sw: "Endelea kwenda kliniki. Usisimame ili ujibu."
+ack_referred:      # approved by Florian, Sat 3 Oct
+  en: "Thank you, your answer was passed on. Keep going to the clinic."
+  sw: "Asante, jibu lako limefikishwa. Endelea kwenda kliniki."
+questions:
+  # ---------- pre-arrival (Tier 1: REFERRED cases, after go now) ----------
+  - id: PA_FITS_COUNT
+    kind: prearrival
+    approved: true    # by Florian, Sat 3 Oct
+    sign: convulsions
+    trigger_signs: [convulsions]
+    en: "How many fits has the child had in this illness? Reply 1 more than one. 2 one. 3 not sure."
+    sw: "Mtoto amepata degedege mara ngapi kwa ugonjwa huu? Jibu 1 zaidi ya moja. 2 moja. 3 sina uhakika."
+    labels: {1: "more than one fit", 2: "one fit", 3: "not sure how many fits"}
+    source: "WHO/UNICEF CHW manual (S1) pp.12, 36"
+  - id: PA_AWAKE
+    kind: prearrival
+    approved: true    # by Florian, Sat 3 Oct
+    sign: sleepy_unconscious
+    trigger_signs: [convulsions, sleepy_unconscious]
+    en: "Look only, do not shake. Reply 1 not awake or fitting now. 2 awake. 3 not sure."
+    sw: "Angalia tu, usimtikise. Jibu 1 hajaamka au ana degedege sasa. 2 ameamka. 3 sina uhakika."
+    labels: {1: "not awake or fitting now", 2: "awake", 3: "not sure if awake"}
+    source: "WHO/UNICEF CHW manual (S1) pp.27, 38"
+  - id: PA_DRINK_SINCE
+    kind: prearrival
+    approved: true    # by Florian, Sat 3 Oct
+    sign: not_drink_feed
+    trigger_signs: [not_drink_feed]
+    en: "When did the child stop drinking or sucking? Reply 1 yesterday or earlier. 2 today. 3 not sure."
+    sw: "Mtoto aliacha kunywa au kunyonya lini? Jibu 1 jana au kabla. 2 leo. 3 sina uhakika."
+    labels: {1: "stopped drinking yesterday or earlier", 2: "stopped drinking today", 3: "not sure since when"}
+    source: "WHO/UNICEF CHW manual (S1) p.12"
+  # ---------- checks (Tier 2: TOLD cases, health worker's approval required) ----------
+  - id: CK_FITS
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: convulsions
+    en: "In this illness, has the child had fits (jerking they could not stop, eyes rolling, body stiff)? Reply 1 yes, fits. 2 no fits. 3 not sure."
+    sw: "Katika ugonjwa huu, mtoto amepata degedege (kutetemeka bila kuzuia, macho kuzunguka, mwili kukakamaa)? Jibu 1 ndio, degedege. 2 hana degedege. 3 sina uhakika."
+    labels: {1: "fits in this illness", 2: "no fits reported", 3: "not sure about fits"}
+    source: "WHO/UNICEF CHW manual (S1) pp.12, 36"
+  - id: CK_WAKE
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: sleepy_unconscious
+    en: "Call the child's name and touch gently. Do not shake. Reply 1 if they do not wake or fall back asleep at once. 2 if awake and looking at you. 3 not sure."
+    sw: "Mwite mtoto kwa jina lake na mguse taratibu. Usimtikise. Jibu 1 kama haamki au analala tena mara moja. 2 yuko macho na anakutazama. 3 sina uhakika."
+    labels: {1: "does not wake or falls back asleep", 2: "awake and looking", 3: "not sure if awake"}
+    source: "WHO/UNICEF CHW manual (S1) pp.27, 38"
+  - id: CK_DRINK
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: not_drink_feed
+    after: CK_WAKE
+    en: "Only if the child is awake: offer a drink or the breast, do not force. Reply 1 cannot drink or suck at all, or not awake. 2 drinks or sucks. 3 not sure."
+    sw: "Mtoto akiwa macho tu: mjaribu kumpa kinywaji au titi, usilazimishe. Jibu 1 hawezi kunywa/kunyonya kabisa, au hayuko macho. 2 ananywa/ananyonya. 3 sina uhakika."
+    labels: {1: "cannot drink or suck, or not awake", 2: "drinks or sucks", 3: "not sure about drinking"}
+    source: "WHO/UNICEF CHW manual (S1) pp.12, 106, 119"
+  - id: CK_VOMIT
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: vomits_everything
+    en: "Since this illness began, does the child vomit up every drink and feed? Reply 1 vomits everything. 2 keeps some down. 3 not sure."
+    sw: "Tangu ugonjwa huu uanze, mtoto hutapika kila anachokunywa au kula? Jibu 1 hutapika kila kitu. 2 hubakisha vingine. 3 sina uhakika."
+    labels: {1: "vomits everything", 2: "keeps some down", 3: "not sure about vomiting"}
+    source: "WHO/UNICEF CHW manual (S1) p.12"
+  - id: CK_BLOOD
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: blood_stool
+    en: "Look at the child's last stool (poo). Reply 1 if you see blood, red or dark. 2 no blood. 3 not sure or no stool."
+    sw: "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu, rangi nyekundu au nyeusi. 2 hakuna damu. 3 sina uhakika au hakuna kinyesi."
+    labels: {1: "blood in stool", 2: "no blood seen", 3: "not sure or no stool"}
+    source: "WHO/UNICEF CHW manual (S1) p.36"
+  - id: CK_COUGH_DAYS
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: cough_long
+    en: "Has the cough lasted {cough_red_days} days or more? Reply 1 yes, {cough_red_days} days or more. 2 less than {cough_red_days} days. 3 not sure."
+    sw: "Kikohozi kimekaa siku {cough_red_days} au zaidi? Jibu 1 ndio, siku {cough_red_days} au zaidi. 2 chini ya siku {cough_red_days}. 3 sina uhakika."
+    labels: {1: "cough {cough_red_days} days or more", 2: "cough under {cough_red_days} days", 3: "not sure how long the cough"}
+    source: "WHO/UNICEF CHW manual (S1) p.35; S2 p.6"
+  - id: CK_DIARRHOEA_DAYS
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: diarrhoea_long
+    en: "Has the diarrhoea lasted {diarrhoea_red_days} days or more? Reply 1 yes, {diarrhoea_red_days} days or more. 2 less than {diarrhoea_red_days} days. 3 not sure."
+    sw: "Kuharisha kumedumu siku {diarrhoea_red_days} au zaidi? Jibu 1 ndiyo, siku {diarrhoea_red_days} au zaidi. 2 chini ya siku {diarrhoea_red_days}. 3 sina uhakika."
+    labels: {1: "diarrhoea {diarrhoea_red_days} days or more", 2: "diarrhoea under {diarrhoea_red_days} days", 3: "not sure how long the diarrhoea"}
+    source: "WHO/UNICEF CHW manual (S1) p.36"
+  - id: CK_FEVER_DAYS
+    kind: check
+    approved: false   # Tier 2: not yet approved
+    sign: fever_long
+    en: "Has the fever lasted {fever_red_days} days or more, counted from when it started, even on and off? Reply 1 yes. 2 less. 3 not sure."
+    sw: "Homa imekaa siku {fever_red_days} au zaidi, ukihesabu tangu ilipoanza, hata kama inakuja na kuisha? Jibu 1 ndio. 2 chini ya {fever_red_days}. 3 sina uhakika."
+    labels: {1: "fever {fever_red_days} days or more", 2: "fever under {fever_red_days} days", 3: "not sure how long the fever"}
+    source: "WHO/UNICEF CHW manual (S1) p.36"
+# Blocked words for the health worker's own messages (review E2), approved by Florian (Sat 3 Oct). BOTH language
+# lists apply to EVERY message, whatever the parent's language (code-mixing). Matched on the lower-cased text as
+# whole words or phrases; *_stems_sw also match any word that contains the stem. Any hit refuses the message.
+blocked:
+  refuse_text: "Not sent: for medicines or a change of plan, call the parent."
+  medicine_en: [medicine, medication, drug, drugs, tablet, tablets, pill, pills, syrup, dose, doses, dosage, mg, ml, teaspoon, spoon, spoons, injection, antibiotic, antibiotics, amoxicillin, amoxil, paracetamol, panadol, calpol, ibuprofen, cotrimoxazole, septrin, ors, oresol, oral rehydration, zinc, artemether, coartem, artesunate, antimalarial, quinine, herbal, herbs]
+  medicine_sw: [dawa, vidonge, kidonge, sindano, kijiko, vijiko, dozi, mililita, sharubati, shurubati, zinki, mitishamba, panadol, amoxil, septrin, coartem, antibiotiki, oresol]
+  plan_en: [wait, waiting, stay, no need, don't go, dont go, do not go, tomorrow, later]
+  plan_sw: [subiri, usubiri, msubiri, tusubiri, ngoja, ungoje, mngoje, tungoje, usingoje, hakuna haja, si lazima, usiende, msiende, asiende, usimpeleke, msimpeleke, kesho, baadaye, kaa nyumbani, abaki nyumbani]
+  plan_stems_sw: [subir, ngoj, ngoje, siende, simpeleke]
+  reassure_en: [don't worry, dont worry, do not worry, he'll be fine, she'll be fine, he will be fine, she will be fine, not serious, nothing serious]
+  reassure_sw: [usijali, msijali, atakuwa sawa, hana shida, si mbaya, si kitu]
+  reassure_stems_sw: [sijali]

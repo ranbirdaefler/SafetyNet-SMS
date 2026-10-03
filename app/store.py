@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS outbox (id INTEGER PRIMARY KEY, ts REAL, recipient TE
 def _check_parent(msg_id, body):
     """Allowlist (C3): a parent-line SMS must equal one of the 5 caregiver templates after slot fill."""
     import re
-    from app.messages import PARENT_ALLOWLIST, parent_variants
-    if msg_id not in PARENT_ALLOWLIST:
+    from app.messages import PARENT_ALLOWLIST, QL_TEMPLATES, parent_variants
+    if msg_id not in PARENT_ALLOWLIST and msg_id not in QL_TEMPLATES:
         raise ValueError(f"not allowlisted for the parent line: {msg_id}")
     for tpl in parent_variants(msg_id):
         pat = re.escape(tpl).replace(re.escape("{facility}"), r"[^\n]{1,28}").replace(re.escape("{code}"), r"\d{4}")
