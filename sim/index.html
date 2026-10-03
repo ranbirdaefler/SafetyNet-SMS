@@ -12,7 +12,20 @@
   header { padding:10px 16px; display:flex; align-items:center; gap:12px; }
   header h1 { font-size:17px; margin:0; }
   header .hint { color:var(--muted); font-size:13px; }
-  main { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; padding:0 12px 64px; height:calc(100vh - 48px); }
+  main { display:grid; grid-template-columns:minmax(0,1fr) 400px minmax(0,1fr); gap:12px; padding:0 12px 64px; height:calc(100vh - 48px); }
+  .pane.phone { border:10px solid #1d2329; border-radius:34px; box-shadow:0 6px 20px rgba(0,0,0,.18); overflow:hidden; }
+  .pane.phone .statusbar { display:flex; justify-content:space-between; font-size:12px; padding:6px 16px 0; color:var(--muted); }
+  .tabs { display:flex; border-bottom:1px solid var(--line); }
+  .tabs button { flex:1; font:inherit; padding:8px; border:0; background:none; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; }
+  .tabs button.on { color:var(--ink); border-bottom-color:var(--sent); font-weight:600; }
+  .board { flex:1; overflow-y:auto; padding:10px; display:none; flex-direction:column; gap:8px; }
+  .card { border:1px solid var(--line); border-radius:12px; padding:8px 10px; }
+  .card.danger { border-color:var(--accent); border-left-width:5px; }
+  .card .top { display:flex; justify-content:space-between; font-weight:600; }
+  .card .status { font-size:12px; padding:1px 8px; border-radius:10px; background:var(--recv); }
+  .card .signs { font-size:13px; margin-top:3px; }
+  .card .rem { font-size:12.5px; margin-top:4px; color:var(--sent); }
+  .card .meta { font-size:11.5px; color:var(--muted); margin-top:3px; }
   @media (max-width: 900px) { main { grid-template-columns:1fr; height:auto; } .thread { height:50vh; } }
   .pane { background:var(--pane); border:1px solid var(--line); border-radius:14px; display:flex; flex-direction:column; min-height:0; }
   .pane h2 { margin:0; font-size:16px; padding:10px 12px 4px; }
@@ -40,10 +53,13 @@
     <div class="thread"></div>
     <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
   </section>
-  <section class="pane" data-role="chp">
+  <section class="pane phone" data-role="chp">
+    <div class="statusbar"><span>Health worker</span><span>SMS</span></div>
     <h2>Health worker</h2>
     <div class="who">Phone <select></select> texts <span class="line"></span></div>
+    <div class="tabs"><button type="button" class="on" data-tab="thread">Messages</button><button type="button" data-tab="board">Cases</button></div>
     <div class="thread"></div>
+    <div class="board"></div>
     <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
   </section>
   <section class="pane" data-role="facility">
@@ -125,7 +141,43 @@ async function poll() {
     }
   } finally { busy = false; }
 }
-init();
+async function pollBoard() {
+  const p = panes.chp;
+  if (!p || p.boardEl.style.display !== "flex") return;
+  const rows = await (await fetch("board?phone=" + encodeURIComponent(p.select.value))).json();
+  p.boardEl.innerHTML = rows.length ? "" : '<div class="meta">No cases yet.</div>';
+  for (const r of rows) {
+    const c = document.createElement("div");
+    c.className = "card" + (r.danger ? " danger" : "");
+    const top = document.createElement("div"); top.className = "top";
+    top.textContent = `${r.code} · ${r.age}`;
+    const st = document.createElement("span"); st.className = "status"; st.textContent = r.status; top.appendChild(st);
+    c.appendChild(top);
+    const sg = document.createElement("div"); sg.className = "signs";
+    sg.textContent = r.signs.length ? (r.danger ? "Danger: " : "") + r.signs.join(", ") : "No sign recorded";
+    c.appendChild(sg);
+    if (r.reminder) { const rm = document.createElement("div"); rm.className = "rem"; rm.textContent = r.reminder; c.appendChild(rm); }
+    const mt = document.createElement("div"); mt.className = "meta"; mt.textContent = `opened ${r.opened} · last ${r.time}`;
+    c.appendChild(mt);
+    p.boardEl.appendChild(c);
+  }
+}
+
+function setupTabs() {
+  const p = panes.chp;
+  p.boardEl = p.el.querySelector(".board");
+  p.el.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+    p.el.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+    const board = b.dataset.tab === "board";
+    p.thread.style.display = board ? "none" : "flex";
+    p.boardEl.style.display = board ? "flex" : "none";
+    p.el.querySelector("form").style.display = board ? "none" : "flex";
+    pollBoard();
+  });
+  setInterval(pollBoard, 2000);
+}
+
+init().then(setupTabs);
 </script>
 </body>
 </html>
