@@ -1,0 +1,8 @@
+{
+ "split": "y_test2",
+ "generator": "claude-opus-5-5",
+ "cards": 150,
+ "written": 150,
+ "errors": {},
+ "finished": "2026-10-03 15:00:48 Eastern Daylight Time"
+}
