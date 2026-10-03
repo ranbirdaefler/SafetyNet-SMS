@@ -1,6 +1,6 @@
 # STATUS
 
-**Updated:** Sat 3 Oct · **Block:** D1 done, `slice` tagged; next B9 (CHW rest) · **Last tag:** `slice`
+**Updated:** Sat 3 Oct · **Block:** B9, D2a, D2b done; B12 README draft done; `mvs` tagged (clip pending, Florian) · **Last tag:** `mvs`
 
 ## Seal record (commit times are push times from the local clock; GitHub push record is the evidence)
 | Item | Commit | Time (ET) | Notes |
@@ -30,8 +30,13 @@
 - D1 abfd316: parent door. `app/door.py` `parent_policy()` (the one function live + harness call, F5): v0 caregiver rows + duration regex + shared stage (ignores cues; chest -> "breathing complaint") + C4 + under 2 m; C9 scope order. Paths D1/D2 (unregistered), D3, D4 (CHP_CALL + full ASK_SIGNS, then CG_TOLD), D5 (no age), D6, D7, D8, D13-D15, D16/D17 link, D23. Send-time guard: a parent SMS must match one of the 5 templates. 61 pytest checks pass.
 - `slice`: run on the Pi simulator in the browser (parent text -> CG_TOLD + CHP_CALL + ASK_SIGNS -> CHP "4006 5" -> ALERT x2 + REFER_NOW + CG_GO_NOW -> facility "4006" -> ARRIVED + ACK); parent "degedege" -> ALERT x2 + CHP_GO_NOW + CG_GO_NOW checked by curl on the Pi.
 
+- B9 + timers b8a7a2e: A1 24 h window after NON_RED, A3 silence, D21/D22 late replies (CHA copied), M4, NON_RED; timer thread fires due times (restart reloads them, D28); one event lock (D29). T1-T35 (T34 retired) pass. Live 60 s door timeout checked on the Pi (CG_TIMEOUT + CHP_TIMEOUT + ALERT).
+- D2a/D2b 54230c7: no-CHP reason, D27 send failure; `app/cg_tests.py` CG1-CG18 (CG16 retired) + parent and staff lints on every load; red CG -> door flag off. Mutation checks: removing C4 "breathing", MUAC regex, negation, sending CG_TOLD before staff SMS, ALERT without PARENT SMS, a blocked word -> each caught. Door ON on the Pi. 69 pytest checks pass.
+- B12: README draft (MVS items: NOT TESTED header, safety contract, arrival-code owner, retention, English-only, no-age, C12, X5 (b), X6 (e), 60 s timeouts).
+
 ## Open issues
-- Wording to confirm (planner/Florian): D7 (no CHP assigned) sends CG_GO_NOW, whose fixed text says "Your health worker has been told" although no CHP exists (the CHA is told). ALERT for a parent with no CHP reads "CHU -, CHP -".
+- 60 s three-actor clip for `mvs`: needs Florian to record (simulator at http://192.168.1.208:8000/?clean=1).
+- Door flag off = parent texts logged only, no reply (the door is not offered). Confirm that is the intended flag-off behaviour.
 
 ## Next
-B9: CHW rest (A1 24 h digit window, A3-A5, timers, M4, NON_RED, option 8), T22-T35 -> then D2a (timeouts, C2, C4, scope, X6, F2), D2b (CG1-CG18, lints).
+B6: dedupe + per-head counts on X train, then B7 training (AfroXLMR-base, 8 heads, prereg recipe).
