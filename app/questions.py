@@ -44,7 +44,7 @@ def lint(bank, params):
     pre = bank.get("prefix_referred", {})
     if not pre.get("en") or not pre.get("sw"):
         errs.append("prefix_referred: en and sw required")
-    for k in ("ack_referred", "prefix_chw_referred"):
+    for k in ("ack_referred", "prefix_chw_referred", "ack_told"):
         for lang in ("en", "sw"):
             t = (bank.get(k) or {}).get(lang)
             if not t:
@@ -119,9 +119,14 @@ def load(params, path=None, force=None):
         if q.get("approved") is not True:                 # only texts Florian approved reach the allowlist
             continue
         texts = {lang: q[lang].format(**params) for lang in ("en", "sw")}
-        variants = list(texts.values()) + [pre[lang] + " " + texts[lang] for lang in ("en", "sw")]
+        variants = list(texts.values())
+        if q["kind"] == "prearrival":                     # only pre-arrival questions go out on referred cases
+            variants += [pre[lang] + " " + texts[lang] for lang in ("en", "sw")]
         M.QL_TEMPLATES["Q_" + q["id"]] = variants
     M.QL_TEMPLATES["Q_ACK"] = [bank["ack_referred"]["en"], bank["ack_referred"]["sw"]]
+    at = bank.get("ack_told") or {}
+    if at.get("approved") is True:
+        M.QL_TEMPLATES["Q_ACK_TOLD"] = [at["en"], at["sw"]]
     STATE["on"] = True
     return STATE
 
@@ -156,6 +161,15 @@ def text_for(qid, lang, referred, params):
     lang = lang if lang in ("en", "sw") else "sw"
     t = q[lang].format(**params)
     return (STATE["bank"]["prefix_referred"][lang] + " " + t) if referred else t
+
+
+def ack_told_text(lang, minutes, facility):
+    """None while the TOLD acknowledgement is not approved (then no acknowledgement is sent)."""
+    at = (STATE["bank"] or {}).get("ack_told") or {}
+    if at.get("approved") is not True:
+        return None
+    lang = lang if lang in ("en", "sw") else "sw"
+    return at[lang].format(minutes=minutes, facility=facility)
 
 
 def ack_text(lang):

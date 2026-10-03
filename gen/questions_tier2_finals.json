@@ -1,0 +1,32 @@
+{
+ "CK_WAKE": {
+  "en": "Call the child's name, touch gently, do not shake. Reply 1 if they do not wake, do not look at you, or drift off while you talk. 2 awake and alert. 3 not sure.",
+  "sw": "Ita jina la mtoto, mguse polepole. Usimtikise. Jibu 1 haamki, hakuangalii, au analala ukiongea. 2 yuko macho na makini. 3 sina uhakika",
+  "bt": "Call the child’s name, touch them gently. Do not shake them. Reply 1 does not wake up, does not look at you, or falls asleep while you are talking. 2 is awake and alert. 3 I am not sure",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_en": 159,
+  "len_sw": 134,
+  "gsm": true
+ },
+ "CK_BLOOD": {
+  "en": "Look at the child's last stool (poo). Reply 1 if you see blood or red. 2 no blood. 3 not sure or no stool.",
+  "sw": "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu au rangi nyekundu. 2 hakuna damu. 3 sina uhakika au hakuna kinyesi.",
+  "bt": "Check the child's last stool. Reply 1 if you see blood or red color. 2 no blood. 3 I am not sure or there is no stool.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_en": 106,
+  "len_sw": 124,
+  "gsm": true
+ },
+ "Q_ACK_TOLD": {
+  "en": "Thank you, your answer was passed on. If no one calls or comes within {minutes} minutes, go to {facility}. Go NOW if a danger sign appears.",
+  "sw": "Asante, jibu lako limefikishwa. Mtu asipopiga simu au kuja ndani ya dakika {minutes}, nenda {facility}. Ukiona dalili ya hatari, nenda SASA HIVI.",
+  "bt": "Thank you, your reply has been delivered. If someone does not call or come within {minutes} minutes, go to {facility}. If you see a danger sign, go RIGHT NOW.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_en": 149,
+  "len_sw": 155,
+  "gsm": true
+ }
+}

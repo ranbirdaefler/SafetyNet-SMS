@@ -38,6 +38,8 @@ def triggered_signs(state):
 def suggest(state, bank_questions, status):
     """Up to MAX_PREARRIVAL pre-arrival question ids for a REFERRED case (Tier 1), linked to the sign(s) that
     triggered go now, in bank order; skips questions already asked or declined. Each with its fixed-part reason."""
+    if status == "ASK_SIGNS" and eligible(state):
+        return suggest_checks(state, bank_questions)
     if status != "REFERRED" or not eligible(state):
         return []
     q = state.get("q") or {}
@@ -60,3 +62,39 @@ def suggest(state, bank_questions, status):
         reason += f" Source: {item['source']}."
         out.append({"id": item["id"], "reason": reason})
     return out[:max(0, MAX_PREARRIVAL - pre_asked)]
+
+
+GENERAL = ("convulsions", "not_drink_feed", "vomits_everything", "sleepy_unconscious")   # WHO general danger signs
+DURATION = ("cough_long", "diarrhoea_long", "fever_long")
+MAX_CHECKS = 2
+
+
+def suggest_checks(state, bank_questions):
+    """Tier 2: checks on a TOLD case, ranked by the model's per-sign scores; signs already PRESENT, questions already
+    asked or declined are skipped; DRINK only after WAKE was asked; duration checks only when the model scores that
+    long illness at 0.5 or more. Model unavailable: the bank's fixed order of the general danger signs."""
+    q = state.get("q") or {}
+    asked = list(q.get("asked", []))
+    if len(asked) + len(q.get("own", [])) >= MAX_PER_CASE:
+        return []
+    done = set(asked) | set(q.get("declined", []))
+    present = {s for s, v in (state.get("fields") or {}).items() if v == "PRESENT"}
+    heads = (state.get("model") or {}).get("heads") or {}
+    cands = []
+    for i, item in enumerate(bank_questions):
+        if item["kind"] != "check" or item["id"] in done or item["sign"] in present:
+            continue
+        if item.get("after") and item["after"] not in asked:
+            continue
+        p = heads.get(item["sign"])
+        if item["sign"] in DURATION and (p is None or p < 0.5):
+            continue
+        cands.append((-(p if p is not None else 0.0), i, item, p))
+    cands.sort(key=lambda c: (c[0], c[1]))
+    out = []
+    for _, _, item, p in cands[:MAX_CHECKS]:
+        st = score_text(p)
+        reason = (f"The model ranked it: {LABEL[item['sign']]}, score {st}." if st
+                  else "One of the WHO danger signs (fixed order).")
+        out.append({"id": item["id"], "reason": reason + f" Source: {item['source']}."})
+    return out[:MAX_PER_CASE - len(asked) - len(q.get("own", []))]

@@ -13,6 +13,11 @@ prefix_referred:   # approved by Florian, Sat 3 Oct
 prefix_chw_referred:
   en: "Keep going to the clinic."
   sw: "Endelea kwenda kliniki."
+# Acknowledgement on a TOLD case (Tier 2): restates the unchanged deadline as a duration ({minutes} = time left).
+ack_told:
+  approved: true    # by Florian, Sat 3 Oct
+  en: "Thank you, your answer was passed on. If no one calls or comes within {minutes} minutes, go to {facility}. Go NOW if a danger sign appears."
+  sw: "Asante, jibu lako limefikishwa. Mtu asipopiga simu au kuja ndani ya dakika {minutes}, nenda {facility}. Ukiona dalili ya hatari, nenda SASA HIVI."
 ack_referred:      # approved by Florian, Sat 3 Oct
   en: "Thank you, your answer was passed on. Keep going to the clinic."
   sw: "Asante, jibu lako limefikishwa. Endelea kwenda kliniki."
@@ -48,7 +53,7 @@ questions:
   # ---------- checks (Tier 2: TOLD cases, health worker's approval required) ----------
   - id: CK_FITS
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: convulsions
     en: "In this illness, has the child had fits (jerking they could not stop, eyes rolling, body stiff)? Reply 1 yes, fits. 2 no fits. 3 not sure."
     sw: "Katika ugonjwa huu, mtoto amepata degedege (kutetemeka bila kuzuia, macho kuzunguka, mwili kukakamaa)? Jibu 1 ndio, degedege. 2 hana degedege. 3 sina uhakika."
@@ -56,15 +61,15 @@ questions:
     source: "WHO/UNICEF CHW manual (S1) pp.12, 36"
   - id: CK_WAKE
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: sleepy_unconscious
-    en: "Call the child's name and touch gently. Do not shake. Reply 1 if they do not wake or fall back asleep at once. 2 if awake and looking at you. 3 not sure."
-    sw: "Mwite mtoto kwa jina lake na mguse taratibu. Usimtikise. Jibu 1 kama haamki au analala tena mara moja. 2 yuko macho na anakutazama. 3 sina uhakika."
-    labels: {1: "does not wake or falls back asleep", 2: "awake and looking", 3: "not sure if awake"}
+    en: "Call the child's name, touch gently, do not shake. Reply 1 if they do not wake, do not look at you, or drift off while you talk. 2 awake and alert. 3 not sure."
+    sw: "Ita jina la mtoto, mguse polepole. Usimtikise. Jibu 1 haamki, hakuangalii, au analala ukiongea. 2 yuko macho na makini. 3 sina uhakika."
+    labels: {1: "does not wake, does not look at you, or drifts off", 2: "awake and alert", 3: "not sure if awake"}
     source: "WHO/UNICEF CHW manual (S1) pp.27, 38"
   - id: CK_DRINK
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: not_drink_feed
     after: CK_WAKE
     en: "Only if the child is awake: offer a drink or the breast, do not force. Reply 1 cannot drink or suck at all, or not awake. 2 drinks or sucks. 3 not sure."
@@ -73,7 +78,7 @@ questions:
     source: "WHO/UNICEF CHW manual (S1) pp.12, 106, 119"
   - id: CK_VOMIT
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: vomits_everything
     en: "Since this illness began, does the child vomit up every drink and feed? Reply 1 vomits everything. 2 keeps some down. 3 not sure."
     sw: "Tangu ugonjwa huu uanze, mtoto hutapika kila anachokunywa au kula? Jibu 1 hutapika kila kitu. 2 hubakisha vingine. 3 sina uhakika."
@@ -81,15 +86,15 @@ questions:
     source: "WHO/UNICEF CHW manual (S1) p.12"
   - id: CK_BLOOD
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: blood_stool
-    en: "Look at the child's last stool (poo). Reply 1 if you see blood, red or dark. 2 no blood. 3 not sure or no stool."
-    sw: "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu, rangi nyekundu au nyeusi. 2 hakuna damu. 3 sina uhakika au hakuna kinyesi."
+    en: "Look at the child's last stool (poo). Reply 1 if you see blood or red. 2 no blood. 3 not sure or no stool."
+    sw: "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu au rangi nyekundu. 2 hakuna damu. 3 sina uhakika au hakuna kinyesi."
     labels: {1: "blood in stool", 2: "no blood seen", 3: "not sure or no stool"}
     source: "WHO/UNICEF CHW manual (S1) p.36"
   - id: CK_COUGH_DAYS
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: cough_long
     en: "Has the cough lasted {cough_red_days} days or more? Reply 1 yes, {cough_red_days} days or more. 2 less than {cough_red_days} days. 3 not sure."
     sw: "Kikohozi kimekaa siku {cough_red_days} au zaidi? Jibu 1 ndio, siku {cough_red_days} au zaidi. 2 chini ya siku {cough_red_days}. 3 sina uhakika."
@@ -97,7 +102,7 @@ questions:
     source: "WHO/UNICEF CHW manual (S1) p.35; S2 p.6"
   - id: CK_DIARRHOEA_DAYS
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: diarrhoea_long
     en: "Has the diarrhoea lasted {diarrhoea_red_days} days or more? Reply 1 yes, {diarrhoea_red_days} days or more. 2 less than {diarrhoea_red_days} days. 3 not sure."
     sw: "Kuharisha kumedumu siku {diarrhoea_red_days} au zaidi? Jibu 1 ndiyo, siku {diarrhoea_red_days} au zaidi. 2 chini ya siku {diarrhoea_red_days}. 3 sina uhakika."
@@ -105,7 +110,7 @@ questions:
     source: "WHO/UNICEF CHW manual (S1) p.36"
   - id: CK_FEVER_DAYS
     kind: check
-    approved: false   # Tier 2: not yet approved
+    approved: true    # by Florian, Sat 3 Oct (Tier 2)
     sign: fever_long
     en: "Has the fever lasted {fever_red_days} days or more, counted from when it started, even on and off? Reply 1 yes. 2 less. 3 not sure."
     sw: "Homa imekaa siku {fever_red_days} au zaidi, ukihesabu tangu ilipoanza, hata kama inakuja na kuisha? Jibu 1 ndio. 2 chini ya {fever_red_days}. 3 sina uhakika."

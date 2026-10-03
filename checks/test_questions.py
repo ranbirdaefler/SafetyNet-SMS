@@ -95,7 +95,7 @@ def test_suggest_tier1_and_m1(on):
     bank = QL.STATE["bank"]["questions"]
     st = {"age_months": 24, "u2m": False, "refer_reasons": ["convulsions"]}
     assert [s["id"] for s in suggest(st, bank, "REFERRED")] == ["PA_FITS_COUNT", "PA_AWAKE"]
-    assert suggest(st, bank, "ASK_SIGNS") == []                                   # Tier 1: referred cases only
+    assert all(s["id"].startswith("CK_") for s in suggest(st, bank, "ASK_SIGNS"))   # TOLD: Tier 2 checks only
     for bad in ({"age_months": None}, {"u2m": True, "age_months": 1}, {"age_months": 70}, {"pregnancy": True}):
         assert suggest({**st, **bad}, bank, "REFERRED") == []                     # M1
     r = suggest({**st, "rule_terms": {"convulsions": "degedege"}, "model": {"heads": {"convulsions": 0.97}}}, bank, "REFERRED")[0]["reason"]
@@ -262,7 +262,8 @@ def test_normal_messages_pass(on, text):
 
 def test_only_approved_texts_reach_the_allowlist(on):
     from app import messages as M
-    assert "Q_PA_FITS_COUNT" in M.QL_TEMPLATES and "Q_CK_FITS" not in M.QL_TEMPLATES   # Tier 2 not approved
+    bank = QL.STATE["bank"]
+    assert all(("Q_" + q["id"] in M.QL_TEMPLATES) == (q.get("approved") is True) for q in bank["questions"])
 
 
 # ---------- step 6: her own / edited messages (review E1-E6) ----------
@@ -335,3 +336,142 @@ def test_own_message_not_for_unregistered_or_other_chp(on):
     assert own(e, code, "Nijulishe mkifika.", chp=CHP8)[0]["error"] == "not your case"
     code_u = e.send("+254799000001", "parent", FITS)[0]["case_code"]                   # unregistered number
     assert own(e, code_u, "Nijulishe mkifika.")[0]["ok"] is False
+
+
+def test_own_message_gsm7(on):
+    e = Env(PROTO)
+    code = referred(e)
+    assert own(e, code, "Mtoto akiwa sawa? 🙂")[0]["error"].startswith("Not sent: use plain letters")
+    r, out = own(e, code, "Nijulishe mkifika kliniki – asante…")
+    assert r["ok"] and out[0]["body"].endswith("Nijulishe mkifika kliniki - asante...")
+
+
+
+# ---------- Tier 2: checks on TOLD cases (review M2, M4, M5, M7, M8, E7); every text approved in a temporary bank ----------
+@pytest.fixture
+def tier2(tmp_path):
+    lexicon.use(lexicon.live_list(lexicon.e2_list()))
+    bank = yaml.safe_load((ROOT / "config" / "questions.yaml").read_text(encoding="utf-8"))
+    for q in bank["questions"]:
+        q["approved"] = True
+    bank["ack_told"]["approved"] = True
+    f = tmp_path / "q.yaml"
+    f.write_text(yaml.safe_dump(bank, allow_unicode=True), encoding="utf-8")
+    QL.load(P, path=f, force=True)
+    assert QL.is_on(), QL.STATE["errors"]
+    yield
+    QL.load(P, force=False)
+
+
+RASH = "mtoto wangu wa miaka 2 ana upele"
+
+
+def told(e, phone=P1, text=RASH):
+    code = e.send(phone, "parent", text)[0]["case_code"]
+    assert e.store.case(code)["status"] == "ASK_SIGNS"
+    return code
+
+
+def test_tier2_suggest_order_skips_and_wake_before_drink(tier2):
+    bank = QL.approved_questions()
+    st = {"age_months": 24, "u2m": False, "model": {"heads": {"vomits_everything": 0.8, "convulsions": 0.6, "not_drink_feed": 0.9}}}
+    ids_ = [s["id"] for s in suggest(st, bank, "ASK_SIGNS")]
+    assert ids_ == ["CK_VOMIT", "CK_FITS"]                                   # DRINK waits for WAKE
+    st2 = {**st, "q": {"asked": ["CK_WAKE"]}, "fields": {"vomits_everything": "PRESENT"}}
+    assert [s["id"] for s in suggest(st2, bank, "ASK_SIGNS")] == ["CK_DRINK", "CK_FITS"]
+    assert all("COUGH" not in s["id"] for s in suggest(st, bank, "ASK_SIGNS"))   # durations only if scored >= 0.5
+    r = suggest(st, bank, "ASK_SIGNS")[0]["reason"]
+    assert "score 0.80" in r and "WHO/UNICEF" in r
+
+
+def test_tier2_question_has_no_referred_prefix(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    r, out = approve(e, code, qflow.suggestions(e.store.case(code))[0]["id"])
+    assert r["ok"] and not out[0]["body"].startswith("Endelea kwenda kliniki")
+
+
+def first_check(e, code, qid):
+    c = e.store.case(code)
+    st = c["state"]
+    st.setdefault("q", {})
+    qflow.qstate(st)["asked"].append(qid)                       # bypass the ranking: put this check as pending directly
+    st["q"]["pending"] = {"id": qid, "at": time.time()}
+    e.store.update_case(code, state=st)
+
+
+def test_tier2_danger_answer_goes_now_first(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    first_check(e, code, "CK_VOMIT")
+    out = e.send(P1, "parent", "1")
+    assert ("parent", "CG_GO_NOW") in ids(out) and ("parent", "Q_ACK_TOLD") not in ids(out)     # M2
+    assert ("facility", "ALERT") in ids(out)
+    c = e.store.case(code)
+    assert c["status"] == "REFERRED" and c["state"]["fields"]["vomits_everything"] == "PRESENT"
+
+
+@pytest.mark.parametrize("qid,go", [("CK_FITS", True), ("CK_WAKE", True), ("CK_DRINK", True), ("CK_VOMIT", True),
+                                     ("CK_BLOOD", False), ("CK_COUGH_DAYS", False)])
+def test_tier2_not_sure(tier2, qid, go):
+    e = Env(PROTO)
+    code = told(e)
+    first_check(e, code, qid)
+    out = e.send(P1, "parent", "3")
+    if go:                                                                  # M4: general danger signs -> go now
+        assert ("parent", "CG_GO_NOW") in ids(out)
+    else:                                                                   # blood / duration -> call now, deadline kept
+        c = e.store.case(code)
+        assert c["status"] == "ASK_SIGNS" and "Call now" in c["state"]["q"]["alert"]
+        assert ids(out) == [("parent", "Q_ACK_TOLD")]
+
+
+def test_tier2_safe_answer_keeps_deadline_and_timeout_fires(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    due0 = e.store.case(code)["due"]
+    first_check(e, code, "CK_FITS")
+    out = e.send(P1, "parent", "2")
+    assert ids(out) == [("parent", "Q_ACK_TOLD")]
+    assert "dakika" in out[0]["body"]                                       # duration form, no clock time
+    c = e.store.case(code)
+    assert c["status"] == "ASK_SIGNS" and c["due"] == due0 and "convulsions" not in (c["state"].get("fields") or {})
+    fired = e.fire()
+    assert ("parent", "CG_TIMEOUT") in ids(fired)                           # the deadline still runs
+
+
+def test_tier2_non_bare_is_not_sure_then_old_flow(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    first_check(e, code, "CK_FITS")
+    out = e.send(P1, "parent", "ndiyo")
+    assert ("parent", "CG_GO_NOW") in ids(out)                              # M5 + M4
+
+
+def test_tier2_late_danger_after_her_zero(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    first_check(e, code, "CK_VOMIT")
+    e.send(CHP7, "chp", f"{code} 0")                                        # she closes the case
+    assert e.store.case(code)["status"] == "NON_RED"
+    out = e.send(P1, "parent", "1")
+    assert ("parent", "CG_GO_NOW") in ids(out)                              # M8: within 12 h goes now
+
+
+def test_tier2_e7_reply_to_her_message(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    r, out = own(e, code, "Nitakupigia simu sasa hivi.")
+    assert r["ok"] and out[0]["body"] == "Achieng, your health worker: Nitakupigia simu sasa hivi."   # no E1 line on TOLD
+    out = e.send(P1, "parent", "sawa")
+    assert (CHP7, "CHP_PARENT_REPLIED") in [(m["recipient"], m["msg_id"]) for m in out]
+    c = e.store.case(code)
+    assert c["state"]["q"]["alert"] == "PARENT REPLIED: read now" and c["status"] == "ASK_SIGNS"
+    out = e.send(P1, "parent", "mtoto ana degedege sasa")                    # the keyword policy still runs underneath
+    assert ("parent", "CG_GO_NOW") in ids(out)
+
+
+def test_tier2_m1_no_drafts_for_newborn_or_no_age(tier2):
+    e = Env(PROTO)
+    code = e.send(P1, "parent", "mtoto wa wiki 3 ana upele")[0]["case_code"]
+    assert qflow.suggestions(e.store.case(code)) == []

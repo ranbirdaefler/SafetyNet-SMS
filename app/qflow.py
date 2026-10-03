@@ -16,12 +16,16 @@ from app import questions as Q
 from app.suggest import LABEL, MAX_PER_CASE, suggest
 
 WINDOW_S = 12 * 3600
+PLAIN = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "-", "—": "-", "…": "...",
+         " ": " "}
+PARENT_REPLIED = "{code}: parent replied to your message. Read now."
 PREARRIVAL = "{code} PRE-ARRIVAL, parent report, not checked: {label} (answered {time}). Asked via CHP {chp}."
 
 
 def qstate(st):
-    q = st.setdefault("q", {"asked": [], "declined": [], "log": [], "answers": [], "pending": None})
-    for k, v in (("own", []), ("replies", []), ("chw_pending", None)):
+    q = st.setdefault("q", {})
+    for k, v in (("asked", []), ("declined", []), ("log", []), ("answers", []), ("pending", None), ("own", []),
+                 ("replies", []), ("chw_pending", None)):
         q.setdefault(k, v)
     return q
 
@@ -69,6 +73,7 @@ def chw_action(store, reg, proto, chp_phone, code, qid, action):
     q["asked"].append(qid)
     q["pending"] = {"id": qid, "at": now}                          # M8: latest wins
     q["chw_pending"] = None
+    q["alert"] = None
     q["log"].append({"at": now, "qid": qid, "action": "approved", "by": chp["id"], "reason": offered[qid]["reason"],
                      "text": "drafted by model, approved by CHP " + chp["id"]})
     store.update_case(code, state=st)                               # M2: status, due and chp_replied untouched
@@ -87,6 +92,9 @@ def on_parent_text(flow, phone, case, body):
     cp = q.get("chw_pending")
     if not pend and cp and now - cp["at"] <= WINDOW_S:              # a reply to HER message: shown, never parsed
         q.setdefault("replies", []).append({"at": now, "text": body[:300]})
+        if case["status"] == "ASK_SIGNS" and case.get("chp_phone"):   # E7: on a TOLD case, call her attention
+            q["alert"] = "PARENT REPLIED: read now"
+            flow.store.send(case["chp_phone"], "chp", "CHP_PARENT_REPLIED", PARENT_REPLIED.format(code=case["code"]), case["code"])
         flow.store.update_case(case["code"], state=st)
         return None                                                 # the existing flow runs (policy, D23 repeat)
     if not pend:
@@ -95,10 +103,12 @@ def on_parent_text(flow, phone, case, body):
         q["pending"] = None
         flow.store.update_case(case["code"], state=st)
         return None
+    item = Q.question(pend["id"])
+    if case["status"] in ("ASK_SIGNS", "NON_RED") and item["kind"] == "check":
+        return on_check_answer(flow, phone, case, body, item, now)   # Tier 2
     arrived = bool(st.get("arrived_at"))
     if case["status"] != "REFERRED" and not (case["status"] == "CLOSED" and arrived):
         return None
-    item = Q.question(pend["id"])
     n = Q.parse_answer(body)
     bare = n is not None
     n = n or 3                                                      # M5: non-bare counts as "not sure"
@@ -117,6 +127,45 @@ def on_parent_text(flow, phone, case, body):
         return None                                                 # then the existing flow (D23 repeat) runs
     if not arrived:
         flow.store.send(phone, "parent", "Q_ACK", Q.ack_text(flow.reg.parent_lang(phone)), case["code"])
+    return case["code"]
+
+
+def on_check_answer(flow, phone, case, body, item, now):
+    """Tier 2 (review M2, M4, M5, M8): an answer to an approved check on a TOLD case (or within 12 h after her '0').
+    1 -> the sign is PRESENT and the existing go_now() runs (CG_GO_NOW first; no acknowledgement before it).
+    3 on fits / drink / vomit / wake -> go now. 3 on blood or a duration -> 'call now' on her board; deadline unchanged.
+    2 -> her board only ('not a check, you still check'). A non-bare reply counts as 3, then the existing flow."""
+    from app.engine import PRESENT
+    from app.suggest import GENERAL
+    st = case["state"]
+    q = st["q"]
+    n = Q.parse_answer(body)
+    bare = n is not None
+    n = n or 3
+    sign = item["sign"]
+    label = str(item["labels"][n]).format(**flow.proto.params)
+    q["pending"] = None
+    q["answers"].append({"at": now, "qid": item["id"], "n": n, "label": label, "bare": bare, "forwarded": False})
+    chp = flow.reg.chp_by_phone.get(case["chp_phone"])
+    go = (n == 1) or (n == 3 and sign in GENERAL)
+    if go:
+        if n == 1:
+            st.setdefault("fields", {})[sign] = PRESENT
+        reason = f"{LABEL[sign]} (parent check)" if n == 1 else f"not sure: {LABEL[sign]} (parent check)"
+        flow.store.update_case(case["code"], state=st)
+        flow.go_now(phone, chp, st, [reason], code=case["code"])
+        return case["code"]
+    if n == 3:
+        q["alert"] = f"Parent not sure: {label}. Call now."
+    flow.store.update_case(case["code"], state=st)
+    if not bare:
+        return None                                                 # then the existing flow (awaiting) runs
+    if case["status"] == "ASK_SIGNS" and case.get("due"):
+        import math
+        minutes = max(1, math.ceil((case["due"] - now) / 60))
+        t = Q.ack_told_text(flow.reg.parent_lang(phone), minutes, flow.fac())
+        if t:                                                       # only once Florian approved the text
+            flow.store.send(phone, "parent", "Q_ACK_TOLD", t, case["code"])
     return case["code"]
 
 
@@ -144,7 +193,7 @@ def board_lines(case):
 
 def write_info(case, reg):
     """What the 'write your own' box needs: the fixed, system-added start of the SMS and the room left (or None)."""
-    if not Q.is_on() or case is None or case["status"] != "REFERRED":
+    if not Q.is_on() or case is None or case["status"] not in ("REFERRED", "ASK_SIGNS"):
         return None
     parent = case.get("parent_phone")
     chp = reg.chp_by_phone.get(case["chp_phone"])
@@ -154,7 +203,8 @@ def write_info(case, reg):
         return None
     lang = reg.parent_lang(parent)
     lang = lang if lang in ("en", "sw") else "sw"
-    start = Q.STATE["bank"]["prefix_chw_referred"][lang] + " " + chp["name"] + ", your health worker: "
+    first = Q.STATE["bank"]["prefix_chw_referred"][lang] + " " if case["status"] == "REFERRED" else ""   # E1
+    start = first + chp["name"] + ", your health worker: "
     return {"start": start, "room": 160 - len(start)}
 
 
@@ -169,8 +219,12 @@ def chw_message(store, reg, proto, chp_phone, code, text, from_qid=None):
     if info is None:
         return {"ok": False, "error": "not available for this case"}
     text = " ".join((text or "").split())
+    for a_, b_ in PLAIN.items():                                       # GSM-7: typographic marks to plain ones
+        text = text.replace(a_, b_)
     if not text:
         return {"ok": False, "error": "empty message"}
+    if any(c not in Q.GSM and c not in Q.GSM_EXT for c in text):
+        return {"ok": False, "error": "Not sent: use plain letters only (no emoji or special symbols)."}
     if Q.blocked_hits(text):                                          # E2
         return {"ok": False, "error": Q.STATE["bank"]["blocked"]["refuse_text"]}
     system = set(M.PARENT_ALLOWLIST.values()) | {t for v in M.QL_TEMPLATES.values() for t in v}
@@ -189,6 +243,7 @@ def chw_message(store, reg, proto, chp_phone, code, text, from_qid=None):
     q["own"].append({"at": now, "text": text, "from_qid": from_qid})
     q["pending"] = None                                               # E5: her message ends parsing of a bank question
     q["chw_pending"] = {"at": now}
+    q["alert"] = None
     q["log"].append({"at": now, "qid": from_qid or "OWN", "action": "edited" if from_qid else "written", "by": chp["id"],
                      "reason": "", "text": ("edited" if from_qid else "written") + " by CHP " + chp["id"]})
     store.update_case(code, state=st)                                 # E4: status, due, chp_replied untouched

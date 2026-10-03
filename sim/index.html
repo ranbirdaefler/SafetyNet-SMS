@@ -103,6 +103,7 @@
   .qsug button { font:inherit; font-size:13px; padding:3px 10px; margin:4px 6px 0 0; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
   .qsug button.ok { background:#3b2a85; color:#fff; border-color:#3b2a85; }
   .qline { font-size:12.5px; margin-top:3px; }
+  .qalert { margin:4px 0; padding:4px 8px; border-radius:8px; background:#fde7e6; color:#8a1c12; font-weight:700; font-size:14px; }
   .qwrite { margin-top:6px; }
   .qwrite .start { font-size:12.5px; color:var(--muted); }
   .qwrite textarea { width:100%; font:inherit; font-size:15px; min-height:52px; border:1px solid var(--line); border-radius:8px; padding:6px; }
@@ -377,6 +378,7 @@ async function pollBoard() {
     const sg = document.createElement("div"); sg.className = "signs";
     sg.textContent = r.signs.length ? (r.danger ? "Danger: " : "") + r.signs.join(", ") : "No sign recorded";
     c.appendChild(sg);
+    if (r.q_alert) { const al = document.createElement("div"); al.className = "qalert"; al.textContent = r.q_alert; c.insertBefore(al, c.children[1]); }
     const chips = document.createElement("div");
     if (r.danger) { const k = document.createElement("span"); k.className = "chip rules"; k.textContent = "rules: go now / referral"; chips.appendChild(k); }
     const where = ms[r.code] != null ? ` · ${ms[r.code]} ms${cfg.public ? ", demo server" : ", on device"}` : "";
