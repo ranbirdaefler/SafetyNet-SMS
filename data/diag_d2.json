@@ -1,0 +1,104 @@
+{
+ "v1 FP32": {
+  "convulsions": {
+   "present_caught": "0/8",
+   "denied_flagged": "0/8"
+  },
+  "Swahili": {
+   "present_caught": "13/20",
+   "denied_flagged": "10/20"
+  },
+  "all": {
+   "present_caught": "26/40",
+   "denied_flagged": "18/40"
+  },
+  "English": {
+   "present_caught": "13/20",
+   "denied_flagged": "8/20"
+  },
+  "not_drink_feed": {
+   "present_caught": "8/8",
+   "denied_flagged": "2/8"
+  },
+  "vomits_everything": {
+   "present_caught": "8/8",
+   "denied_flagged": "8/8"
+  },
+  "sleepy_unconscious": {
+   "present_caught": "8/8",
+   "denied_flagged": "8/8"
+  },
+  "blood_stool": {
+   "present_caught": "2/8",
+   "denied_flagged": "0/8"
+  }
+ },
+ "v2 FP32": {
+  "convulsions": {
+   "present_caught": "1/8",
+   "denied_flagged": "0/8"
+  },
+  "Swahili": {
+   "present_caught": "13/20",
+   "denied_flagged": "10/20"
+  },
+  "all": {
+   "present_caught": "29/40",
+   "denied_flagged": "20/40"
+  },
+  "English": {
+   "present_caught": "16/20",
+   "denied_flagged": "10/20"
+  },
+  "not_drink_feed": {
+   "present_caught": "8/8",
+   "denied_flagged": "6/8"
+  },
+  "vomits_everything": {
+   "present_caught": "8/8",
+   "denied_flagged": "6/8"
+  },
+  "sleepy_unconscious": {
+   "present_caught": "8/8",
+   "denied_flagged": "8/8"
+  },
+  "blood_stool": {
+   "present_caught": "4/8",
+   "denied_flagged": "0/8"
+  }
+ },
+ "v2 shipped (trim INT8)": {
+  "convulsions": {
+   "present_caught": "1/8",
+   "denied_flagged": "0/8"
+  },
+  "Swahili": {
+   "present_caught": "13/20",
+   "denied_flagged": "10/20"
+  },
+  "all": {
+   "present_caught": "28/40",
+   "denied_flagged": "20/40"
+  },
+  "English": {
+   "present_caught": "15/20",
+   "denied_flagged": "10/20"
+  },
+  "not_drink_feed": {
+   "present_caught": "8/8",
+   "denied_flagged": "6/8"
+  },
+  "vomits_everything": {
+   "present_caught": "8/8",
+   "denied_flagged": "6/8"
+  },
+  "sleepy_unconscious": {
+   "present_caught": "8/8",
+   "denied_flagged": "8/8"
+  },
+  "blood_stool": {
+   "present_caught": "3/8",
+   "denied_flagged": "0/8"
+  }
+ }
+}
