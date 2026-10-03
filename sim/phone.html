@@ -26,7 +26,7 @@
 <main>
   <div id="banner" hidden style="background:#fff4d6;border:1px solid #e8d49a;border-radius:10px;padding:6px 10px;font-size:13px;margin-top:8px">Demo with synthetic data. Not for medical use. In deployment this runs offline on the health worker's phone; this public demo runs the same code on a cloud server so you can try it.</div>
   <h1>SafetyNet-SMS on a phone</h1>
-  <div class="sub">The shipped board model (90 MB, 8-bit weights) running in this browser, single-threaded WebAssembly. No app, no cloud.</div>
+  <div class="sub">The shipped board model (93 MB, 8-bit weights) running in this browser, single-threaded WebAssembly. No app, no cloud.</div>
   <div class="card">Network: <span id="net" class="status">checking</span><div class="k">From the browser (navigator.onLine and online/offline events).</div></div>
   <div class="card"><div>Model: <span id="load">loading...</span></div><div class="k" id="loadk"></div></div>
   <div class="card">
@@ -163,7 +163,7 @@ $("parity").onclick = async () => {
   } catch (e) { $("res").textContent = "Parity needs the Pi (online)."; }
 };
 
-fetch("config").then(r => r.json()).then(c => { if (c.public) document.getElementById("banner").hidden = false; });
+fetch("config").then(r => r.json()).then(c => { if (c.public) { document.getElementById("banner").hidden = false; document.getElementById("parity").hidden = true; } });
 init().catch(e => { $("load").textContent = "failed: " + e; });
 </script>
 </body>

@@ -202,7 +202,10 @@ setInterval(pollLog, 1500);
 
 document.getElementById("reset").onclick = async () => { await fetch("demo/reset", {method: "POST"}); location.reload(); };
 document.getElementById("fire").onclick = async () => { await fetch("demo/fire-timeouts", {method: "POST"}); };
-fetch("config").then(r => r.json()).then(c => { if (c.public) document.getElementById("banner").hidden = false; });
+fetch("config").then(r => r.json()).then(c => { if (c.public) {
+  document.getElementById("banner").hidden = false;
+  document.querySelector(".corner").textContent = "SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.";
+} });
 
 init().then(setupTabs);
 </script>
