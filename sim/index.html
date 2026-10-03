@@ -1,1 +1,131 @@
-<!doctype html><title>sim</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SafetyNet-SMS simulator</title>
+<style>
+  :root { --bg:#eef0f3; --pane:#fff; --ink:#1d2329; --muted:#6b7480; --line:#d6dae0;
+          --sent:#1f6feb; --sent-ink:#fff; --recv:#e9ecef; --accent:#b42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:10px 16px; display:flex; align-items:center; gap:12px; }
+  header h1 { font-size:17px; margin:0; }
+  header .hint { color:var(--muted); font-size:13px; }
+  main { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; padding:0 12px 64px; height:calc(100vh - 48px); }
+  @media (max-width: 900px) { main { grid-template-columns:1fr; height:auto; } .thread { height:50vh; } }
+  .pane { background:var(--pane); border:1px solid var(--line); border-radius:14px; display:flex; flex-direction:column; min-height:0; }
+  .pane h2 { margin:0; font-size:16px; padding:10px 12px 4px; }
+  .who { padding:0 12px 8px; color:var(--muted); font-size:13px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; border-bottom:1px solid var(--line); }
+  .who select { font:inherit; }
+  .thread { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:8px; }
+  .msg { max-width:88%; padding:8px 11px; border-radius:14px; white-space:pre-wrap; word-wrap:break-word; }
+  .msg.sent { align-self:flex-end; background:var(--sent); color:var(--sent-ink); border-bottom-right-radius:4px; }
+  .msg.recv { align-self:flex-start; background:var(--recv); border-bottom-left-radius:4px; }
+  .meta { font-size:11px; opacity:.7; margin-top:3px; }
+  body.clean .meta .id { display:none; }
+  form { display:flex; gap:8px; padding:10px; border-top:1px solid var(--line); }
+  form input { flex:1; font:inherit; padding:8px 10px; border:1px solid var(--line); border-radius:10px; }
+  form button { font:inherit; padding:8px 14px; border:0; border-radius:10px; background:var(--sent); color:#fff; cursor:pointer; }
+  .corner { position:fixed; left:12px; right:12px; bottom:10px; background:rgba(29,35,41,.88); color:#fff; font-size:12.5px;
+            padding:6px 10px; border-radius:8px; text-align:center; }
+</style>
+</head>
+<body>
+<header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span></header>
+<main>
+  <section class="pane" data-role="parent">
+    <h2>Parent</h2>
+    <div class="who">Phone <select></select> texts <span class="line"></span></div>
+    <div class="thread"></div>
+    <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
+  </section>
+  <section class="pane" data-role="chp">
+    <h2>Health worker</h2>
+    <div class="who">Phone <select></select> texts <span class="line"></span></div>
+    <div class="thread"></div>
+    <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
+  </section>
+  <section class="pane" data-role="facility">
+    <h2>Facility + CHA</h2>
+    <div class="who">Phone <select></select> texts <span class="line"></span></div>
+    <div class="thread"></div>
+    <form><input placeholder="Type an SMS" autocomplete="off"><button>Send</button></form>
+  </section>
+</main>
+<div class="corner">SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi. Synthetic cases; not clinically validated.</div>
+<script>
+if (new URLSearchParams(location.search).get("clean")) document.body.classList.add("clean");
+const panes = {};
+let cfg, lastIn = 0, lastOut = 0;
+const fmt = ts => new Date(ts * 1000).toTimeString().slice(0, 8);
+
+function bubble(pane, cls, body, meta) {
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.textContent = body;
+  const m = document.createElement("div");
+  m.className = "meta";
+  m.innerHTML = meta;
+  d.appendChild(m);
+  pane.thread.appendChild(d);
+  pane.thread.scrollTop = pane.thread.scrollHeight;
+}
+
+function phonesFor(role) {
+  if (role === "parent") return cfg.parents.concat(["+254799000001 (not registered)"]);
+  if (role === "chp") return cfg.chps;
+  return [cfg.facility].concat(cfg.cha);
+}
+
+async function init() {
+  cfg = await (await fetch("config")).json();
+  document.querySelectorAll(".pane").forEach(el => {
+    const role = el.dataset.role;
+    const p = { el, role, thread: el.querySelector(".thread"), select: el.querySelector("select") };
+    phonesFor(role).forEach(ph => { const o = document.createElement("option"); o.value = ph.split(" ")[0]; o.textContent = ph; p.select.appendChild(o); });
+    el.querySelector(".line").textContent = cfg.lines[role];
+    p.select.onchange = () => { p.thread.innerHTML = ""; lastIn = 0; lastOut = 0; };
+    el.querySelector("form").onsubmit = async e => {
+      e.preventDefault();
+      const inp = el.querySelector("input");
+      const body = inp.value.trim();
+      if (!body) return;
+      inp.value = "";
+      await fetch("sms", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ from: p.select.value, to: cfg.lines[role], body }) });
+      poll();
+    };
+    panes[role] = p;
+  });
+  poll();
+  setInterval(poll, 1000);
+}
+
+let busy = false;
+async function poll() {
+  if (busy) return;
+  busy = true;
+  try {
+    const [ins, outs] = await Promise.all([
+      fetch("inbox?since=" + lastIn).then(r => r.json()),
+      fetch("outbox?since=" + lastOut).then(r => r.json())]);
+    const events = ins.map(m => ({ ...m, dir: "in" })).concat(outs.map(m => ({ ...m, dir: "out" })))
+      .sort((a, b) => a.ts - b.ts);
+    for (const m of events) {
+      if (m.dir === "in") {
+        lastIn = Math.max(lastIn, m.id);
+        for (const p of Object.values(panes))
+          if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts));
+      } else {
+        lastOut = Math.max(lastOut, m.id);
+        for (const p of Object.values(panes))
+          if (p.select.value === m.recipient || (p.role === "facility" && phonesFor("facility").includes(m.recipient))) bubble(p, "recv", m.body, `${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
+      }
+    }
+  } finally { busy = false; }
+}
+init();
+</script>
+</body>
+</html>

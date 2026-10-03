@@ -42,6 +42,11 @@ def outbox(since: int = 0):
     return STORE.outbox_since(since)
 
 
+@app.get("/inbox")
+def inbox(since: int = 0):
+    return STORE.inbox_since(since)
+
+
 @app.get("/config")
 def config():
     r = REGISTRY

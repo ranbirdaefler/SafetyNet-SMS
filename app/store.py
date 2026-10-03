@@ -36,6 +36,11 @@ class Store:
             rows = self.db.execute("SELECT * FROM outbox WHERE id > ? ORDER BY id", (since_id,)).fetchall()
         return [dict(r) for r in rows]
 
+    def inbox_since(self, since_id=0):
+        with self.lock:
+            rows = self.db.execute("SELECT * FROM inbox WHERE id > ? ORDER BY id", (since_id,)).fetchall()
+        return [dict(r) for r in rows]
+
     def last_outbox_id(self):
         with self.lock:
             r = self.db.execute("SELECT COALESCE(MAX(id), 0) FROM outbox").fetchone()
