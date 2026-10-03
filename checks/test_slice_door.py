@@ -69,3 +69,11 @@ def test_parent_allowlist_guard():
         STORE.send(P1, "parent", "FREE_TEXT", "Give ORS and wait")
     with pytest.raises(ValueError):
         STORE.send(P1, "parent", "CG_GO_NOW", "Take the child home. It is fine.")
+
+
+def test_umri_without_unit_goes_now_age_not_received():
+    old = STORE.latest_case_for_parent(P3)
+    if old:
+        STORE.update_case(old["code"], status="CLOSED")          # D25: a closed case never absorbs
+    r = send(P3, "40100", "mtoto umri 7 ana mafua")
+    assert ids(r)[-1] == (P3, "CG_GO_NOW") and "age not received" in r[0][2]

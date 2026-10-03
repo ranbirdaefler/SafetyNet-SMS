@@ -1,11 +1,13 @@
 """Shared age and duration regex (both eval arms), MUAC regex and scope words.
 
 Word lists (README lists each one; only words from the protocol record, PREREGISTRATION.md section 5):
-- Age units: m, month(s), y, year(s), d, day(s), week(s); miezi, mwezi (months), mwaka (years), wiki (weeks),
-  siku (days); "umri" marks an age ("umri N" with no unit is read as months).
+- Age units: m, month(s), y, year(s), d, day(s), week(s); miezi, mwezi (months), mwaka, miaka (years), wiki (weeks),
+  siku (days). "miaka" was added on Sat 3 Oct before any test set was opened (source: the pre-event Swahili
+  onboarding text "miezi 2 hadi miaka 5", ux_localization.md). "umri" marks an age; "umri N" without a unit is no age.
 - Under 2 months: under 60 days, under 9 weeks, under 2 months, or "newborn" (S10). Exactly 2 months is in scope.
 - Pregnancy / adult words: "pregnant", "pregnancy", "adult". No Swahili newborn or pregnancy terms are in the sources.
-- Symptom words for durations: cough, kikohozi; diarrhoea, diarrhea, kuhara; fever, homa.
+- Symptom words for durations: cough, kikohozi; diarrhoea, diarrhea, kuhara; fever, homa (Swahili words from the
+  pre-event ASK_SIGNS option 7, "Siku: kikohozi 14+, kuhara 14+, homa 7+", ux_localization.md).
 - "about a week" / "a week" = 7 days. "wiki N" = 7N days. A range takes its upper bound.
 - MUAC: read from 50 to 300 mm or 5.0 to 30.0 cm after the word "muac".
 A number is a duration when a symptom word comes earlier in the same clause or "for / kwa / since / tangu" comes
@@ -17,7 +19,7 @@ from app.lexicon import clauses
 
 UNITS_EN = {"m": "months", "month": "months", "months": "months", "y": "years", "year": "years", "years": "years",
             "d": "days", "day": "days", "days": "days", "week": "weeks", "weeks": "weeks"}
-UNITS_SW = {"miezi": "months", "mwezi": "months", "mwaka": "years", "wiki": "weeks", "siku": "days"}
+UNITS_SW = {"miezi": "months", "mwezi": "months", "mwaka": "years", "miaka": "years", "wiki": "weeks", "siku": "days"}
 AGE_MARK = {"umri", "age", "aged"}
 DUR_MARK = {"for", "kwa", "since", "tangu"}
 SYMPTOM = {"cough": "cough", "kikohozi": "cough", "diarrhoea": "diarrhoea", "diarrhea": "diarrhoea",
@@ -86,8 +88,6 @@ def parse(text):
                 unit, ui = UNITS_SW[toks[i - 1]], i - 1
             elif i + 1 < len(toks) and toks[i + 1] in UNITS_SW:
                 unit, ui = UNITS_SW[toks[i + 1]], i + 1
-            elif i > 0 and toks[i - 1] == "umri":
-                unit, ui = "months", i - 1
             if unit is None:
                 continue
             start = min(i, ui)

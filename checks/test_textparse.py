@@ -17,7 +17,7 @@ def test_exactly_2_months_in_scope(text):
 
 
 @pytest.mark.parametrize("text,months", [("18m homa siku 3", 18), ("mtoto miezi 18 kikohozi siku 14", 18),
-                                         ("child 2 years", 24), ("mwaka 3", 36), ("umri 20", 20),
+                                         ("child 2 years", 24), ("mwaka 3", 36), ("miaka 2", 24), ("umri miezi 7", 7),
                                          ("my son is 18-24 months", 24), ("3 y and 1 m", 1)])
 def test_age(text, months):
     assert textparse.parse(text).age_months == pytest.approx(months)
@@ -86,3 +86,15 @@ def test_shared_stage_ignores_cues_c4():
 def test_hana_degedege_case_has_nothing_absent():
     c = chp_case("18m hana degedege, homa siku 3, MUAC 13.5 cm, miguu sawa")
     assert c.fields == {} and c.age_months == 18 and c.durations == {"fever": 3} and c.muac_mm == 135
+
+
+def test_umri_without_unit_is_no_age():
+    assert textparse.parse("mtoto umri 7 ana homa").age_months is None
+
+
+def test_miaka_6_out_of_scope():
+    from app.door import parent_policy
+    from app.engine import Protocol
+    params = Protocol.load("config/protocol.yaml", run_suite=False).params
+    assert parent_policy("mtoto miaka 6 ana mafua", params).oos == "5 y+"
+    assert parent_policy("mtoto miaka 2 ana mafua", params).action == "TOLD"
