@@ -97,3 +97,6 @@ CHA_UNREG = "PARENT SMS {code}: number not registered, no facility told. Parent 
 # ---------- case board (shown on the board only; never sent as SMS) ----------
 FOLLOWUP_REFERRED = "follow-up visit due {date}. Follow your chart booklet."
 FOLLOWUP_HOME = "check on child due {date}. Follow your chart booklet."
+
+BOARD_POSSIBLE = "model: possible {sign}, check"
+BOARD_UNSURE = "model unsure: please read"

@@ -1,7 +1,8 @@
 """Case board for one health worker: built only from stored case records (no free text, nothing generated).
 
 Columns: code, age, danger flag, signs recorded (fixed vocabulary), status, time, and a follow-up reminder.
-Status: to check / referred / no reply / arrived / closed. Sort: danger first, then oldest first.
+Status: to check / referred / no reply / arrived / closed. Sort: rule-flagged danger first, then model
+"possible", then model "unsure", then the rest; oldest first within each group. Model lines are band words only.
 Reminders (board only, never sent as SMS) say only when to go back: arrived -> "follow-up visit due {date}";
 closed with "0" -> "check on child due {date}"; date = stored arrival or close time + followup_days.
 """
@@ -48,6 +49,9 @@ def row(case, proto):
     else:
         shown = "closed"
     age = st.get("age_months")
+    m = st.get("model") or {}
+    model_line = (M.BOARD_POSSIBLE.format(sign=m["sign"]) if m.get("band") == "possible"
+                  else M.BOARD_UNSURE if m.get("band") == "unsure" else None)
     return {
         "code": case["code"],
         "age": "under 2m" if st.get("u2m") else (f"{int(age)}m" if age is not None else "age unknown"),
@@ -57,6 +61,8 @@ def row(case, proto):
         "opened": M.hhmm(case["created"]),
         "time": M.hhmm(event_ts),
         "reminder": reminder,
+        "model": model_line,
+        "model_band": m.get("band"),
         "created": case["created"],
     }
 
@@ -65,5 +71,6 @@ def board(store, chp_phone, proto):
     with store.lock:
         rows = store.db.execute("SELECT * FROM cases WHERE chp_phone = ? AND status != 'REFERRED_U'", (chp_phone,)).fetchall()
     out = [row(store._case(r), proto) for r in rows]
-    out.sort(key=lambda r: (not r["danger"], r["created"]))
+    group = {"possible": 1, "unsure": 2}
+    out.sort(key=lambda r: (0 if r["danger"] else group.get(r["model_band"], 3), r["created"]))
     return out

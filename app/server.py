@@ -60,6 +60,14 @@ def load_protocol():
     except Exception:
         pass
     STATE["extractors"] = (STATE["encoder"], keyword_extractor) if STATE["encoder_on"] else (keyword_extractor,)
+    # board-only model (v2, calibrated): annotates the health worker's board; never the parent reply
+    STATE["board_model"] = None
+    try:
+        if Path(ROOT, "config", "board_model.json").exists():
+            from app.board_model import BoardModel
+            STATE["board_model"] = BoardModel()
+    except Exception:
+        STATE["board_model"] = None
     try:
         STATE["cg_failed"] = cg_tests.run(proto, variants=variants)
     except Exception as e:
@@ -102,7 +110,8 @@ def sms(msg: Inbound):
         if role == "parent" and not STATE["door_on"]:
             service.door_off(STORE, REGISTRY, msg.sender)   # fail-safe: fixed go-now + CHA copy, never silence
         elif role is not None:
-            service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body, extractors=STATE["extractors"])
+            service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body, extractors=STATE["extractors"],
+                           board_model=STATE.get("board_model"))
         return {"role": role, "replies": STORE.outbox_since(before)}
 
 
@@ -130,6 +139,7 @@ def reload():
     st = load_protocol()
     return {"loaded": st["load_error"] is None, "error": st["load_error"], "door_on": st["door_on"],
             "keyword_list": st["keyword_list"], "encoder_on": st["encoder_on"], "model": MODEL_DIR,
+            "board_model": bool(st.get("board_model")),
             "cg_failed": st["cg_failed"],
             "live": st["protocol"].cfg["profile"]["id"] if st["protocol"] else None}
 

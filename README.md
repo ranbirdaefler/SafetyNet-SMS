@@ -64,6 +64,39 @@ Entry-level Android phone in Kenya: {spec line, cited in DATA.md}
 
 CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit needs root, so only core pinning was used.
 
+### The model on the health worker's board
+
+The model never decides what the parent is told. It sorts the health worker's cases and marks the ones it is unsure about for her to read first.
+
+It reads parent text only and adds one of three board lines, from its calibrated top danger probability: "model: possible {sign}, check" (at or above hi), "model unsure: please read" (between lo and hi), or nothing (below lo). The board sorts rule-flagged danger first, then "possible", then "unsure", then the rest, oldest first within each group. It sends no SMS and changes no case status; a model failure just leaves no model line. Tested: the parent reply is identical with the model on and off (CG1 to CG18 both ways).
+
+Model: v2, vocabulary-trimmed with 8-bit weights (89.7 MB). Calibration: one temperature per head, fit on X-val (held out from the GPT-written training data; never Y-dev or a test set):
+
+| Head | Temperature | ECE before | ECE after |
+|---|---|---|---|
+| convulsions | 0.6 | 0.0477 | 0.012 |
+| not_drink_feed | 0.25 | 0.0319 | 0.0 |
+| vomits_everything | 0.35 | 0.041 | 0.0039 |
+| sleepy_unconscious | 0.6 | 0.0382 | 0.0103 |
+| blood_stool | 0.65 | 0.043 | 0.0127 |
+| cough_long | 0.4 | 0.0585 | 0.0105 |
+| diarrhoea_long | 0.5 | 0.0593 | 0.0243 |
+| fever_long | 0.6 | 0.0502 | 0.0127 |
+
+Thresholds, set on Y-dev (GPT-written): lo = 0.068 (the lowest Y-dev danger score: no Y-dev danger message falls below it; with 60 danger messages this bounds the miss rate at roughly 1/61 on data like Y-dev), hi = 0.990 (the highest Y-dev no-danger score). At these values 30.8% of Y-dev messages go to "please read". Sweep on Y-dev:
+
+| lo | hi | Y-dev messages sent to "please read" | Y-dev danger messages below lo (of 60) | Y-dev no-danger marked "possible" (of 45) |
+|---|---|---|---|---|
+| **0.068 (chosen)** | **0.9904 (chosen)** | **30.8%** | **0** | **0** |
+| 0.01 | 0.9 | 13.3% | 0 | 2 |
+| 0.01 | 0.95 | 16.7% | 0 | 2 |
+| 0.1 | 0.9 | 10.0% | 1 | 2 |
+| 0.1 | 0.95 | 13.3% | 1 | 2 |
+| 0.2 | 0.9 | 9.2% | 1 | 2 |
+| 0.2 | 0.95 | 12.5% | 1 | 2 |
+| 0.5 | 0.9 | 5.8% | 2 | 2 |
+| 0.5 | 0.95 | 9.2% | 2 | 2 |
+
 ## Safety contract and preconditions
 
 - Outgoing SMS are English only in this build. Swahili versions are future work and need a native speaker's back-translation, keeping every qualifier, before any use.
@@ -136,6 +169,7 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - **Deployment rule and deployed model.** Extends prereg section 7: deploy the smallest variant with at least 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches, chosen on Y-dev before `freeze`. Deployed: the v1 model with its vocabulary trimmed after fine-tuning to 9,759 tokens (keep-list: single Latin characters, X train, the keyword lists, the fixed strings, MASSIVE train) and weights stored as 8-bit (weight-only, per channel), 90.3 MB with tokenizer (FP32: 1,074.9 MB). Reason: the brief's rule that model files must be small enough to side-load or send over a weak connection. The registered row stays FP32 as pre-registered (the registered INT8 failed the section 7 rule); the deployed variant is reported as its own labelled row.
 - **Rung 3.** The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests (CG1 and CG5 with the encoder on) and the Y-dev go-live gate (more needless go-nows than the keyword list).
 - **v2.** A second training run (v2) added terse and negated messages after the v1 encoder failed the caregiver safety tests CG1/CG5; training on short danger-term messages makes CG1 easier to pass, which we consider legitimate because recognising bare danger terms is what CG1 requires. v2 still failed (CG5, CG5b, CG10, CG12 and the Y-dev gate) and is reported as its own labelled row.
+- **Board use of the v2 model.** The v2 model runs on the health worker's case board only, with calibrated probabilities and a "please read" band (thresholds set on Y-dev); the parent line is unchanged and stays rule-based. Its test-set numbers are an exploratory row: thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.
 - **Exploratory row (not pre-registered).** MASSIVE sw-KE: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.
 
 ## Word lists added on Saturday (from the protocol sources only)

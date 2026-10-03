@@ -156,6 +156,7 @@ async function pollBoard() {
     const sg = document.createElement("div"); sg.className = "signs";
     sg.textContent = r.signs.length ? (r.danger ? "Danger: " : "") + r.signs.join(", ") : "No sign recorded";
     c.appendChild(sg);
+    if (r.model) { const md = document.createElement("div"); md.className = "rem"; md.style.color = "var(--accent)"; md.textContent = r.model; c.appendChild(md); }
     if (r.reminder) { const rm = document.createElement("div"); rm.className = "rem"; rm.textContent = r.reminder; c.appendChild(rm); }
     const mt = document.createElement("div"); mt.className = "meta"; mt.textContent = `opened ${r.opened} · last ${r.time}`;
     c.appendChild(mt);

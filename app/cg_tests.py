@@ -17,22 +17,25 @@ P1, P2, P3, P4, PU = "+254733000001", "+254733000002", "+254733000003", "+254733
 CHP7, CHP8, FAC, CHA = "+254722000107", "+254722000108", "+254711000100", "+254711000200"
 LINES = {"parent": "40100", "chp": "40101", "facility": "40102"}
 LATER = 10 ** 6
+BOARD_MODEL = None   # set to run every CG test with the board model on (the parent reply must not change)
 
 
 class Env:
     """A scratch service: in-memory store, the live registry and protocol, the real handlers."""
 
-    def __init__(self, proto, extractors=None):
+    def __init__(self, proto, extractors=None, board_model=None):
         from app import service
         self.service, self.proto = service, proto
         self.store, self.reg = Store(":memory:"), Registry(ROOT / "config" / "registry.yaml")
         self.extractors = extractors
+        self.board_model = board_model if board_model is not None else BOARD_MODEL
         self.all = []
 
     def send(self, phone, role, body):
         before = self.store.last_outbox_id()
         self.store.log_in(phone, LINES[role], role, body)
-        self.service.handle(self.store, self.reg, self.proto, role, phone, body, extractors=self.extractors)
+        self.service.handle(self.store, self.reg, self.proto, role, phone, body, extractors=self.extractors,
+                            board_model=self.board_model)
         out = self.store.outbox_since(before)
         self.all += out
         return out

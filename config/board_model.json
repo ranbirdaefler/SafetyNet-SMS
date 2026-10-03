@@ -1,0 +1,19 @@
+{
+ "model_dir": "models/onnx/v2_trim_wq8",
+ "model_hash": "e8e8883382b74bd165ab3eb075a01dca96dd92d5",
+ "temperatures": {
+  "convulsions": 0.6,
+  "not_drink_feed": 0.25,
+  "vomits_everything": 0.35,
+  "sleepy_unconscious": 0.6,
+  "blood_stool": 0.65,
+  "cough_long": 0.4,
+  "diarrhoea_long": 0.5,
+  "fever_long": 0.6
+ },
+ "lo": 0.068065,
+ "hi": 0.990449,
+ "fit_on": "X-val (165 messages, held out from x_train_v2.jsonl with seed 42)",
+ "thresholds_on": "Y-dev (gpt-5.5, 120)",
+ "note": "lo = lowest Y-dev danger score; with 60 danger messages this bounds the miss rate at roughly 1/61 on data like Y-dev. hi = highest Y-dev no-danger score."
+}
