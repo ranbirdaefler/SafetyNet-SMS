@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SafetyNet-SMS simulator</title>
 <style>
   :root { --bg:#eef0f3; --pane:#fff; --ink:#1d2329; --muted:#6b7480; --line:#d6dae0;
@@ -49,6 +49,36 @@
   .osm { position:fixed; left:12px; bottom:46px; font-size:11px; color:var(--muted); }
   .corner { position:fixed; left:12px; right:12px; bottom:10px; background:rgba(29,35,41,.88); color:#fff; font-size:12.5px;
             padding:6px 10px; border-radius:8px; text-align:center; }
+  /* Phone layout (under 768 px only): one pane at a time behind tabs; 768 px and up is unchanged. */
+  .mtabs, .mnote { display:none; }
+  @media (max-width: 767px) {
+    body { display:flex; flex-direction:column; height:100vh; height:100dvh; overflow:hidden; font-size:16px; }
+    body.public main { height:auto; }
+    #banner { display:none !important; }
+    .mnote { display:block; background:#fff4d6; border-bottom:1px solid #e8d49a; padding:6px 12px; font-size:13px;
+             white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; flex:none; }
+    .mnote.open { white-space:normal; max-height:40vh; overflow-y:auto; }
+    header { padding:8px 12px; flex-wrap:wrap; gap:8px; flex:none; }
+    header .hint { display:none; }
+    .tool { font-size:14px; padding:6px 10px; }
+    .mtabs { display:flex; border-bottom:1px solid var(--line); background:#fff; flex:none; }
+    .mtabs button { flex:1; font:inherit; font-size:15px; padding:10px 4px; border:0; background:none; color:var(--muted);
+                    border-bottom:2px solid transparent; cursor:pointer; }
+    .mtabs button.on { color:var(--ink); border-bottom-color:var(--sent); font-weight:600; }
+    .mtabs .badge { display:inline-block; min-width:18px; padding:0 5px; margin-left:4px; border-radius:9px; background:var(--accent);
+                    color:#fff; font-size:12px; line-height:18px; font-weight:600; }
+    .mtabs .badge:empty { display:none; }
+    main { display:flex; flex:1; min-height:0; height:auto; padding:0; gap:0; }
+    .pane, .pane.phone { display:none; flex:1; min-height:0; border:0; border-radius:0; box-shadow:none; }
+    .pane.active { display:flex; }
+    .pane.phone .statusbar, .pane h2 { display:none; }
+    .who { padding:8px 12px; }
+    .thread { height:auto; flex:1; min-height:0; }
+    .board { min-height:0; }
+    form { padding:8px 10px calc(8px + env(safe-area-inset-bottom)); }
+    form input, .who select, form button { font-size:16px; }
+    .logbox, .osm, .corner { display:none; }
+  }
 </style>
 </head>
 <body>
@@ -56,6 +86,12 @@
 <header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span>
   <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
   <button type="button" class="tool" id="reset">Reset demo</button></header>
+<div class="mnote" id="mnote" role="button" tabindex="0"></div>
+<nav class="mtabs" id="mtabs">
+  <button type="button" data-role="parent">Parent<span class="badge"></span></button>
+  <button type="button" data-role="chp">Health worker<span class="badge"></span></button>
+  <button type="button" data-role="facility">Facility + CHA<span class="badge"></span></button>
+</nav>
 <main>
   <section class="pane" data-role="parent">
     <h2>Parent</h2>
@@ -98,7 +134,29 @@ function bubble(pane, cls, body, meta) {
   d.appendChild(m);
   pane.thread.appendChild(d);
   pane.thread.scrollTop = pane.thread.scrollHeight;
+  if (cls === "recv" && primed && mobile.matches && pane.role !== activeRole) {
+    const b = document.querySelector(`#mtabs button[data-role="${pane.role}"] .badge`);
+    b.textContent = String((+b.textContent || 0) + 1);
+  }
 }
+
+// Phone layout: one pane at a time (CSS shows .pane.active under 768 px; ignored on wider screens)
+const mobile = matchMedia("(max-width: 767px)");
+let activeRole = "parent", primed = false;
+function showPane(role) {
+  activeRole = role;
+  document.querySelectorAll(".pane").forEach(el => el.classList.toggle("active", el.dataset.role === role));
+  document.querySelectorAll("#mtabs button").forEach(b => {
+    const on = b.dataset.role === role;
+    b.classList.toggle("on", on);
+    if (on) b.querySelector(".badge").textContent = "";
+  });
+  const p = panes[role];
+  if (p) p.thread.scrollTop = p.thread.scrollHeight;
+}
+document.querySelectorAll("#mtabs button").forEach(b => b.onclick = () => showPane(b.dataset.role));
+document.getElementById("mnote").onclick = e => e.currentTarget.classList.toggle("open");
+showPane("parent");
 
 function phonesFor(role) {
   if (role === "parent") return cfg.parents.concat(["+254799000001 (not registered)"]);
@@ -151,6 +209,7 @@ async function poll() {
           if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
       }
     }
+    primed = true;                       // no badges for the history loaded on the first poll
   } finally { busy = false; }
 }
 async function pollBoard() {
@@ -205,7 +264,11 @@ document.getElementById("fire").onclick = async () => { await fetch("demo/fire-t
 fetch("config").then(r => r.json()).then(c => { if (c.public) {
   document.getElementById("banner").hidden = false; document.body.classList.add("public");
   document.querySelector(".corner").textContent = "SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.";
-} });
+}
+  // phone layout: banner, caption and attribution in one line that expands on tap
+  document.getElementById("mnote").textContent = [c.public ? document.getElementById("banner").textContent : "",
+    document.querySelector(".corner").textContent, document.querySelector(".osm").textContent].filter(Boolean).join(" ");
+});
 
 init().then(setupTabs);
 </script>
