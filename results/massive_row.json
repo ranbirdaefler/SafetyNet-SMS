@@ -1,0 +1,41 @@
+{
+ "label": "Exploratory, not pre-registered: human-written Swahili (translated virtual-assistant commands, no health content); tests false alarms only, not danger detection.",
+ "source": "MASSIVE 1.1 sw-KE test split, CC BY 4.0",
+ "seed": 20261003,
+ "N": 1000,
+ "pool": 2974,
+ "arms": {
+  "keyword_E2": {
+   "triggered": 43,
+   "N": 1000,
+   "cp95_pct": [
+    3.1,
+    5.7
+   ]
+  },
+  "encoder:fp32": {
+   "triggered": 9,
+   "N": 1000,
+   "cp95_pct": [
+    0.4,
+    1.7
+   ]
+  },
+  "encoder:trim10k_wq8": {
+   "triggered": 8,
+   "N": 1000,
+   "cp95_pct": [
+    0.3,
+    1.6
+   ]
+  },
+  "encoder:v2_fp32": {
+   "triggered": 49,
+   "N": 1000,
+   "cp95_pct": [
+    3.6,
+    6.4
+   ]
+  }
+ }
+}
