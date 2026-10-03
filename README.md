@@ -2,6 +2,8 @@
 
 **Pre-registered claim (native Swahili): NOT TESTED**
 
+SafetyNet-SMS closes the referral loop for community health workers in Kenya. A parent texts about a sick child from any phone; fixed rules tell the parent to go now when a WHO danger sign is present and alert the facility; the facility texts a code back when the child arrives and a short outcome code after it is seen; the health worker's follow-up is set from it. A small model, designed to run on her phone, reads the same message and puts the urgent ones at the top of her board. It never decides what the parent is told.
+
 An assistant for Kenya's community health promoters (CHPs). The user is the health worker: she makes every clinical call. Parents in her area text a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. The assistant reads it for danger signs, tells her (with the full checklist), keeps her case board, and writes the referral and arrival record for her. When a danger sign is reported, or she is on a visit or asleep and does not reply in time, the automatic "go now" to the parent and the facility alert are a safety net, not a replacement for her. The model reads every message and puts the urgent ones in front of the health worker; it never decides what the parent is told.
 
 Designed to sit alongside eCHIS on the health worker's government phone; integration not built this weekend. eCHIS records her visits; this assistant reads parents' SMS, flags danger signs, and writes the referral and arrival record for her instead of adding reports for her to send.
@@ -313,6 +315,7 @@ AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper 
 ## What happens next
 
 - **Clinician advice channel (DESIGN, not built):** a clinician sees an escalated case on a smartphone and sends advice to the health worker only, never automatically to the parent; never in the path of a 'go now' case; logged with the clinician's name; designed not to add to clinic load, since clinics are already overloaded.
+- **Spoken parent messages:** Spoken versions of the fixed parent messages (IVR call-back) for parents who can't read, after native-speaker and clinician review.
 - **Speech and more languages:** NLLB-200, MMS, Common Voice and FLEURS for voice notes from parents who cannot read, Kikuyu and Luo through MMS, and translating replies; each needs native-speaker review before use.
 - **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.
 
@@ -326,8 +329,35 @@ Code: MIT (see LICENSE). The model weights (see the model card: research and eva
 
 - **What changes:** the protocol file (`config/protocol.yaml`, edited by the ministry, checked by the must-stay-RED tests on every load); the facility and health worker registry; the fixed messages (reviewed once by a native speaker and a clinician); the model, retrained on local messages.
 - **What stays:** the workflow, the safety tests, the fail-safe, the case board.
-- **Cost to add a language (measured this weekend):** 1,794 generated training and development messages (gpt-5.5: 1,200 X train, 474 v2 additions, 120 Y-dev) plus 175 generated test messages (claude-opus-5-5); for v3, 710 more gpt-5.5 messages (contrast pairs and duration negatives) and a fresh 150-message claude-opus-5-5 test set (y_test2). API spend this weekend, all generated data (training, dev and test sets, diagnosis pairs): about US$5 on OpenAI (gpt-5.5) and about US$2 on Anthropic (claude-opus-5-5), as reported from the providers' usage pages; fine-tuning 0.4 GPU-minutes per run on one desktop GPU (RTX 4070 Ti SUPER; v1 measured); deployed board model 92.7 MB (v3; v2 was 89.7 MB); the whole build, from the first generation commit to the frozen results, took about 2 hours 10 minutes of wall-clock (git log: 12:21 to 14:31 ET, Sat 3 Oct). Real deployment would replace generated messages with messages written by local parents and health workers.
+- **Cost to add a language (measured this weekend):** 1,794 generated training and development messages (gpt-5.5: 1,200 X train, 474 v2 additions, 120 Y-dev) plus 175 generated test messages (claude-opus-5-5); for v3, 710 more gpt-5.5 messages (contrast pairs and duration negatives) and a fresh 150-message claude-opus-5-5 test set (y_test2). API spend this weekend, all generated data: an estimated US$5 on OpenAI (gpt-5.5) and US$2 on Anthropic (claude-opus-5-5); to be confirmed from the providers' usage pages; fine-tuning 0.4 GPU-minutes per run on one desktop GPU (RTX 4070 Ti SUPER; v1 measured; v3, with the larger training set, 1.6 GPU-minutes); deployed board model 92.7 MB (v3; v2 was 89.7 MB); the whole build, from the first generation commit to the frozen results, took about 2 hours 10 minutes of wall-clock (git log: 12:21 to 14:31 ET, Sat 3 Oct). Real deployment would replace generated messages with messages written by local parents and health workers.
 - **Running cost:** SMS at about KES 1.18 each (DATA.md, F3); no cloud.
+
+### Cost per case
+
+Outgoing SMS segments per case, counted from the demo service (all messages are GSM-7: 160 characters for one SMS, 153 per segment when longer), at KES 1.18 per segment. Assumes multi-part SMS are billed per segment; to be confirmed with the gateway's tariff. Incoming texts (parent, health worker and facility to the shortcode) are not counted.
+
+| Path | SMS (segments) | Cost (KES) |
+|---|---|---|
+| Danger sign: parent "go now" + health worker + facility + CHA alerts + arrival + outcome code | 10 (11) | 12.98 |
+| No danger sign: parent "told" + health worker call + checklist + her "0" reply closes it | 4 (9) | 10.62 |
+| "Told", then her checklist reply refers + arrival + outcome code | 13 (18) | 21.24 |
+| No reply: "told" + timeout messages + facility and CHA alerts | 7 (12) | 14.16 |
+
+No cloud costs: the model runs on the health worker's phone or a county box. Cost of generating the training data this weekend: an estimated US$7 in API fees, to be confirmed from the providers' usage pages.
+
+### Adapting to a new setting
+
+M = measured this weekend; E = estimate.
+
+| Step | Who | Hours |
+|---|---|---|
+| Edit the protocol file (danger signs, thresholds) to the local guideline; must-stay-RED tests check it on load | ministry clinician + engineer | 2-4 (E) |
+| Facility and health-worker registry for one county (public facility lists: healthsites.io / Maina et al.) | engineer | 1-2 (E; 5 facilities took under 1 h, M) |
+| Translate the 5 fixed parent messages; native-speaker + clinician review | translator + clinician | 2-4 (E) |
+| Training data: generated messages for a new language (stand-in until real messages exist) | engineer | ~1 h and ~US$7 (E) |
+| Fine-tune, trim, quantize, calibrate | engineer, one desktop GPU | under 0.5 (M: training 1.6 min) |
+| Collect and label real parent messages with health workers (the step that actually makes it work) | local team, community | pilot weeks (E) |
+| Re-set the board thresholds on real messages; CHA reviews every flag at first | CHA + engineer | pilot weeks (E) |
 - **Pilot plan:** one CHU, the CHA reviews every model flag for the first weeks before anyone relies on it.
 
 ## Results
