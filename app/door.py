@@ -22,8 +22,14 @@ DURATION_PARAM = {"cough": ("cough_long", "cough_red_days"), "diarrhoea": ("diar
 
 
 def keyword_extractor(text):
-    """Keyword list v0 on the parent line: caregiver sign rows only (chest, MUAC, feet go through the shared stage)."""
-    return lexicon.match(text, lexicon.T_LIST, k=lexicon.V0_K, use_cues=True)
+    """The live keyword list (v0, or E2 once it passes) on the parent line: caregiver sign rows only (chest, MUAC,
+    feet go through the shared stage)."""
+    return lexicon.match(text, lexicon.LIVE["rows"], k=lexicon.LIVE["k"], use_cues=True)
+
+
+def list_extractor(kw):
+    """A fixed keyword list as an extractor (the eval comparator uses E2 whatever runs live)."""
+    return lambda text: lexicon.match(text, kw["rows"], k=kw["k"], use_cues=True)
 
 
 @dataclass

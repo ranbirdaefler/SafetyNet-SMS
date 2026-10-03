@@ -22,7 +22,9 @@ REGISTRY = Registry(os.environ.get("SNS_REGISTRY", ROOT / "config" / "registry.y
 STORE = Store(os.environ.get("SNS_DB", ROOT / "data" / "sms.db"))
 
 PROTOCOL_PATH = Path(os.environ.get("SNS_PROTOCOL", ROOT / "config" / "protocol.yaml"))
-STATE = {"protocol": None, "load_error": None, "door_on": False, "cg_failed": []}
+STATE = {"protocol": None, "load_error": None, "door_on": False, "cg_failed": [], "keyword_list": "v0",
+         "encoder": None, "encoder_on": False, "extractors": None}
+MODEL_DIR = os.environ.get("SNS_MODEL", str(ROOT / "models" / "onnx" / "trim10k_wq8"))
 
 
 def load_protocol():
@@ -35,8 +37,31 @@ def load_protocol():
         STATE["load_error"] = str(e)
         return STATE
     STATE["protocol"], STATE["load_error"] = proto, None
+    from app import lexicon, must_stay_red
+    from app.door import keyword_extractor
+    # E2 replaces v0 live only if T1-T35 and CG1-CG18 pass with E2 loaded (prereg section 5, step 7)
+    lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
     try:
-        STATE["cg_failed"] = cg_tests.run(proto)
+        lexicon.use(lexicon.e2_list())
+        if must_stay_red.run(proto) or cg_tests.run(proto):
+            raise RuntimeError("E2 failed a must-stay-RED test")
+    except Exception:
+        lexicon.use({"name": "v0", "rows": lexicon.T_LIST, "k": lexicon.V0_K})
+    STATE["keyword_list"] = lexicon.LIVE["name"]
+    # the encoder reads parent text only; CG runs with it on and forced off; red with it on -> keyword list (rung 3)
+    STATE["encoder"], STATE["encoder_on"] = None, False
+    variants = [(STATE["keyword_list"] + ", encoder off", (keyword_extractor,))]
+    try:
+        if Path(MODEL_DIR, "model.onnx").exists():
+            from app.encoder import Encoder
+            enc = Encoder(MODEL_DIR)
+            if not cg_tests.run(proto, variants=[(STATE["keyword_list"] + ", encoder on", (enc, keyword_extractor))]):
+                STATE["encoder"], STATE["encoder_on"] = enc, True
+    except Exception:
+        pass
+    STATE["extractors"] = (STATE["encoder"], keyword_extractor) if STATE["encoder_on"] else (keyword_extractor,)
+    try:
+        STATE["cg_failed"] = cg_tests.run(proto, variants=variants)
     except Exception as e:
         STATE["cg_failed"] = [f"suite error: {type(e).__name__}"]
     STATE["door_on"] = not STATE["cg_failed"]
@@ -52,7 +77,7 @@ def _timer():
     while True:
         try:
             with LOCK:
-                service.tick(STORE, REGISTRY, STATE["protocol"])
+                service.tick(STORE, REGISTRY, STATE["protocol"], extractors=STATE["extractors"])
         except Exception:
             pass
         time.sleep(1)
@@ -77,7 +102,7 @@ def sms(msg: Inbound):
         if role == "parent" and not STATE["door_on"]:
             service.door_off(STORE, REGISTRY, msg.sender)   # fail-safe: fixed go-now + CHA copy, never silence
         elif role is not None:
-            service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body)
+            service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body, extractors=STATE["extractors"])
         return {"role": role, "replies": STORE.outbox_since(before)}
 
 
@@ -104,6 +129,7 @@ def case_board(phone: str):
 def reload():
     st = load_protocol()
     return {"loaded": st["load_error"] is None, "error": st["load_error"], "door_on": st["door_on"],
+            "keyword_list": st["keyword_list"], "encoder_on": st["encoder_on"], "model": MODEL_DIR,
             "cg_failed": st["cg_failed"],
             "live": st["protocol"].cfg["profile"]["id"] if st["protocol"] else None}
 

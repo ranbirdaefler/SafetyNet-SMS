@@ -4,15 +4,15 @@ from app.engine import PRESENT, Case
 
 
 def keyword_rows():
-    """The live keyword list v0 = T-list sign rows (incl. R8, R10, R11 terms) + cues, k = 2."""
-    rows = dict(lexicon.T_LIST)
+    """The live keyword list (v0 = T-list sign rows + cues, k = 2; or E2) plus the R8, R10, R11 T-list terms."""
+    rows = dict(lexicon.LIVE["rows"])
     rows.update(lexicon.SHARED)
     return rows
 
 
 def chp_case(text, registered=True):
     p = textparse.parse(text)
-    fields = lexicon.match(text, keyword_rows(), k=lexicon.V0_K, use_cues=True)
+    fields = lexicon.match(text, keyword_rows(), k=lexicon.LIVE["k"], use_cues=True)
     return Case(registered=registered, fields=fields, age_months=p.age_months, u2m=p.u2m,
                 pregnancy=p.pregnancy, adult=p.adult, durations=dict(p.durations), muac_mm=p.muac_mm)
 

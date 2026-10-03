@@ -396,10 +396,11 @@ def lint_staff(msgs):
     return None
 
 
-def run(proto, extractors=None, verbose=False):
-    """Returns failed IDs. Runs every CG test with the given extractors (keyword list v0 by default)."""
+def run(proto, extractors=None, verbose=False, variants=None):
+    """Returns failed IDs. Runs every CG test once per variant [(tag, extractors)]; default: the live keyword list."""
+    from app import lexicon
     from app.door import keyword_extractor
-    variants = [("v0", extractors or (keyword_extractor,))]
+    variants = variants or [(lexicon.LIVE["name"], extractors or (keyword_extractor,))]
     failed, all_msgs = [], []
     for tag, ex in variants:
         for cid, fn in CG_TESTS:

@@ -107,3 +107,43 @@ def c4(text):
     """C4 reasons, in fixed order; negation-blind."""
     hit = match(text, C4, use_cues=False)
     return [r for r in C4 if r in hit]
+
+
+# ---------- the live keyword list: v0 by default; E2 only if T1-T35 and CG1-CG18 pass with it loaded ----------
+LIVE = {"name": "v0", "rows": T_LIST, "k": V0_K}
+
+
+def e2_list():
+    """E2 = T-list sign rows + mined n-grams (config/e2.json), with k set on Y-dev."""
+    import json
+    from pathlib import Path
+    cfg = json.loads((Path(__file__).resolve().parent.parent / "config" / "e2.json").read_text(encoding="utf-8"))
+    return {"name": "E2", "rows": cfg["rows"], "k": cfg["k"]}
+
+
+def use(kw):
+    LIVE.clear()
+    LIVE.update(kw)
+
+
+def match_detail(text, rows, k):
+    """Every match as (sign, term, negated), using the same rules as match()."""
+    phrases = _phrases(rows)
+    out = []
+    for toks in clauses(text):
+        taken = [False] * len(toks)
+        hits = []
+        for i in range(len(toks)):
+            for words, sign, term in phrases:
+                n = len(words)
+                if toks[i:i + n] == words and not any(taken[i:i + n]):
+                    hits.append((i, n, sign, term))
+                    for j in range(i, i + n):
+                        taken[j] = True
+                    break
+        for i, n, sign, term in hits:
+            negated = False
+            if not any(nn in term for nn in NEVER_NEGATED):
+                negated = any(not taken[j] and toks[j] in CUES for j in range(max(0, i - k), i))
+            out.append((sign, term, negated))
+    return out
