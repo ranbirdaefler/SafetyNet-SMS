@@ -1,0 +1,186 @@
+{
+ "base": "Davlan/afro-xlmr-base",
+ "heads": [
+  "convulsions",
+  "not_drink_feed",
+  "vomits_everything",
+  "sleepy_unconscious",
+  "blood_stool",
+  "cough_long",
+  "diarrhoea_long",
+  "fever_long"
+ ],
+ "threshold": 0.5,
+ "max_len": 256,
+ "epochs": 3,
+ "lr": 3e-05,
+ "batch": 16,
+ "seed": 42,
+ "n_train": 1076,
+ "n_xval": 119,
+ "minutes": 0.4,
+ "log": [
+  {
+   "epoch": 1,
+   "train_loss": 20.309,
+   "xval": {
+    "convulsions": {
+     "f1": 0.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 11
+    },
+    "not_drink_feed": {
+     "f1": 0.444,
+     "tp": 2,
+     "fp": 0,
+     "fn": 5
+    },
+    "vomits_everything": {
+     "f1": 0.167,
+     "tp": 1,
+     "fp": 0,
+     "fn": 10
+    },
+    "sleepy_unconscious": {
+     "f1": 0.667,
+     "tp": 6,
+     "fp": 0,
+     "fn": 6
+    },
+    "blood_stool": {
+     "f1": 0.364,
+     "tp": 2,
+     "fp": 0,
+     "fn": 7
+    },
+    "cough_long": {
+     "f1": 0.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 12
+    },
+    "diarrhoea_long": {
+     "f1": 0.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 14
+    },
+    "fever_long": {
+     "f1": 0.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 10
+    }
+   }
+  },
+  {
+   "epoch": 2,
+   "train_loss": 11.529,
+   "xval": {
+    "convulsions": {
+     "f1": 1.0,
+     "tp": 11,
+     "fp": 0,
+     "fn": 0
+    },
+    "not_drink_feed": {
+     "f1": 0.923,
+     "tp": 6,
+     "fp": 0,
+     "fn": 1
+    },
+    "vomits_everything": {
+     "f1": 0.9,
+     "tp": 9,
+     "fp": 0,
+     "fn": 2
+    },
+    "sleepy_unconscious": {
+     "f1": 0.917,
+     "tp": 11,
+     "fp": 1,
+     "fn": 1
+    },
+    "blood_stool": {
+     "f1": 0.625,
+     "tp": 5,
+     "fp": 2,
+     "fn": 4
+    },
+    "cough_long": {
+     "f1": 0.556,
+     "tp": 5,
+     "fp": 1,
+     "fn": 7
+    },
+    "diarrhoea_long": {
+     "f1": 0.583,
+     "tp": 7,
+     "fp": 3,
+     "fn": 7
+    },
+    "fever_long": {
+     "f1": 0.842,
+     "tp": 8,
+     "fp": 1,
+     "fn": 2
+    }
+   }
+  },
+  {
+   "epoch": 3,
+   "train_loss": 7.72,
+   "xval": {
+    "convulsions": {
+     "f1": 1.0,
+     "tp": 11,
+     "fp": 0,
+     "fn": 0
+    },
+    "not_drink_feed": {
+     "f1": 0.923,
+     "tp": 6,
+     "fp": 0,
+     "fn": 1
+    },
+    "vomits_everything": {
+     "f1": 0.952,
+     "tp": 10,
+     "fp": 0,
+     "fn": 1
+    },
+    "sleepy_unconscious": {
+     "f1": 0.957,
+     "tp": 11,
+     "fp": 0,
+     "fn": 1
+    },
+    "blood_stool": {
+     "f1": 0.714,
+     "tp": 5,
+     "fp": 0,
+     "fn": 4
+    },
+    "cough_long": {
+     "f1": 0.762,
+     "tp": 8,
+     "fp": 1,
+     "fn": 4
+    },
+    "diarrhoea_long": {
+     "f1": 0.692,
+     "tp": 9,
+     "fp": 3,
+     "fn": 5
+    },
+    "fever_long": {
+     "f1": 0.952,
+     "tp": 10,
+     "fp": 1,
+     "fn": 0
+    }
+   }
+  }
+ ]
+}
