@@ -49,15 +49,35 @@ The model runs on the health worker's own phone, with no internet or data bundle
 
 ## Responsible AI
 
-**Where the data sits.** Every message, case and timer is stored in one SQLite file on the county box (the Pi, `data/sms.db`). No cloud model is called at decision time; the model runs on the box. Nothing leaves the box except the SMS replies themselves. In deployment the box sits with the county health team, so primary-care data is processed in Kenya.
+### Where the data sits, who reads it, lost or shared phone
 
-**Who can read it.** Only whoever administers the county box can read the database. The health worker sees only the messages sent to their own phone; the facility and CHA see only alerts with a case code, the child's age and the reasons, never a name and never the parent's own words. The parent's phone number appears only in the five messages that ask the health worker or CHA to call the parent. The demo uses synthetic numbers only.
+- **Where.** Cases live on the health worker's phone (DESIGN); in this demo, a SQLite file on the Raspberry Pi (BUILT). No cloud (BUILT). The model has no network access (BUILT).
+- **What leaves the device.** Only fixed SMS to the parent; the facility alert (case code, age, signs; no name, no sex); escalations to the CHA (BUILT).
+- **Who reads it.** The health worker; the facility, alerts only; the CHA, escalations only (BUILT). SMS is plain text, so the mobile carrier can read it.
+- **No names.** The tool asks for no name and has no name field (BUILT; tested: no name column, no name slot in any message, no parent words in any outgoing SMS or case record). A parent may still type one, and that text stays in the case log. Names stay in the health worker's existing household register.
+- **Retention.** Case content is deleted 30 days after closure; that's our default and the ministry sets it (`retention_days` in `config/protocol.yaml`) (BUILT; tested).
+- **Lost or shared phone.** An app PIN separate from the phone unlock (DESIGN); notifications show no content (DESIGN); the CHA deletes the phone's line in the number-to-role registry, after which that number gets no case data (BUILT); Android Find My Device to wipe (DESIGN).
+- **Gap.** Parent texts also sit in the phone's SMS inbox, as they do today when parents text a health worker.
 
-**When a phone is lost or shared.** No SMS carries a name, a diagnosis or a medicine, so a lost or shared phone shows a case code, an age, the danger signs reported and an instruction to go to the facility. A parent message from an unknown number (a borrowed phone, a new SIM) is never turned away: it gets "go to the nearest facility now", and the CHA is told. A health-worker number that is not registered gets no case information at all. A lost health-worker phone is removed from the registry by the county; open cases then time out to "go now" for the parent.
+Under Kenya's Data Protection Act 2019 (No. 24 of 2019), "health status" is sensitive personal data (s.2), and health data "may only be processed (a) by or under the responsibility of a health care provider; or (b) by a person subject to the obligation of professional secrecy under any law" (s.46(1)), so a deployment would run under a health care provider, not the hackathon team. Source: Kenya Law, https://new.kenyalaw.org/akn/ke/act/2019/24/eng@2022-12-31
 
-**Human in the loop.** The tool never decides against care. Only a health worker can close a case, and only by replying "0" (none of the danger signs, all checked) after seeing the child. Every other path ends with a person: the health worker is called, the facility and CHA are alerted, and the facility confirms arrival. The model can only add a reason to send a child now; it can never remove one.
+### Human in the loop
 
-**The fail-safe.** When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure), a model that fails to load: each one ends in "go now" for the parent or in the health worker being told, with a deadline. If any safety test fails at start-up, the parent line switches off rather than run untested.
+The tool never decides against care. Only a health worker can close a case, and only by replying "0" (none of the danger signs, all checked) after seeing the child. Every other path ends with a person: the health worker is called, the facility and CHA are alerted, and the facility confirms arrival. The model can only add a reason to send a child now; it can never remove one.
+
+### The fail-safe
+
+When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure), a model that fails to load: each one ends in "go now" for the parent or in the health worker being told, with a deadline. If a caregiver safety test fails at start-up, the parent line falls back to a fixed "go to the nearest health facility NOW" reply and the CHA is told; it is never silent.
+
+### Drift and bias monitor
+
+**Drift and bias monitor (DESIGN).** Each case logs the model's flags next to the health worker's checklist answers. A weekly count of disagreements, by sign and by language, goes to the CHA. A rising count means the model is drifting or failing a group of parents, and is the trigger to review it.
+
+## Where the record lands
+
+**Where the record lands (DESIGN, not built).** Each case produces two records: a referral (case code, child's age, CHP, danger signs flagged, time sent) and an arrival (facility, time seen). In a real deployment these would be sent to eCHIS, the Ministry of Health's community health app built on Medic's Community Health Toolkit, which already includes client referral. eCHIS data is reported to sync to KHIS, Kenya's national DHIS2 instance, so counts would roll up there. No public inbound API is confirmed. The demo writes the same fields to a local database.
+
+Sources: Medic, 2023 (https://medic.org/stories/accompanying-kenyas-ministry-of-health/ ; https://medic.org/stories/cht-interoperability-reference-application-adoption-by-ministry-of-health-kenya-to-facilitate-data-exchange/); Living Goods, 16 Oct 2023, sync (secondary) (https://livinggoods.org/media/kenya-takes-bold-step-towards-universal-health-coverage-with-the-launch-of-a-digital-health-tool/); DHIS2.org, 10 Aug 2026 (https://dhis2.org/kenya-launches-dhis2-for-case-based-eye-care-program/).
 
 ## Production gaps
 
