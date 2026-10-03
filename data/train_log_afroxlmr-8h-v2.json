@@ -1,0 +1,48 @@
+{
+ "base": "Davlan/afro-xlmr-base",
+ "run": "v2 (one run, same recipe and seed as v1)",
+ "data": "data/x_train_v2.jsonl",
+ "n_total": 1657,
+ "epochs": 3,
+ "lr": 3e-05,
+ "batch": 16,
+ "seed": 42,
+ "xval_f1_by_epoch": {
+  "1": {
+   "convulsions": 0.143,
+   "not_drink_feed": 1.0,
+   "vomits_everything": 0.222,
+   "sleepy_unconscious": 0.824,
+   "blood_stool": 0.353,
+   "cough_long": 0.4,
+   "diarrhoea_long": 0.414,
+   "fever_long": 0.583
+  },
+  "2": {
+   "convulsions": 0.917,
+   "not_drink_feed": 1.0,
+   "vomits_everything": 0.933,
+   "sleepy_unconscious": 0.889,
+   "blood_stool": 0.833,
+   "cough_long": 0.857,
+   "diarrhoea_long": 0.884,
+   "fever_long": 0.828
+  },
+  "3": {
+   "convulsions": 0.917,
+   "not_drink_feed": 1.0,
+   "vomits_everything": 0.933,
+   "sleepy_unconscious": 0.974,
+   "blood_stool": 0.88,
+   "cough_long": 0.938,
+   "diarrhoea_long": 0.9,
+   "fever_long": 0.867
+  }
+ },
+ "train_loss_by_epoch": [
+  26.82,
+  13.68,
+  8.48
+ ],
+ "note": "log written by hand from the run's printed output: the script's final log line failed on a path bug after the model was saved"
+}

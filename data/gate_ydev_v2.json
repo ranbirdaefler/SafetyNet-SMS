@@ -1,0 +1,49 @@
+{
+ "set": "Y-dev (dev, not a test set)",
+ "e2_k": 4,
+ "table": {
+  "keyword_E2": {
+   "missed": 10,
+   "of_danger": 60,
+   "needless": 2,
+   "of_no_danger": 45,
+   "shared_path": "10/10",
+   "age_not_received_only": 5,
+   "no_age_cards_age_not_received": "5/5",
+   "c4_on_danger": 0
+  },
+  "keyword_v0": {
+   "missed": 30,
+   "of_danger": 60,
+   "needless": 3,
+   "of_no_danger": 45,
+   "shared_path": "10/10",
+   "age_not_received_only": 5,
+   "no_age_cards_age_not_received": "5/5",
+   "c4_on_danger": 0
+  },
+  "encoder:v2_fp32": {
+   "missed": 3,
+   "of_danger": 60,
+   "needless": 5,
+   "of_no_danger": 45,
+   "shared_path": "10/10",
+   "age_not_received_only": 5,
+   "no_age_cards_age_not_received": "5/5",
+   "c4_on_danger": 0
+  }
+ },
+ "gate": {
+  "encoder_misses_le_keyword": true,
+  "encoder_needless_le_keyword": false,
+  "shared_path_complete": true,
+  "p95_ms_per_message": 22.1,
+  "p95_budget_ms": 300,
+  "p95_in_budget": true,
+  "passes": false
+ },
+ "p95_ms_by_model": {
+  "v2_fp32": 22.1
+ },
+ "host": "FlorianMachina"
+}

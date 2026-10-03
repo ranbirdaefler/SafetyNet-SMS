@@ -8,6 +8,7 @@ validation (held out from the keep-list).
 Usage: .venv/Scripts/python train/trim_vocab.py <target size> <out dir>
 """
 import json
+import os
 import sys
 from collections import Counter
 from pathlib import Path
@@ -23,7 +24,7 @@ from app import lexicon, messages as M, textparse  # noqa: E402
 from export import export, keep_piece  # noqa: E402
 from model import SignModel  # noqa: E402
 
-SRC = ROOT / "models" / "afroxlmr-8h"
+SRC = Path(os.environ.get("SNS_SRC", ROOT / "models" / "afroxlmr-8h"))
 
 
 def fixed_texts():
@@ -57,7 +58,7 @@ def main():
     keep = {0, 1, 2, 3, V - 1}
     keep |= {i for i, (p, _) in enumerate(vocab) if len(p.replace("▁", "")) <= 1 and keep_piece(p)}
     n_single = len(keep)
-    x = [json.loads(l)["message"] for l in open(ROOT / "data" / "x_train.dedup.jsonl", encoding="utf-8")]
+    x = [json.loads(l)["message"] for l in open(ROOT / "data" / os.environ.get("SNS_XDATA", "x_train.dedup.jsonl"), encoding="utf-8")]
     for t in x + fixed_texts():
         keep |= set(tok.encode(t).ids)
         keep |= set(tok.encode(t.lower()).ids)

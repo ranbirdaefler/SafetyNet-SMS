@@ -88,7 +88,7 @@ def main():
     meta = {"base": BASE, "heads": HEADS, "threshold": THRESHOLD, "max_len": MAX_LEN, "epochs": EPOCHS, "lr": LR,
             "batch": BATCH, "seed": SEED, "n_train": len(train), "n_xval": len(val), "minutes": round((time.time() - t0) / 60, 1),
             "log": log}
-    meta["data"] = str(DATA.relative_to(ROOT))
+    meta["data"] = str(DATA)
     (ROOT / "data" / ("train_log.json" if OUT.name == "afroxlmr-8h" else f"train_log_{OUT.name}.json")).write_text(json.dumps(meta, indent=1))
     print(f"saved {OUT}; {meta['minutes']} min")
 

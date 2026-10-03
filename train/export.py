@@ -9,6 +9,7 @@ Variants (each a folder under models/onnx/ with model.onnx + tokenizer.json):
 - trim_int8_emb  trimmed + MatMul + Gather INT8
 """
 import json
+import os
 import sys
 import unicodedata
 from pathlib import Path
@@ -19,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from model import BASE, HEADS, ProbModel, SignModel  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "models" / "afroxlmr-8h"
+SRC = Path(os.environ.get("SNS_SRC", ROOT / "models" / "afroxlmr-8h"))
 OUT = ROOT / "models" / "onnx"
 
 
