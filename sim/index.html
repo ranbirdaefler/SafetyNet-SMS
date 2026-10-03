@@ -71,6 +71,26 @@
   .story { display:flex; align-items:center; gap:10px; padding:8px 16px; background:#1d2329; color:#fff; font-size:15px; }
   .story[hidden] { display:none; }
   .story #storycap { flex:1; }
+  .story .st-title { font-weight:700; margin-right:6px; }
+  .story .st-look { display:block; margin-top:2px; color:#ffd98a; }
+  .story details { margin-top:4px; font-size:14px; color:#d6dae0; }
+  .story details summary { cursor:pointer; color:#fff; }
+  .story button:disabled { opacity:.5; cursor:default; }
+  .flow { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; font-size:13px; }
+  .flow span { padding:1px 8px; border-radius:10px; border:1px solid #56606b; color:#9aa3ad; }
+  .flow span.on { background:#ffd98a; color:#1d2329; border-color:#ffd98a; font-weight:600; }
+  .flow i { color:#56606b; font-style:normal; }
+  .recap { margin:4px 0 0; padding-left:18px; font-size:14px; }
+  body.story-on .pane, body.story-on .logbox { transition:opacity .3s, filter .3s; }
+  body.story-on .pane.dim, body.story-on .logbox.dim { opacity:.35; filter:grayscale(1); }
+  body.story-on .pane.spot { outline:3px solid #f0a020; outline-offset:2px; }
+  .from { font-weight:600; margin-right:4px; }
+  .stepb { display:inline-block; min-width:16px; padding:0 4px; margin-right:4px; border-radius:8px; background:#f0a020; color:#1d2329;
+           font-size:11px; font-weight:700; text-align:center; }
+  .msg.new { animation:pulse 1.2s ease-out 1; }
+  @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(240,160,32,.9); } 100% { box-shadow:0 0 0 12px rgba(240,160,32,0); } }
+  @media (prefers-reduced-motion: reduce) { .msg.new { animation:none; } body.story-on .pane, body.story-on .logbox { transition:none; } }
+  .ktime { font-size:12px; color:var(--muted); }
   .story button, .tool.play { font:inherit; font-size:14px; padding:5px 12px; border-radius:8px; border:0; cursor:pointer; }
   .story button { background:#fff; color:#1d2329; }
   .tool.play { background:var(--sent); color:#fff; font-weight:600; }
@@ -104,6 +124,7 @@
     .pane.phone .statusbar, .pane h2 { display:none; }
     .story { flex-wrap:wrap; padding:8px 12px; gap:6px 8px; flex:none; font-size:14px; }
     .story #storycap { flex-basis:100%; }
+    .story .flow, .story .recap { display:none; }
     .who { padding:8px 12px; }
     .thread { height:auto; flex:1; min-height:0; }
     .board { min-height:0; }
@@ -118,8 +139,9 @@
 <header><h1>SafetyNet-SMS</h1><span class="hint">Three phones, one box. Add <code>?clean=1</code> to hide message IDs.</span>
   <button type="button" class="tool play" id="play">Play the story, about 60 s</button>
   <button type="button" class="tool" id="fire">Fire timeouts now (demo)</button>
-  <button type="button" class="tool" id="reset">Reset demo</button></header>
-<div class="story" id="story" hidden><span id="storycap"></span><button type="button" id="storynext">Next</button><button type="button" id="storyclose">Close</button></div>
+  <button type="button" class="tool" id="reset">Reset demo</button>
+  <span class="ktime">Times: Kenya time (EAT)</span></header>
+<div class="story" id="story" hidden><div id="storycap"></div><button type="button" id="storynext">Next</button><button type="button" id="storyclose">Close</button></div>
 <div class="mnote" id="mnote" role="button" tabindex="0"></div>
 <nav class="mtabs" id="mtabs">
   <button type="button" data-role="parent">Parent<span class="badge"></span></button>
@@ -159,15 +181,28 @@
 if (new URLSearchParams(location.search).get("clean")) document.body.classList.add("clean");
 const panes = {};
 let cfg, lastIn = 0, lastOut = 0;
-const fmt = ts => new Date(ts * 1000).toTimeString().slice(0, 8);
+const KENYA = new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Nairobi", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+const fmt = ts => KENYA.format(new Date(ts * 1000));
 
-function bubble(pane, cls, body, meta) {
+function who(pane) {
+  if (pane.role === "parent") return storyOn ? (pane.select.value === cfg.parents[1] ? "Parent 2" : "Amina") : "Parent";
+  if (pane.role === "chp") return storyOn ? "Achieng" : "Health worker";
+  return "Facility";
+}
+function fromTo(pane, cls) {
+  if (cls === "sent") return `${who(pane)} → SafetyNet`;
+  if (pane.role === "parent") return `SafetyNet → ${who(pane)}`;
+  if (pane.role === "chp") return storyOn ? "SafetyNet → Achieng (health worker)" : "SafetyNet → Health worker";
+  return "SafetyNet → Facility + CHA";
+}
+function bubble(pane, cls, body, meta, step, fresh) {
   const d = document.createElement("div");
-  d.className = "msg " + cls;
+  d.className = "msg " + cls + (fresh && step ? " new" : "");
   d.textContent = body;
   const m = document.createElement("div");
   m.className = "meta";
-  m.innerHTML = (pane.role === "parent" && cls === "recv" ? '<span class="tag">fixed message</span>' : "") + meta;
+  m.innerHTML = (step ? `<span class="stepb">${step}</span>` : "") + `<span class="from">${fromTo(pane, cls)}</span>` +
+    (pane.role === "parent" && cls === "recv" ? '<span class="tag">fixed message</span>' : "") + meta;
   d.appendChild(m);
   pane.thread.appendChild(d);
   pane.thread.scrollTop = pane.thread.scrollHeight;
@@ -237,14 +272,19 @@ async function poll() {
       .sort((a, b) => a.ts - b.ts);
     for (const m of events) {
       if (m.dir === "in") {
+        maxIn = Math.max(maxIn, m.id);
         lastIn = Math.max(lastIn, m.id);
+        const st = stepFor("i" + m.id, m.id > stepStart.i);
         for (const p of Object.values(panes))
-          if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts));
+          if (p.select.value === m.sender && cfg.lines[p.role] === m.line) bubble(p, "sent", m.body, fmt(m.ts), st, primed);
       } else {
         lastOut = Math.max(lastOut, m.id);
         track(m);
+        const st = stepFor("o" + m.id, m.id > stepStart.o);
+        if (storyOn && m.id > stepStart.o) stepSeen.add(m.msg_id);
+        maxOut = Math.max(maxOut, m.id);
         for (const p of Object.values(panes))
-          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`);
+          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed);
       }
     }
     primed = true;                       // no badges for the history loaded on the first poll
@@ -359,6 +399,13 @@ document.getElementById("reccsv").onclick = () => {
 
 // ---------- "Play the story": team-written messages through the same /sms endpoint; user-paced ----------
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+let storyOn = false, step = 0, storyCode = null, maxIn = 0, maxOut = 0;
+let stepStart = { i: Infinity, o: Infinity };
+const stepOf = {}, stepSeen = new Set(), stepTimes = [];
+function stepFor(key, isNew) {
+  if (!(key in stepOf) && storyOn && step > 0 && isNew) stepOf[key] = step;
+  return stepOf[key];
+}
 async function sms(from, role, body) {
   const r = await fetch("sms", { method: "POST", headers: { "content-type": "application/json" },
     body: JSON.stringify({ from, to: cfg.lines[role], body }) });
@@ -373,54 +420,129 @@ function chwView(board) {
   const b = panes.chp.el.querySelector(`.tabs button[data-tab="${board ? "board" : "thread"}"]`);
   if (b) b.click();
 }
-let storyCode = null, step = 0;
+const HEADERS = { parent: "Amina · parent · basic phone (SMS)", chp: "Achieng · community health promoter · her phone",
+                  facility: "Facility nurse + CHA (supervisor)" };
+function storyMode(on) {
+  storyOn = on;
+  document.body.classList.toggle("story-on", on);
+  document.querySelectorAll(".pane").forEach(el => {
+    const h = el.querySelector("h2");
+    if (!h.dataset.plain) h.dataset.plain = h.textContent;
+    h.textContent = on ? HEADERS[el.dataset.role] : h.dataset.plain;
+    if (!on) el.classList.remove("dim", "spot");
+  });
+  if (!on) document.getElementById("logbox").classList.remove("dim");
+}
+function spotlight(roles) {
+  document.querySelectorAll(".pane").forEach(el => {
+    const on = roles.includes(el.dataset.role);
+    el.classList.toggle("spot", on); el.classList.toggle("dim", !on);
+  });
+  document.getElementById("logbox").classList.toggle("dim", !roles.includes("log"));
+}
+const NODES = ["Amina", "Rules", "Model", "Achieng", "Facility/CHA"];
+const LONG = [
+  "Amina (a fictional mother) texts in Swahili: her 14-month-old vomits everything, even water. That's a danger sign, but her words don't match the keyword list, so the rules miss it. She gets the fixed 'your health worker has been told' reply, which lists the go-now signs, vomiting everything among them.",
+  "The model reads the same text and flags it for the health worker: 'possible: vomits everything', so she sees it first. The model never changes what Amina is told.",
+  "Amina texts again: 'sasa ana degedege' (now the child has convulsions). The rules send a fixed 'go now' at once; the facility and the CHA get an alert with a 4-digit code.",
+  "At the facility, staff text the code back. The health worker and the CHA are told the child arrived.",
+  "The facility sends the code and T5: treated, sent home, follow-up day 5. The reminder on the health worker's board moves to day 5.",
+  "Another parent texts; nobody answers. 'Fire timeouts now' skips the wait: the parent is told to go now, and the facility and the CHA are alerted.",
+];
 const STORY = [
-  { cap: "Step 1 of 6. Amina (a fictional mother) texts in Swahili: her 14-month-old vomits everything, even water. That's a danger sign, but her words don't match the keyword list, so the rules miss it. She gets the fixed 'your health worker has been told' reply, which lists the go-now signs, vomiting everything among them.",
-    tab: "parent", run: async () => { await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); } },
-  { cap: "Step 2 of 6. The model reads the same text and flags it for the health worker: 'possible: vomits everything', so she sees it first. The model never changes what Amina is told.",
-    tab: "chp", run: async () => { chwView(true); } },
-  { cap: "Step 3 of 6. Amina texts again: 'sasa ana degedege' (now the child has convulsions). The rules send a fixed 'go now' at once; the facility and the CHA get an alert with a 4-digit code.",
-    tab: "parent", run: async () => { chwView(false); const r = await sms(cfg.parents[0], "parent", "sasa ana degedege");
-      storyCode = (r.replies || []).map(x => x.case_code).find(Boolean); } },
-  { cap: "Step 4 of 6. At the facility, staff text the code back. The health worker and the CHA are told the child arrived.",
-    tab: "facility", run: async () => { if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode); } },
-  { cap: "Step 5 of 6. The facility sends the code and T5: treated, sent home, follow-up day 5. The reminder on the health worker's board moves to day 5.",
-    tab: "chp", run: async () => { if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode + " T5"); chwView(true); } },
-  { cap: "Step 6 of 6 (optional). Another parent texts; nobody answers. 'Fire timeouts now' skips the wait: the parent is told to go now, and the facility and the CHA are alerted.",
-    tab: "parent", run: async () => { chwView(false); setPhone("parent", cfg.parents[1]);
+  { title: "The rules miss it", text: "Amina texts that her son vomits everything, even water. That's a danger sign, but her words don't match the keyword list, so she gets the fixed 'your health worker has been told' reply.",
+    look: "Parent pane.", roles: ["parent"], tab: "parent", nodes: ["Amina", "Rules"], expect: ["CG_TOLD"],
+    run: async () => { chwView(false); await sms(cfg.parents[0], "parent", "mtoto wangu wa miezi 14 kila kitu anachokula anatapika hata maji"); } },
+  { title: "The model catches it", text: "The model reads the same text and flags it on Achieng's board: possible, vomits everything. She sees it first. It never changes what Amina is told.",
+    look: "the amber chip on Achieng's board.", roles: ["chp", "log"], tab: "chp", nodes: ["Model", "Achieng"], expect: [],
+    ready: () => !!panes.chp.boardEl.querySelector(".chip.possible"), run: async () => { chwView(true); } },
+  { title: "Convulsions: go now", text: "Amina texts 'sasa ana degedege' (now he's convulsing). The rules send 'go now' at once and alert the facility and the supervisor with a 4-digit code.",
+    look: "Amina's reply and the facility alert.", roles: ["parent", "facility"], tab: "parent", nodes: ["Amina", "Rules", "Facility/CHA"],
+    expect: ["CG_GO_NOW", "ALERT"], run: async () => { chwView(false);
+      const r = await sms(cfg.parents[0], "parent", "sasa ana degedege"); storyCode = (r.replies || []).map(x => x.case_code).find(Boolean); } },
+  { title: "He arrives", text: "Facility staff text the code back; Achieng and the supervisor are told.",
+    look: "'arrived' on Achieng's board.", roles: ["facility", "chp"], tab: "chp", nodes: ["Facility/CHA", "Achieng"], expect: ["ARRIVED", "ACK"],
+    run: async () => { chwView(true); if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode); } },
+  { title: "The clinic's answer comes back", text: "The facility texts the code + T5: treated, sent home, follow up in 5 days. Achieng's reminder moves to day 5, and the referral record fills in.",
+    look: "the reminder and the record panel.", roles: ["facility", "chp"], tab: "chp", nodes: ["Facility/CHA", "Achieng"], expect: ["OUTCOME", "OUTCOME_ACK"],
+    run: async () => { chwView(true); document.getElementById("rec").open = true;
+      if (storyCode) await sms(cfg.facilities[0].phone, "facility", storyCode + " T5"); } },
+  { title: "Nobody answers: the safety net", text: "Another parent texts; no one replies in time. The parent is told to go now and the supervisor is alerted.",
+    look: "the parent's reply and the CHA alert.", roles: ["parent", "facility"], tab: "parent", nodes: ["Rules", "Facility/CHA"], expect: ["CG_TIMEOUT", "ALERT"],
+    run: async () => { chwView(false); setPhone("parent", cfg.parents[1]);
       await sms(cfg.parents[1], "parent", "mtoto wangu wa miaka 3 ana upele mwilini"); await sleep(1500);
       await fetch("demo/fire-timeouts", { method: "POST" }); poll(); } },
 ];
-function storyShow(text, nextLabel) {
-  document.getElementById("story").hidden = false;
-  document.getElementById("storycap").textContent = text;
-  document.getElementById("storynext").textContent = nextLabel;
+function scrollSpot() {
+  requestAnimationFrame(() => Object.values(panes).forEach(p => { p.thread.scrollTop = p.thread.scrollHeight; }));
+}
+function esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+function caption(i) {
+  const s = STORY[i];
+  const flow = NODES.map(n => `<span class="${s.nodes.includes(n) ? "on" : ""}">${n}</span>`).join("<i>→</i>");
+  document.getElementById("storycap").innerHTML =
+    `<span class="st-title">${i + 1}/6 ${esc(s.title)}.</span>${esc(s.text)}<span class="st-look">Look at: ${esc(s.look)}</span>` +
+    `<details><summary>Why it matters</summary>${esc(LONG[i])}</details><div class="flow">${flow}</div>`;
+}
+async function waitReady(s) {
+  for (let t = 0; t < 60; t++) {                          // up to 15 s, then Next is released anyway
+    if (s.expect.every(id => stepSeen.has(id)) && (!s.ready || s.ready())) return;
+    await sleep(250);
+  }
 }
 document.getElementById("play").onclick = async () => {
   await fetch("demo/reset", { method: "POST" });          // the story starts from a clean demo
   for (const k in rec) delete rec[k];
+  for (const k in stepOf) delete stepOf[k];
+  stepTimes.length = 0;
   renderRec();
   Object.values(panes).forEach(p => p.thread.innerHTML = "");
-  lastIn = 0; lastOut = 0; primed = false;
+  lastIn = 0; lastOut = 0; maxIn = 0; maxOut = 0; primed = false;
   document.querySelectorAll("#mtabs .badge").forEach(b => b.textContent = "");
   setPhone("parent", cfg.parents[0]); setPhone("chp", cfg.chps[0]); setPhone("facility", cfg.facilities[0].phone);
   chwView(false);
   step = 0; storyCode = null;
-  storyShow("Play the story: one family's case, from the first SMS to the facility outcome. Press Next for each step.", "Next");
+  storyMode(true);
+  spotlight(["parent", "chp", "facility", "log"]);
+  document.getElementById("story").hidden = false;
+  document.getElementById("storycap").innerHTML = '<span class="st-title">Play the story.</span>One family\'s case, from the first SMS to the facility outcome. Press Next for each step.';
+  document.getElementById("storynext").textContent = "Next";
+  document.getElementById("storynext").disabled = false;
+  document.getElementById("storyclose").textContent = "Close";
 };
+// The step index changes ONLY here, on a click of Next; one step per click (a click while a step runs is ignored).
+let advancing = false;
 document.getElementById("storynext").onclick = async () => {
   const btn = document.getElementById("storynext");
-  if (step >= STORY.length) { document.getElementById("story").hidden = true; return; }
+  btn.blur();                                             // Enter/Space can't re-press a focused Next
+  if (advancing) return;
+  if (step >= STORY.length) { closeStory(); return; }
+  advancing = true;
   btn.disabled = true;
-  const s = STORY[step++];
-  storyShow(s.cap, step >= STORY.length ? "Try your own message" : "Next");
+  const i = step++;
+  const s = STORY[i];
+  stepSeen.clear();
+  stepStart = { i: maxIn, o: maxOut };
+  caption(i);
+  spotlight(s.roles);
   showPane(s.tab);
-  try { await s.run(); } finally { btn.disabled = false; }
-  if (step >= STORY.length) document.getElementById("storyclose").textContent = "Reset";
+  try { await s.run(); await waitReady(s); } finally { btn.disabled = false; advancing = false; scrollSpot(); }
+  stepTimes[i] = fmt(Date.now() / 1000);
+  if (step >= STORY.length) {
+    btn.textContent = "Try your own message";
+    document.getElementById("storyclose").textContent = "Reset";
+    const lines = STORY.map((x, k) => `<li>${stepTimes[k] || ""} · ${esc(x.title)}</li>`).join("");
+    document.getElementById("storycap").insertAdjacentHTML("beforeend", `<ol class="recap">${lines}</ol>`);
+    scrollSpot();
+  }
 };
+function closeStory() {
+  document.getElementById("story").hidden = true;
+  storyMode(false);
+}
 document.getElementById("storyclose").onclick = async () => {
   if (step >= STORY.length) { await fetch("demo/reset", { method: "POST" }); location.reload(); return; }
-  document.getElementById("story").hidden = true;
+  closeStory();
 };
 
 init().then(setupTabs);
