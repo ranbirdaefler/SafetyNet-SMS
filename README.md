@@ -132,7 +132,8 @@ The board now runs **v3**, a third training run made after the results were tabu
 
 v3 added, to the v2 training data: gpt-5.5 contrast pairs (the same message with a sign present and denied, extra "very sleepy" denials), duration messages under the cut-offs, human-written Swahili with no health content as no-danger examples (MASSIVE sw-KE train and AfriSenti swa train), and SMS-style noise. v3 includes AfriSenti training data; a ministry deployment would retrain without it or seek the creators' approval.
 
-<!-- HOLD: v3 results table and paragraph pending Florian-approved wording.
+Results after the pre-registered tests (exploratory). The pre-registered model tied the keyword list, 20 missed danger messages each across the three sealed sets, and missed one more on two of them, so under the pre-registered safety rule the keyword list runs the parent line. Two retrains followed. v2 caught more danger messages than the pre-registered model but flagged 62.6 to 80.5% of everyday Swahili sentences. v3 was evaluated once on a fresh sealed set of 150 AI-written messages. It kept the board's catch rate (keywords + board missed 2 of 80 danger messages, the same number as v2, though not the same messages) while flagging 2 of 55 harmless messages (v2: 18) and 1 of 1,012 FLORES sentences it never trained on (v2: 70.6%). The cost: on the three older sets, keywords + v3 board let through 3 of 104 danger messages that the v2 board caught, mostly long illnesses described in Swahili. v3's training changes were chosen after seeing error types on dev data and, report-only, on those older sets, so only the fresh set is a clean test of v3. On its own (p ≥ 0.5), v3 missed fewer danger messages than the keywords on every set, with no more needless trips; even so, it doesn't talk to parents until it has been tested on real parents' messages. All test messages are AI-written; native Swahili is NOT TESTED. Board numbers use lo 0.849 / hi 0.997, set by the rule committed before evaluation.
+
 | Evaluation split (never used for training or thresholds) | Keywords + v2 board (as shipped) | Keywords + v2 board (re-tuned) | Keywords + v3 board |
 |---|---|---|---|
 | Fresh test set y_test2 (Claude-written, 80 danger): danger missed | 2 | 2 | 2 |
@@ -141,12 +142,7 @@ v3 added, to the v2 training data: gpt-5.5 contrast pairs (the same message with
 | Everyday Swahili, FLORES-200 devtest (1,012; FLORES was never trained on): flagged | 70.6% | 70.6% | 0.1% |
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 80.5% | 0.0% |
 
-v3 passed all three pre-declared criteria (caregiver tests green with it on; no more danger missed than with v2; at most 35% of each everyday split flagged). v2 with thresholds re-chosen by the same rule kept its safe lower threshold and still flagged 60 to 80% of everyday Swahili: thresholds alone could not fix the flood without giving up safety; retraining did. The v3 board thresholds (lo 0.849, hi 0.997) were set by the rule on separate threshold splits.
-
-Reported, not used for any decision: on the three original sealed sets, keywords + the v3 board missed one danger message on each of (a), (b) and Y-test, where keywords + the v2 board (whose flood flagged almost everything) missed none.
-
-On our AI-written tests the v3 board flags 2 of 55 harmless messages on the fresh test set; on everyday Swahili sentences that aren't about sick children it flags 0 to 1 per source. It has never seen a real parent's text; its thresholds have to be set on real parents' texts before use.
--->
+Thresholds behind each column: v2 as shipped lo 0.068 / hi 0.9; v2 re-tuned lo 0.068 / hi 0.844 (same rule as v3); v3 lo 0.849 / hi 0.997. A message counts as flagged when the board marks it 'possible' or 'unsure'. "Alone" figures use p ≥ 0.5, the pre-registered PRESENT rule, never tuned.
 
 ## Safety contract and preconditions
 
@@ -287,6 +283,10 @@ AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper 
 - **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.
 
 **Related work.** Masakhane Hub's LINGUA Africa 2026 grants include health language-AI work: WHO Kenya's AFYA-LINGUA (Kiswahili plus nine languages), IDI Uganda's Sasa (eight languages including Kiswahili), and Ushahidi's health-and-education resources for Tonga, Tjwao and Doma (https://www.microsoft.com/en-us/research/academic-program/lingua-africa-open-call/).
+
+## Licence
+
+Code: MIT (see LICENSE). The model weights (see the model card: research and evaluation only) and the datasets keep their own licences.
 
 ## Reuse in another setting
 

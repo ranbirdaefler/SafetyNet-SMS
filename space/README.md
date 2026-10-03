@@ -6,7 +6,7 @@ colorTo: red
 sdk: docker
 app_port: 7860
 pinned: false
-license: other  # TBD by the author
+license: mit
 short_description: Danger-sign SMS assistant for health workers (synthetic data only)
 ---
 
