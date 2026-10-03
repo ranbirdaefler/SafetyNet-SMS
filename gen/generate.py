@@ -16,6 +16,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 sys.path.insert(0, str(Path(__file__).parent))
+import aug_cards as A
 import cards as C
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,12 +34,13 @@ SCHEMA = {
 
 OUT = {
     "x_train": ROOT / "data" / "x_train.jsonl",
+    "x_aug": ROOT / "data" / "x_aug.jsonl",
     "y_dev": ROOT / "data" / "y_dev.jsonl",
     "y_test": ROOT / "tests" / "y_test.jsonl",
     "set_b": ROOT / "tests" / "caregiver_set_b.csv",
 }
 SEALED = {"y_test", "set_b"}
-FAMILY = {"x_train": "gpt", "y_dev": "gpt", "y_test": "claude", "set_b": "claude"}
+FAMILY = {"x_aug": "gpt", "x_train": "gpt", "y_dev": "gpt", "y_test": "claude", "set_b": "claude"}
 
 
 def call_gpt(client, user):
@@ -71,7 +73,7 @@ def one(fn, client, card):
     last = None
     for attempt in range(4):
         try:
-            texts = [t.strip() for t in fn(client, C.render(card))]
+            texts = [t.strip() for t in fn(client, A.render(card) if card["id"].startswith("x_aug") else C.render(card))]
             if len(texts) == want and all(texts):
                 return texts
             last = "wrong_text_count"
@@ -84,7 +86,8 @@ def one(fn, client, card):
 def main():
     split = sys.argv[1]
     limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else None
-    cards = C.grid_b_cards() if split == "set_b" else C.sample_split(split, *C.SPLITS[split])
+    cards = (C.grid_b_cards() if split == "set_b" else A.all_cards() if split == "x_aug"
+             else C.sample_split(split, *C.SPLITS[split]))
     if limit:
         cards = cards[:limit]
     if FAMILY[split] == "gpt":
