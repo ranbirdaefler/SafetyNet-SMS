@@ -18,7 +18,7 @@ You are the **build agent** for SafetyNet-SMS, Florian's solo entry to the World
 5. **Secrets.** API keys only in `.env` (gitignored). Never print or commit them.
 6. **Transport.** No Twilio. One generic endpoint `{from, to, body}` → replies; role from `to`. The 3-pane simulator (Parent / Health worker / Facility) is the demo client. Caption: "SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway. Everything behind the gateway runs as shown, on this Pi."
 7. **Hardware.** Raspberry Pi 5, 8 GB, at 192.168.1.208 (user/host FloFlo), CPU-only ONNX Runtime, 4 threads. Training on the desktop RTX 4070 Ti SUPER. Model: AfroXLMR-base (fallback -small), FP32 ONNX default; INT8 (MatMul-only) only by the prereg rule.
-8. **Outgoing SMS are English only.** Input may be Swahili / English / mixed.
+8. **Outgoing SMS: messages to health workers, facilities and the CHA are English only. Parent messages: CG_GO_NOW, CG_GO_NOW_U, CG_TIMEOUT and CG_OOS are bilingual, Swahili first, English below as the authoritative line. CG_TOLD is sent in the parent's registered language (Swahili by default, or English). All parent texts are fixed strings approved by Florian; nothing generated is ever sent to a parent.** Input may be Swahili / English / mixed.
 
 ## Working loop
 - Work block by block in `WEEKEND_PLAN.md` order. At the start of a block, state its goal and "done when" test in one line; at the end, run the test, commit, push, and report in ≤ 5 lines: done / not done, test result, time used vs. budget, anything Florian must decide.
