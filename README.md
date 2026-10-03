@@ -33,6 +33,18 @@ World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 t
 - Precondition for deployment: a county shortcode on a Kenyan SMS gateway, so parents pay nothing. Texts sent while the box is down are lost.
 - Not clinically validated.
 
+## Responsible AI
+
+**Where the data sits.** Every message, case and timer is stored in one SQLite file on the county box (the Pi, `data/sms.db`). No cloud model is called at decision time; the model runs on the box. Nothing leaves the box except the SMS replies themselves. In deployment the box sits with the county health team, so primary-care data is processed in Kenya.
+
+**Who can read it.** Only whoever administers the county box can read the database. The health worker sees only the messages sent to their own phone; the facility and CHA see only alerts with a case code, the child's age and the reasons, never a name and never the parent's own words. The parent's phone number appears only in the five messages that ask the health worker or CHA to call the parent. The demo uses synthetic numbers only.
+
+**When a phone is lost or shared.** No SMS carries a name, a diagnosis or a medicine, so a lost or shared phone shows a case code, an age, the danger signs reported and an instruction to go to the facility. A parent message from an unknown number (a borrowed phone, a new SIM) is never turned away: it gets "go to the nearest facility now", and the CHA is told. A health-worker number that is not registered gets no case information at all. A lost health-worker phone is removed from the registry by the county; open cases then time out to "go now" for the parent.
+
+**Human in the loop.** The tool never decides against care. Only a health worker can close a case, and only by replying "0" (none of the danger signs, all checked) after seeing the child. Every other path ends with a person: the health worker is called, the facility and CHA are alerted, and the facility confirms arrival. The model can only add a reason to send a child now; it can never remove one.
+
+**The fail-safe.** When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure), a model that fails to load: each one ends in "go now" for the parent or in the health worker being told, with a deadline. If any safety test fails at start-up, the parent line switches off rather than run untested.
+
 ## Production gaps
 
 - A keyed hash of phone numbers.
