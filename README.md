@@ -225,7 +225,69 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - **Running cost:** SMS at about KES 1.18 each (DATA.md, F3); no cloud.
 - **Pilot plan:** one CHU, the CHA reviews every model flag for the first weeks before anyone relies on it.
 
-## Data and evaluation (filled at `freeze` and `results`)
+## Results
+
+**Pre-registered claim (native Swahili): NOT TESTED**
+
+Tabulated once, at tag `results`, on the outputs sealed at `freeze` (28609b6, pushed 14:06 ET Sat 3 Oct). Full tables, error listings by message ID and class, and errata: `results/TABLES.md`, `results/ERRATA.md`.
+
+Outcome (checked in the pre-registered order: safety switch, then Win, then Tie-or-loss). The safety switch fired on (b) and Y-test.
+
+> No native speaker's texts were sealed in time, so my registered claim is not tested. On three stand-in sets, the model sent 10 of 12 children with a danger sign to the clinic in 25 test messages an AI model wrote from a fixed case grid, 9 of 12 in 25 AI-written Swahili texts no native speaker checked, and 65 of 80 in 150 AI-written test texts; the keyword list 8, 10, 66. Needless trips: model 4 of 13, 0 of 13, 3 of 55; keyword list 3, 3, 11. None are real parents' texts, so the model is not shown to beat a keyword list.
+
+On screen with it: "Test messages written by an AI model from a fixed case grid; no native or human-written test set."
+
+> Before testing I set a rule that the model may not miss more children with a danger sign than a keyword list; on (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker it missed 3 of 12, the keyword list 2, so the keyword list now runs the parent line.
+
+> Before testing I set a rule that the model may not miss more children with a danger sign than a keyword list; on Y-test, Claude, caregiver it missed 15 of 80, the keyword list 14, so the keyword list now runs the parent line.
+
+Single pass: each message read once, first reply scored; dialogue not replayed. Registered senders only. Ours = FP32 ONNX on the Pi 5 (8 GB).
+
+| Set | Row | Missed go-now (CP 95%) | Needless go-now (CP 95%) | Shared path | "Age not received" alone |
+|---|---|---|---|---|---|
+| (a) Claude-written from a fixed case grid | keyword list (E2) | 4/12 (9.9-65.1%) | 3/13 (5.0-53.8%) | 0/0 | 3 |
+| (a) Claude-written from a fixed case grid | ours (registered v1 FP32) | 2/12 (2.1-48.4%) | 4/13 (9.1-61.4%) | 0/0 | 2 |
+| (a) Claude-written from a fixed case grid | McNemar (no-danger discordant) | b = 0, c = 1 | p = 1.0 | | |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | keyword list (E2) | 2/12 (2.1-48.4%) | 3/13 (5.0-53.8%) | 0/0 | 0 |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | ours (registered v1 FP32) | 3/12 (5.5-57.2%) | 0/13 (0.0-24.7%) | 0/0 | 0 |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | McNemar (no-danger discordant) | b = 3, c = 0 | p = 0.25 | | |
+| Y-test, Claude, caregiver | keyword list (E2) | 14/80 (9.9-27.6%) | 11/55 (10.4-33.0%) | 10/10 | 5 |
+| Y-test, Claude, caregiver | ours (registered v1 FP32) | 15/80 (10.9-29.0%) | 3/55 (1.1-15.1%) | 10/10 | 5 |
+| Y-test, Claude, caregiver | McNemar (no-danger discordant) | b = 9, c = 1 | p = 0.0215 | | |
+
+Baselines: always go now misses 0 and sends every no-danger child; never go now misses every danger child. Only a native set could produce a Win, so the Y-test McNemar p is not a win.
+
+### Exploratory rows (not pre-registered)
+
+| Set | Row | Missed go-now | Needless go-now |
+|---|---|---|---|
+| (a) Claude-written from a fixed case grid | v1 deployed (trim + 8-bit weights) | 2/12 (2.1-48.4%) | 4/13 (9.1-61.4%) |
+| (a) Claude-written from a fixed case grid | v2 FP32 (second training run) | 1/12 (0.2-38.5%) | 6/13 (19.2-74.9%) |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | v1 deployed (trim + 8-bit weights) | 3/12 (5.5-57.2%) | 0/13 (0.0-24.7%) |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | v2 FP32 (second training run) | 2/12 (2.1-48.4%) | 1/13 (0.2-36.0%) |
+| Y-test, Claude, caregiver | v1 deployed (trim + 8-bit weights) | 15/80 (10.9-29.0%) | 3/55 (1.1-15.1%) |
+| Y-test, Claude, caregiver | v2 FP32 (second training run) | 2/80 (0.3-8.7%) | 12/55 (11.8-35.0%) |
+
+**By language (exploratory; each message's language as fixed when it was generated, never read from the text; set (a) has no language split).**
+
+| Set | Language | Keyword list E2 | v1 FP32 (registered) | v2 FP32 |
+|---|---|---|---|---|
+| (b) | Swahili | 2/12 missed, 3/13 needless | 3/12 missed, 0/13 needless | 2/12 missed, 1/13 needless |
+| Y-test | Swahili | 6/27 missed, 7/31 needless | 6/27 missed, 2/31 needless | 1/27 missed, 6/31 needless |
+| Y-test | English | 6/31 missed, 2/13 needless | 3/31 missed, 1/13 needless | 1/31 missed, 2/13 needless |
+| Y-test | code-mixed | 2/22 missed, 2/11 needless | 6/22 missed, 0/11 needless | 0/22 missed, 4/11 needless |
+
+**The board model (exploratory).** Deployed board model v2 (trimmed, 8-bit weights) at the board thresholds lo 0.068 / hi 0.9. On Y-dev, where the thresholds were set (thresholds set on this data), it flagged 10 of the 10 danger messages the keyword list E2 missed, and flagged 11 of 45 no-danger messages. On the sealed sets (thresholds set on Y-dev; the test sets are Claude-written, so the Y-dev guarantee does not formally transfer):
+
+| Set | Danger messages E2 missed that the board flagged | No-danger messages flagged |
+|---|---|---|
+| (a) Claude-written from a fixed case grid | 4/4 (39.8-100.0%) | 7/13 (25.1-80.8%) |
+| (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | 2/2 (15.8-100.0%) | 4/13 (9.1-61.4%) |
+| Y-test, Claude, caregiver | 14/14 (76.8-100.0%) | 19/55 (22.2-48.6%) |
+
+**Human-written Swahili with no health content: MASSIVE sw-KE (exploratory).** On 1,000 translated virtual-assistant commands (sampled with a fixed seed), counted as "go now" triggered by a sign, a C4 word or under 2 months, the keyword list triggered on 43, the first model (v1 FP32) on 9, and the shipped board model (v2, trimmed, 8-bit weights) on 59. All model counts use the parent-line rule (raw p >= 0.5 on any head), not the board's calibrated bands. v2 differs from v1 by 462 extra training messages, terse danger terms and negated lists, added after v1 failed the caregiver tests CG1 and CG5; v2 ships on the board because on Y-dev it passed more caregiver tests and caught more danger messages, and it was chosen there before the freeze. When each number was seen: the v1 FP32, v2 FP32 (49) and keyword list counts printed when the runs finished, after the freeze and after v2 had already been chosen for the board; the shipped v2 count was run after the freeze, before the tabulation. So on the AI-written test sets the registered model had fewer needless trips than the keyword list, but on human-written Swahili the shipped model raised more "go now" triggers than the keyword list did.
+
+### Evaluation notes
 
 - Training and development data were written by GPT; every test set was written by Claude.
 - Test messages written by an AI model from a fixed case grid; no native or human-written test set.
