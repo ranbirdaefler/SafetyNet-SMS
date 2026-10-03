@@ -213,6 +213,8 @@ SPLITS = {
     "x_train": (660, 420, 120, 1001, 40),
     "y_dev": (60, 45, 15, 2002, 8),
     "y_test": (80, 55, 15, 3003, 10),
+    # fresh test set for v3 (Sat 3 Oct): claude-opus-5-5, new seed, Y-test size and mix; 40% of no-danger cards are denials
+    "y_test2": (80, 55, 15, 7007, 10),
 }
 
 # Set (b): the D01-D12 / N01-N13 grid from PREREGISTRATION.md section 3, Swahili, 12/13/0.

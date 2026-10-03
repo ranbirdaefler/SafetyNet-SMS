@@ -37,10 +37,11 @@ OUT = {
     "x_aug": ROOT / "data" / "x_aug.jsonl",
     "y_dev": ROOT / "data" / "y_dev.jsonl",
     "y_test": ROOT / "tests" / "y_test.jsonl",
+    "y_test2": ROOT / "tests" / "y_test2.jsonl",
     "set_b": ROOT / "tests" / "caregiver_set_b.csv",
 }
-SEALED = {"y_test", "set_b"}
-FAMILY = {"x_aug": "gpt", "x_train": "gpt", "y_dev": "gpt", "y_test": "claude", "set_b": "claude"}
+SEALED = {"y_test", "y_test2", "set_b"}
+FAMILY = {"y_test2": "claude", "x_aug": "gpt", "x_train": "gpt", "y_dev": "gpt", "y_test": "claude", "set_b": "claude"}
 
 
 def call_gpt(client, user):
