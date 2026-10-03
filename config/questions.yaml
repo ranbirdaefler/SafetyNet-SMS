@@ -3,7 +3,7 @@
 # 2 = safe observation, 3 = not sure. Look or recall only: no examination, no medicine, no advice, no diagnosis.
 # English is authoritative. Swahili: gpt-5.5 translation with a back-translation per text; NOT native-reviewed.
 # Wording from the clinical-safety review (quorum/rounds/reconvene/2026-10-03-question-layer-safety.md, M1-M8).
-enabled: false   # off until Florian approves the texts; tests switch it on
+enabled: true    # EXPERIMENTAL: on for the release (Florian, Sat 3 Oct); SNS_QUESTIONS=0 switches it off
 # Fixed first line on every parent message on a REFERRED case (review E1 / section 3), system-added.
 prefix_referred:   # approved by Florian, Sat 3 Oct
   en: "Keep going to the clinic. Do not stop to reply."

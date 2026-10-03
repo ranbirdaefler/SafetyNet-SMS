@@ -12,6 +12,13 @@ MAX_PREARRIVAL = 2          # review SHOULD: at most 2 pre-arrival questions, ne
 MAX_PER_CASE = 3
 
 
+def score_text(p):
+    """E6: a model score is shown only when the model ranked the question; never below 0.5, never as 1.00."""
+    if p is None or p < 0.5:
+        return None
+    return "above 0.99" if p > 0.99 else f"{p:.2f}"
+
+
 def eligible(state):
     """Review M1: model drafts are off for under 2 months, no age, 5 years+, pregnancy and adult."""
     age = state.get("age_months")
@@ -48,10 +55,8 @@ def suggest(state, bank_questions, status):
         if not hit:
             continue
         s = hit[0]
-        reason = f"Linked to the sign that triggered go now: {LABEL[s]}."
-        p = heads.get(s)
-        if p is not None and p >= 0.5:                       # E6: never show a low score
-            reason += f" Model score for {LABEL[s]}: {p:.2f}."
+        term = (state.get("rule_terms") or {}).get(s)          # the rules found this sign: credit the rules, no score
+        reason = f"Linked to the sign the rules found: {LABEL[s]}" + (f" ('{term}')" if term else "") + "."
         reason += f" Source: {item['source']}."
         out.append({"id": item["id"], "reason": reason})
     return out[:max(0, MAX_PREARRIVAL - pre_asked)]

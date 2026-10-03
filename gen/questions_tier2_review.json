@@ -1,0 +1,74 @@
+{
+ "CK_FITS": {
+  "en": "In this illness, has the child had fits (jerking they could not stop, eyes rolling, body stiff)? Reply 1 yes, fits. 2 no fits. 3 not sure.",
+  "sw": "Katika ugonjwa huu, mtoto amepata degedege (kutetemeka bila kuzuia, macho kuzunguka, mwili kukakamaa)? Jibu 1 ndio, degedege. 2 hana degedege. 3 sina uhakika.",
+  "back": "During this illness, has the child had convulsions (shaking without control, eyes rolling, body becoming stiff)? Reply 1 yes, convulsions. 2 has no convulsions. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 158
+ },
+ "CK_WAKE": {
+  "en": "Call the child's name and touch gently. Do not shake. Reply 1 if they do not wake or fall back asleep at once. 2 if awake and looking at you. 3 not sure.",
+  "sw": "Mwite mtoto kwa jina lake na mguse taratibu. Usimtikise. Jibu 1 kama haamki au analala tena mara moja. 2 yuko macho na anakutazama. 3 sina uhakika.",
+  "back": "Call the child by their name and touch them gently. Do not shake them. Reply 1 if they do not wake up or fall asleep again at once. 2 they are awake and looking at you. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 147
+ },
+ "CK_DRINK": {
+  "en": "Only if the child is awake: offer a drink or the breast, do not force. Reply 1 cannot drink or suck at all, or not awake. 2 drinks or sucks. 3 not sure.",
+  "sw": "Mtoto akiwa macho tu: mjaribu kumpa kinywaji au titi, usilazimishe. Jibu 1 hawezi kunywa/kunyonya kabisa, au hayuko macho. 2 ananywa/ananyonya. 3 sina uhakika.",
+  "back": "Only when the child is awake: try to give him/her a drink or the breast, do not force. Reply 1 cannot drink/suckle at all, or is not awake. 2 is drinking/suckling. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 159
+ },
+ "CK_VOMIT": {
+  "en": "Since this illness began, does the child vomit up every drink and feed? Reply 1 vomits everything. 2 keeps some down. 3 not sure.",
+  "sw": "Tangu ugonjwa huu uanze, mtoto hutapika kila anachokunywa au kula? Jibu 1 hutapika kila kitu. 2 hubakisha vingine. 3 sina uhakika.",
+  "back": "Since this illness began, does the child vomit everything he/she drinks or eats? Reply 1 vomits everything. 2 keeps some things down. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 130
+ },
+ "CK_BLOOD": {
+  "en": "Look at the child's last stool (poo). Reply 1 if you see blood, red or dark. 2 no blood. 3 not sure or no stool.",
+  "sw": "Angalia kinyesi cha mwisho cha mtoto. Jibu 1 ukiona damu, rangi nyekundu au nyeusi. 2 hakuna damu. 3 sina uhakika au hakuna kinyesi.",
+  "back": "Check the child's last stool. Reply 1 if you see blood, red or black color. 2 no blood. 3 I am not sure or no stool.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 132
+ },
+ "CK_COUGH_DAYS": {
+  "en": "Has the cough lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 not sure.",
+  "sw": "Kikohozi kimekaa siku 14 au zaidi? Jibu 1 ndio, siku 14 au zaidi. 2 chini ya siku 14. 3 sina uhakika.",
+  "back": "Has the cough lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 101
+ },
+ "CK_DIARRHOEA_DAYS": {
+  "en": "Has the diarrhoea lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 not sure.",
+  "sw": "Kuharisha kumedumu siku 14 au zaidi? Jibu 1 ndiyo, siku 14 au zaidi. 2 chini ya siku 14. 3 sina uhakika.",
+  "back": "Has diarrhea lasted 14 days or more? Reply 1 yes, 14 days or more. 2 less than 14 days. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 104
+ },
+ "CK_FEVER_DAYS": {
+  "en": "Has the fever lasted 7 days or more, counted from when it started, even on and off? Reply 1 yes. 2 less. 3 not sure.",
+  "sw": "Homa imekaa siku 7 au zaidi, ukihesabu tangu ilipoanza, hata kama inakuja na kuisha? Jibu 1 ndio. 2 chini ya 7. 3 sina uhakika.",
+  "back": "Has the fever lasted 7 days or more, counting from when it started, even if it comes and goes? Reply 1 yes. 2 less than 7. 3 I am not sure.",
+  "seg_en": 1,
+  "seg_sw": 1,
+  "len_sw": 127
+ },
+ "Q_ACK_TOLD": {
+  "en": "Thank you, your answer was passed on. If no one calls or comes by {time}, go to {facility}. Go NOW if a danger sign appears.",
+  "sw": "Asante, jibu lako limefikishwa. Ikiwa hakuna mtu atakayepiga simu au kuja kufikia saa {time}, nenda {facility}. Ukiona dalili ya hatari, nenda SASA HIVI.",
+  "back": "Thank you, your reply has been delivered. If no one calls or comes by {time}, go to {facility}. If you see a danger sign, go RIGHT NOW.",
+  "seg_en": 1,
+  "seg_sw": 2,
+  "len_sw": 170
+ }
+}

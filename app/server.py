@@ -158,6 +158,21 @@ def why_question(row):
     return f"Bank question {qid}: drafted by the model, approved by CHP {log[-1]['by']}.\nWhy suggested: {log[-1]['reason']}"
 
 
+def remember_rule_terms(phone, body):
+    """Question layer (display only): the keyword term behind each sign the rules found, for the reason line."""
+    from app import lexicon
+    from app.door import keyword_extractor
+    case = STORE.latest_case_for_parent(phone)
+    if case is None:
+        return
+    found = keyword_extractor(body)
+    terms = case["state"].setdefault("rule_terms", {})
+    for sign, term, neg in lexicon.match_detail(body, lexicon.LIVE["rows"], lexicon.LIVE["k"]):
+        if not neg and found.get(sign) == "PRESENT" and sign not in terms:
+            terms[sign] = term
+    STORE.update_case(case["code"], state=case["state"])
+
+
 def with_why(rows):
     return [dict(r, why=why_for(r)) if r.get("role") == "parent" else r for r in rows]
 
@@ -247,6 +262,8 @@ def sms(msg: Inbound):
             service.handle(STORE, REGISTRY, STATE["protocol"], role, msg.sender, msg.body, extractors=STATE["extractors"],
                            board_model=STATE.get("board_model"))
         replies = STORE.outbox_since(before)
+        if role == "parent" and STATE.get("questions", {}).get("on"):
+            remember_rule_terms(msg.sender, msg.body)
         if EXPLAIN and role == "chp":
             for r in replies:
                 if r["role"] == "parent" and r["msg_id"] == "CG_GO_NOW":

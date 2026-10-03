@@ -26,7 +26,7 @@ def on():
     QL.load(P, force=True)
     assert QL.is_on(), QL.STATE["errors"]
     yield
-    QL.load(P, force=False)
+    QL.load(P, force=False)                                     # the rest of the suite runs with the layer off
     assert not QL.is_on()
 
 
@@ -51,8 +51,10 @@ def approve(e, code, qid, chp=CHP7):
 def test_bank_passes_lint_and_default_is_off():
     bank = yaml.safe_load((ROOT / "config" / "questions.yaml").read_text(encoding="utf-8"))
     assert QL.lint(bank, P) == []
-    QL.load(P)                                                  # bank default: off until Florian approves the texts
-    assert not QL.is_on() and QL.STATE["errors"] == []
+    QL.load(P)                                                  # bank default: on for the release (experimental)
+    import os
+    expect = {"0": False, "1": True}.get(os.environ.get("SNS_QUESTIONS"), bank["enabled"] is True)
+    assert QL.is_on() == expect and QL.STATE["errors"] == []
 
 
 @pytest.mark.parametrize("mutate,expect", [
@@ -96,10 +98,11 @@ def test_suggest_tier1_and_m1(on):
     assert suggest(st, bank, "ASK_SIGNS") == []                                   # Tier 1: referred cases only
     for bad in ({"age_months": None}, {"u2m": True, "age_months": 1}, {"age_months": 70}, {"pregnancy": True}):
         assert suggest({**st, **bad}, bank, "REFERRED") == []                     # M1
-    r = suggest({**st, "model": {"heads": {"convulsions": 0.97}}}, bank, "REFERRED")[0]["reason"]
-    assert "Model score for convulsions: 0.97" in r and "WHO/UNICEF" in r
-    low = suggest({**st, "model": {"heads": {"convulsions": 0.2}}}, bank, "REFERRED")[0]["reason"]
-    assert "0.2" not in low and "unlikely" not in low                             # E6
+    r = suggest({**st, "rule_terms": {"convulsions": "degedege"}, "model": {"heads": {"convulsions": 0.97}}}, bank, "REFERRED")[0]["reason"]
+    assert r.startswith("Linked to the sign the rules found: convulsions ('degedege').") and "WHO/UNICEF" in r
+    assert "0.97" not in r and "score" not in r                                   # rules found it: no model score
+    from app.suggest import score_text
+    assert score_text(0.999) == "above 0.99" and score_text(0.97) == "0.97" and score_text(0.3) is None   # E6
 
 
 # ---------- the health worker's action ----------

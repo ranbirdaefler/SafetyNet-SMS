@@ -342,6 +342,7 @@ function openWrite(qb, r, text, qid) {
     (qid ? `<div class="warn">Edited: answers will not be read automatically. To keep automatic go-now, approve as written.</div>` :
            `<div class="warn">Replies to your message are shown to you, never read automatically.</div>`) +
     `<button type="button">Send</button> <button type="button" class="tool">Cancel</button><div class="err"></div>`;
+  w.querySelector(".err").textContent = writeOpen[r.code].err || "";
   w.querySelector(".start").textContent = "Sent as: " + r.q_write.start + "…  (added by the system)";
   const ta = w.querySelector("textarea"); ta.maxLength = r.q_write.room; ta.value = writeOpen[r.code].text;
   ta.oninput = () => { writeOpen[r.code].text = ta.value; };
@@ -352,7 +353,7 @@ function openWrite(qb, r, text, qid) {
     const res = await (await fetch("chw/message", { method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ chp: panes.chp.select.value, code: r.code, text: ta.value, from_qid: qid }) })).json();
     send.disabled = false;
-    if (!res.ok) { w.querySelector(".err").textContent = res.error; return; }
+    if (!res.ok) { writeOpen[r.code].err = res.error; w.querySelector(".err").textContent = res.error; return; }
     delete writeOpen[r.code]; w.remove(); poll(); pollBoard();
   };
   qb.appendChild(w);
@@ -657,6 +658,18 @@ const STORIES = [
   ] },
 ];
 const S5 = "mtoto wangu wa miaka 2 ana degedege";
+async function writeDraft(text) {                    // story: type into her "Write your own message" box and press Send
+  const b = panes.chp.boardEl;
+  if (!b.querySelector(".qwrite")) {
+    const open = [...b.querySelectorAll("button")].find(x => x.textContent === "Write your own message");
+    if (open) open.click();
+  }
+  const ta = b.querySelector(".qwrite textarea");
+  if (!ta) return;
+  ta.value = text; ta.dispatchEvent(new Event("input"));
+  b.querySelector(".qwrite button").click();
+  await sleep(600);
+}
 async function qAct(qid, action) {
   await fetch("chw/question", { method: "POST", headers: { "content-type": "application/json" },
     body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, qid, action }) });
@@ -684,11 +697,15 @@ STORIES.push({ name: "Questions before arrival (experimental)", parent: "Zawadi"
     look: "the log on Achieng's case card.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: [],
     ready: () => /declined by CHP/.test(panes.chp.boardEl.textContent),
     run: async () => { chwView(true); await qAct("PA_AWAKE", "decline"); } },
-  { title: "She writes her own", text: "Achieng writes 'Nijulishe mkifika kliniki' (tell me when you reach the clinic). The system adds 'Endelea kwenda kliniki.' and her name; medicine or 'wait' words would be refused.",
-    why: "Her own words can reach a parent only through her phone, signed as hers, with the fixed first line on a referred case. Model-written text never does.",
+  { title: "Her own words: a reassurance is refused", text: "Achieng drafts 'Usijali, nijulishe mkifika kliniki' (don't worry, tell me when you reach the clinic). 'Usijali' is a reassurance word, so the message is not sent.",
+    why: "Words that could make a family slow down (don't worry, wait, tomorrow) and any medicine or dose are refused in English and Swahili. For those, she phones.",
+    look: "the refusal under her draft on the board.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: [],
+    ready: () => /Not sent: for medicines/.test(panes.chp.boardEl.textContent),
+    run: async () => { chwView(true); await sleep(2300); await writeDraft("Usijali, nijulishe mkifika kliniki."); } },
+  { title: "She removes it; it goes out as hers", text: "She deletes 'Usijali' and sends. Zawadi gets 'Endelea kwenda kliniki. Achieng, your health worker: Nijulishe mkifika kliniki.' The first line and her name are added by the system.",
+    why: "Her own words reach a parent only through her phone, signed as hers, with the fixed first line on a referred case. Model-written text never does.",
     look: "the message in the parent pane.", roles: ["chp", "parent"], tab: "parent", nodes: ["Achieng", "P"], expect: ["CHW_MSG"],
-    run: async () => { await fetch("chw/message", { method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ chp: cfg.chps[0], code: storyCode, text: "Nijulishe mkifika kliniki." }) }); poll(); pollBoard(); } },
+    run: async () => { await writeDraft("Nijulishe mkifika kliniki."); } },
   { title: "The reply goes to her, as written", text: "Zawadi replies 'sawa' (OK). Achieng sees it on her board exactly as written; it is never read automatically, and the system repeats 'go now'.",
     why: "Only bare answers to approved bank questions are read automatically. Anything else is shown to a person, and the referral stands.",
     look: "'Parent replied' on Achieng's board and the repeated go-now.", roles: ["parent", "chp"], tab: "chp", nodes: ["P", "Achieng"], expect: ["CG_GO_NOW"],
