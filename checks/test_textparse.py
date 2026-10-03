@@ -106,3 +106,13 @@ def test_age_text_is_not_a_numbered_reply():
     assert parse_reply("1234 2 years", "1234") is None
     assert parse_reply("3 asante", "1234") == ("digits", {3})
     assert parse_reply("1234 18", "1234") == ("digits", {1, 8})
+
+
+@pytest.mark.parametrize("text,months,u2m", [("hi mtoto 1yr 1 month ana runny nose", 13, False),
+                                              ("child 2 years 3 months fever", 27, False),
+                                              ("mwaka 1 miezi 3", 15, False),
+                                              ("mtoto mwezi 1 ana homa", 1, True), ("baby 1 month", 1, True),
+                                              ("3 y and 1 m", 1, True), ("mwaka 2 na mwezi 1", 1, True)])
+def test_years_then_months_is_one_age_but_and_keeps_two(text, months, u2m):   # post-hoc fix, Sat 3 Oct
+    p = textparse.parse(text)
+    assert p.age_months == pytest.approx(months) and p.u2m == u2m

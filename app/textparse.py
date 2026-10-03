@@ -18,6 +18,7 @@ from dataclasses import dataclass, field
 from app.lexicon import clauses
 
 UNITS_EN = {"m": "months", "month": "months", "months": "months", "y": "years", "year": "years", "years": "years",
+            "yr": "years", "yrs": "years",   # abbreviations of "years", added post-hoc Sat 3 Oct (README)
             "d": "days", "day": "days", "days": "days", "week": "weeks", "weeks": "weeks"}
 UNITS_SW = {"miezi": "months", "mwezi": "months", "mwaka": "years", "miaka": "years", "wiki": "weeks", "siku": "days"}
 AGE_MARK = {"umri", "age", "aged"}
@@ -77,6 +78,7 @@ def parse(text):
             if toks[i] == "a" and toks[i + 1] == "week":
                 _add_duration(p, toks, i, 7)
         # number + unit (English order) or unit + number (Swahili order)
+        prev_years_end = None                  # post-hoc (Sat 3 Oct): "1yr 1 month" is one age, 13 months
         for i, t in enumerate(toks):
             v = _num(t)
             if v is None:
@@ -100,8 +102,14 @@ def parse(text):
             else:
                 days = v * DAYS[unit]
                 months = v if unit == "months" else v * 12 if unit == "years" else days / 30.4375
+                if unit == "months" and prev_years_end is not None and start == prev_years_end + 1 and p.ages_months:
+                    p.ages_months[-1] += months         # years directly followed by months, no "and"/"na": one age
+                    p.ages_days[-1] += days
+                    prev_years_end = None
+                    continue
                 p.ages_days.append(days)
                 p.ages_months.append(months)
+                prev_years_end = max(i, ui) if unit == "years" else None
                 if (unit == "days" and v < 60) or (unit == "weeks" and v < 9) or (unit == "months" and v < 2):
                     p.u2m = True
     if p.newborn:

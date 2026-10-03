@@ -1,0 +1,710 @@
+{"id": "v3c-000p", "message": "Mtoto wangu wa 24 months ana upele na amepata degedege, nisaidie tafadhali", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-000d", "message": "Mtoto wangu wa 24 months ana upele na hajapata degedege, nisaidie tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-001p", "message": "Mtoto wangu wa 33 months hana hamu ya kula na ana degedege, naomba msaada.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-001d", "message": "Mtoto wangu wa 33 months hana hamu ya kula na hana degedege, naomba msaada.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-002p", "message": "Mtoto wangu wa 5 months ana kikohozi kidogo na amepata degedege, nisaidieni tafadhali", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-002d", "message": "Mtoto wangu wa 5 months ana kikohozi kidogo na hajapata degedege, nisaidieni tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-003p", "message": "Mtoto wangu ana 7 months, ana kikohozi kidogo na amepata degedege, nisaidie.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-003d", "message": "Mtoto wangu ana 7 months, ana kikohozi kidogo na hajapata degedege, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-004p", "message": "Mtoto wangu ana 44 months, ana mafua na amepata degedege, nisaidieni tafadhali", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-004d", "message": "Mtoto wangu ana 44 months, ana mafua na hana degedege, nisaidieni tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-005p", "message": "Mtoto wangu ana 19 months, ana mafua na amepata degedege, nisaidie tafadhali", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-005d", "message": "Mtoto wangu ana 19 months, ana mafua na hajapata degedege, nisaidie tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-006p", "message": "Mtoto wangu ana 27 months, ana upele na amepata degedege.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-006d", "message": "Mtoto wangu ana 27 months, ana upele na hajapata degedege.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-007p", "message": "Mtoto wangu wa 39 months ana degedege, naogopa sana.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-007d", "message": "Mtoto wangu wa 39 months hana degedege, naogopa sana.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-008p", "message": "Mtoto wangu ana 52 months, hali vizuri kula na amepata degedege, naogopa.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-008d", "message": "Mtoto wangu ana 52 months, hali vizuri kula na hajapata degedege, naogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-009p", "message": "Mtoto wangu wa 55 months ana degedege, nimeogopa sana.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-009d", "message": "Mtoto wangu wa 55 months hana degedege, nimeogopa sana.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-010p", "message": "Mtoto wangu ana 30 months, ana mafua yanatoka na amepata degedege, nisaidie.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-010d", "message": "Mtoto wangu ana 30 months, ana mafua yanatoka na hajapata degedege, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-011p", "message": "Mtoto wangu ana miezi 21, ana kikohozi kidogo na amepata degedege, nisaidieni.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-011d", "message": "Mtoto wangu ana miezi 21, ana kikohozi kidogo na hajapata degedege, nisaidieni.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-012p", "message": "Mtoto wangu ana 34 months, ana homa kidogo na amepata degedege.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-012d", "message": "Mtoto wangu ana 34 months, ana homa kidogo na hajapata degedege.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-013p", "message": "Mtoto wangu ana 39 months, ana degedege na mimi nina wasiwasi.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-013d", "message": "Mtoto wangu ana 39 months, hana degedege na mimi nina wasiwasi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-014p", "message": "Mtoto wangu ana 53 months, ana homa kidogo na amepata degedege.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-014d", "message": "Mtoto wangu ana 53 months, ana homa kidogo na hajapata degedege.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-015p", "message": "Mtoto wangu ana 12 months, ana homa kidogo na amepata degedege, nisaidieni.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-015d", "message": "Mtoto wangu ana 12 months, ana homa kidogo na hajapata degedege, nisaidieni.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-016p", "message": "My child is 20 months and has a rash, now having fits. I am worried.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-016d", "message": "My child is 20 months and has a rash, now has no fits. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-017p", "message": "My baby is 11 months, has a rash and is having fits. Please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-017d", "message": "My baby is 11 months, has a rash and has no fits. Please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-018p", "message": "My child is 33 months, has had fits and a little cough, what can I do?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-018d", "message": "My child is 33 months, has had no fits and a little cough, what can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-019p", "message": "My baby is 4 months and has a rash. He is having fits, what can I do?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-019d", "message": "My baby is 4 months and has a rash. He has no fits, what can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-020p", "message": "My child is 59 months and has fits, I am worried.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-020d", "message": "My child is 59 months and has no fits, I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-021p", "message": "My child is 24 months, has poor appetite and is having fits, please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-021d", "message": "My child is 24 months, has poor appetite and has no fits, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-022p", "message": "My child is 37 months, has poor appetite and is getting fits. What should I do?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-022d", "message": "My child is 37 months, has poor appetite and has no fits. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-023p", "message": "My baby is 6 months, has a runny nose and is having fits, please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-023d", "message": "My baby is 6 months, has a runny nose and has no fits, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-024p", "message": "My child is 26 months, has a rash and is having fits. I am worried", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-024d", "message": "My child is 26 months, has a rash and has no fits. I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-025p", "message": "My child is 40 months and has poor appetite, now having fits. Please help.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-025d", "message": "My child is 40 months and has poor appetite, now having no fits. Please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-026p", "message": "My baby is 3 months and has a rash, now having fits. Please help.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-026d", "message": "My baby is 3 months and has a rash, now has no fits. Please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-027p", "message": "My child is 58 months and has fits, also poor appetite. Please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-027d", "message": "My child is 58 months and has no fits, also poor appetite. Please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-028p", "message": "My child is 58 months and has a little cough, now having fits.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-028d", "message": "My child is 58 months and has a little cough, now has no fits.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-029p", "message": "My child is 59 months and has a mild fever, now having fits.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-029d", "message": "My child is 59 months and has a mild fever, now having no fits.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-030p", "message": "My child is 56 months old, has a rash and is having fits, please help.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-030d", "message": "My child is 56 months old, has a rash and has no fits, please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-031p", "message": "My child is 48 months old, has a runny nose and is getting fits, please help.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-031d", "message": "My child is 48 months old, has a runny nose and has no fits, please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-032p", "message": "Mtoto wangu 17 months ako na a little cough na amepata degedege, nisaidie.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-032d", "message": "Mtoto wangu 17 months ako na a little cough na hajapata degedege, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-033p", "message": "Mtoto wangu 59 months ako na runny nose na amepata degedege, nisaidie.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-033d", "message": "Mtoto wangu 59 months ako na runny nose na hajapata degedege, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-034p", "message": "Mtoto wangu 52 months amekula kidogo sana na leo amepata degedege, please advise.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-034d", "message": "Mtoto wangu 52 months amekula kidogo sana na leo hajapata degedege, please advise.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-035p", "message": "Mtoto wangu wa 5 months ako na a little cough na amepata degedege, nifanye nini?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-035d", "message": "Mtoto wangu wa 5 months ako na a little cough na hajapata degedege, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-036p", "message": "Mtoto wangu 37 months ako na mild fever na amepata degedege, nifanye nini?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-036d", "message": "Mtoto wangu 37 months ako na mild fever na hajapata degedege, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-037p", "message": "Mtoto wangu wa 35 months ana little cough na ana degedege, please help.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-037d", "message": "Mtoto wangu wa 35 months ana little cough na hana degedege, please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-038p", "message": "Mtoto wangu 53 months ako na runny nose na amepata degedege, naogopa.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-038d", "message": "Mtoto wangu 53 months ako na runny nose na hajapata degedege, naogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-039p", "message": "Mtoto wangu 39 months ana rash na amepata fits, naogopa.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-039d", "message": "Mtoto wangu 39 months ana rash na hajapata fits, naogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-040p", "message": "Mtoto wangu 23 months ako na fever kidogo na amepata degedege, please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-040d", "message": "Mtoto wangu 23 months ako na fever kidogo na hajapata degedege, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-041p", "message": "Mtoto wangu 16 months ako na mild fever na amepata degedege, nifanye nini?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-041d", "message": "Mtoto wangu 16 months ako na mild fever na hajapata degedege, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-042p", "message": "Mtoto wangu 18 months ana rash na amepata degedege, nisaidieni please", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-042d", "message": "Mtoto wangu 18 months ana rash na hajapata degedege, nisaidieni please", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-043p", "message": "Mtoto wangu 55 months ako na mild fever na amepata degedege, naogopa sana.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-043d", "message": "Mtoto wangu 55 months ako na mild fever na hana degedege, naogopa sana.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-044p", "message": "Mtoto wangu 53 months ana rash na amepata fits, naogopa.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-044d", "message": "Mtoto wangu 53 months ana rash na hajapata fits, naogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-045p", "message": "Mtoto wangu wa 40 months ako na rash na amepata degedege, naogopa sana.", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-045d", "message": "Mtoto wangu wa 40 months ako na rash na hajapata degedege, naogopa sana.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-046p", "message": "Mtoto wangu 26 months ako na rash na amepata degedege, please help", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-046d", "message": "Mtoto wangu 26 months ako na rash na hajapata degedege, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-047p", "message": "Mtoto wangu 8 months ako na rash na amepata degedege, nifanye nini?", "present": [1, 0, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-047d", "message": "Mtoto wangu 8 months ako na rash na hajapata degedege, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-048p", "message": "Mtoto wangu ana 8 months, ana upele na hawezi kunyonya wala kunywa kabisa. Nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-048d", "message": "Mtoto wangu ana 8 months, ana upele na anaweza kunyonya na kunywa. Nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-049p", "message": "Mtoto wangu wa 9 months hataki kula vizuri na hawezi kunyonya wala kunywa kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-049d", "message": "Mtoto wangu wa 9 months hataki kula vizuri na anaweza kunyonya na kunywa, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-050p", "message": "Mtoto wangu wa 18 months ana kikohozi kidogo na hawezi kunywa wala kunyonya kabisa, nifanye nini?", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-050d", "message": "Mtoto wangu wa 18 months ana kikohozi kidogo na anaweza kunywa na kunyonya, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-051p", "message": "Mtoto wangu ana 4 months, ana kikohozi kidogo na hawezi kunyonya wala kunywa kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-051d", "message": "Mtoto wangu ana 4 months, ana kikohozi kidogo na anaweza kunyonya na kunywa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-052p", "message": "Mtoto wangu wa 48 months ana upele na hanywi wala kunyonya kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-052d", "message": "Mtoto wangu wa 48 months ana upele na anakunywa na kunyonya, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-053p", "message": "Mtoto wangu ana 45 months, ana kikohozi kidogo na hawezi kunywa wala kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-053d", "message": "Mtoto wangu ana 45 months, ana kikohozi kidogo na anaweza kunywa na kunyonya.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-054p", "message": "Mtoto wangu wa 50 months ana upele na hawezi kunywa wala kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-054d", "message": "Mtoto wangu wa 50 months ana upele na anaweza kunywa na kunyonya kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-055p", "message": "Mtoto wangu ana 51 months, hawezi kunywa kabisa, ana homa kidogo.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-055d", "message": "Mtoto wangu ana 51 months, anaweza kunywa, ana homa kidogo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-056p", "message": "Mtoto wangu ana 50 months, ana kikohozi kidogo na hawezi kunywa au kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-056d", "message": "Mtoto wangu ana 50 months, ana kikohozi kidogo na anaweza kunywa au kunyonya.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-057p", "message": "Mtoto wangu ana 48 months, ana kikohozi kidogo na hawezi kunywa au kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-057d", "message": "Mtoto wangu ana 48 months, ana kikohozi kidogo na anaweza kunywa au kunyonya kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-058p", "message": "Mtoto wangu ana 51 months, ana upele na hawezi kunywa wala kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-058d", "message": "Mtoto wangu ana 51 months, ana upele na anaweza kunywa na kunyonya.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-059p", "message": "Mtoto wangu wa 24 months hawezi kunywa wala kunyonya kabisa, anaumwa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-059d", "message": "Mtoto wangu wa 24 months anaweza kunywa na kunyonya, anaumwa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-060p", "message": "Mtoto wangu ana miezi 43, hana hamu ya kula na hawezi kunywa wala kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-060d", "message": "Mtoto wangu ana miezi 43, hana hamu ya kula na anaweza kunywa wala kunyonya kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-061p", "message": "Mtoto wangu ana 20 months, ana makamasi na hawezi kunywa wala kunyonya kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-061d", "message": "Mtoto wangu ana 20 months, ana makamasi na anaweza kunywa na kunyonya.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-062p", "message": "Mtoto wangu 40 months hana hamu ya kula na hawezi kunywa kabisa, naomba msaada.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-062d", "message": "Mtoto wangu 40 months hana hamu ya kula na anaweza kunywa, naomba msaada.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-063p", "message": "Mtoto wangu wa 10 months ana kikohozi kidogo, hawezi kunyonya au kunywa kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-063d", "message": "Mtoto wangu wa 10 months ana kikohozi kidogo, anaweza kunyonya au kunywa kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-064p", "message": "My child is 36 months, has a mild fever and cannot drink at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-064d", "message": "My child is 36 months, has a mild fever and can drink.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-065p", "message": "My baby is 8 months and has a mild fever, cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-065d", "message": "My baby is 8 months and has a mild fever, can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-066p", "message": "My child is 25 months and has a little cough. He cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-066d", "message": "My child is 25 months and has a little cough. He can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-067p", "message": "My baby is 7 months, has a little cough and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-067d", "message": "My baby is 7 months, has a little cough and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-068p", "message": "My child is 23 months and cannot drink or breastfeed at all, I am worried.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-068d", "message": "My child is 23 months and can drink or breastfeed, I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-069p", "message": "My baby is 12 months, has a little cough and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-069d", "message": "My baby is 12 months, has a little cough and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-070p", "message": "My baby is 6 months, has a mild fever and cannot drink or breastfeed at all", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-070d", "message": "My baby is 6 months, has a mild fever and can drink or breastfeed", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-071p", "message": "My child is 37 months, poor appetite and cannot drink or breastfeed at all, what do I do?", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-071d", "message": "My child is 37 months, poor appetite and can drink or breastfeed, what do I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-072p", "message": "My child is 41 months and has a runny nose, she cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-072d", "message": "My child is 41 months and has a runny nose, she can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-073p", "message": "My child is 57 months and cannot drink or breastfeed at all, I am worried", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-073d", "message": "My child is 57 months and can drink or breastfeed, I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-074p", "message": "My child is 23 months, has a little cough and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-074d", "message": "My child is 23 months, has a little cough and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-075p", "message": "My child is 19 months, has a runny nose and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-075d", "message": "My child is 19 months, has a runny nose and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-076p", "message": "My child is 55 months old, has a runny nose and cannot drink at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-076d", "message": "My child is 55 months old, has a runny nose and can drink.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-077p", "message": "My child is 47 months, has a rash and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-077d", "message": "My child is 47 months, has a rash and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-078p", "message": "My baby is 4 months, has poor appetite and cannot drink or breastfeed at all.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-078d", "message": "My baby is 4 months, has poor appetite and can drink or breastfeed.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-079p", "message": "My child is 57 months and has a rash, cannot drink or breastfeed at all. I'm worried", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-079d", "message": "My child is 57 months and has a rash, can drink or breastfeed. I'm worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-080p", "message": "Mtoto wangu ako 57 months, ako na mild fever na hawezi drink wala breastfeed kabisa, nifanye nini?", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-080d", "message": "Mtoto wangu ako 57 months, ako na mild fever na anaweza drink na breastfeed, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-081p", "message": "Mtoto wangu 8 months ako na little cough na hawezi drink au breastfeed kabisa, nifanye nini?", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-081d", "message": "Mtoto wangu 8 months ako na little cough na anaweza drink au breastfeed, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-082p", "message": "Mtoto wangu wa 25 months hana appetite na hawezi drink or breastfeed kabisa, nisaidie", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-082d", "message": "Mtoto wangu wa 25 months hana appetite na anaweza drink or breastfeed, nisaidie", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-083p", "message": "Mtoto wangu ana 31 months, ako na rash na hawezi drink or breastfeed kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-083d", "message": "Mtoto wangu ana 31 months, ako na rash na anaweza drink or breastfeed kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-084p", "message": "Mtoto wangu 46 months hawezi kunywa or breastfeed kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-084d", "message": "Mtoto wangu 46 months anaweza kunywa or breastfeed kabisa, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-085p", "message": "Mtoto wangu wa 2 months hawezi kunyonya or drink kabisa, nashindwa nifanye nini", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-085d", "message": "Mtoto wangu wa 2 months anaweza kunyonya or drink kabisa, nashindwa nifanye nini", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-086p", "message": "Mtoto wangu 47 months ako na runny nose na hawezi drink or breastfeed kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-086d", "message": "Mtoto wangu 47 months ako na runny nose na anaweza drink or breastfeed kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-087p", "message": "Mtoto wangu wa 8 months ana fever na hawezi kunyonya wala kunywa kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-087d", "message": "Mtoto wangu wa 8 months ana fever na anaweza kunyonya na kunywa vizuri, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-088p", "message": "Mtoto wangu 55 months ako na runny nose na hawezi drink or breastfeed kabisa, nisaidie", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-088d", "message": "Mtoto wangu 55 months ako na runny nose na anaweza drink or breastfeed kabisa, nisaidie", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-089p", "message": "Mtoto wangu wa 27 months ako na runny nose na hawezi drink or breastfeed at all, nisaidie", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-089d", "message": "Mtoto wangu wa 27 months ako na runny nose na anaweza drink or breastfeed, nisaidie", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-090p", "message": "Mtoto wangu ana 42 months, appetite iko chini na hawezi kunywa or breastfeed kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-090d", "message": "Mtoto wangu ana 42 months, appetite iko chini na anaweza kunywa or breastfeed kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-091p", "message": "Mtoto wangu 22 months ako na runny nose na hawezi drink or breastfeed kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-091d", "message": "Mtoto wangu 22 months ako na runny nose na anaweza drink or breastfeed kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-092p", "message": "Mtoto wangu 56 months ako na rash na hawezi kunywa kabisa.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-092d", "message": "Mtoto wangu 56 months ako na rash na anaweza kunywa kabisa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-093p", "message": "Mtoto wangu 33 months ako na fever kidogo na hawezi drink or breastfeed kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-093d", "message": "Mtoto wangu 33 months ako na fever kidogo na anaweza drink or breastfeed kabisa, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-094p", "message": "Mtoto wangu 18 months ako na poor appetite na hawezi kunywa wala breastfeed kabisa, nisaidie.", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-094d", "message": "Mtoto wangu 18 months ako na poor appetite na anaweza kunywa na breastfeed kabisa, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-095p", "message": "Mtoto wangu ana 28 months, ako na a little cough na hawezi kunywa wala breastfeed kabisa, nifanye nini?", "present": [0, 1, 0, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-095d", "message": "Mtoto wangu ana 28 months, ako na a little cough na anaweza kunywa na breastfeed, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-096p", "message": "Mtoto wangu ana 56 months, ana kikohozi kidogo na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-096d", "message": "Mtoto wangu ana 56 months, ana kikohozi kidogo na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-097p", "message": "Mtoto wangu wa 38 months ana mafua yanatoka na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-097d", "message": "Mtoto wangu wa 38 months ana mafua yanatoka na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-098p", "message": "Mtoto wangu wa 35 months hana hamu ya kula na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-098d", "message": "Mtoto wangu wa 35 months hana hamu ya kula na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-099p", "message": "Mtoto wangu ana 57 months, ana mafua na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-099d", "message": "Mtoto wangu ana 57 months, ana mafua na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-100p", "message": "Mtoto wangu wa 46 months ana upele na anatapika kila kitu, nisaidie.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-100d", "message": "Mtoto wangu wa 46 months ana upele na hatapiki kila kitu, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-101p", "message": "Mtoto wangu ana 40 months na ana upele, anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-101d", "message": "Mtoto wangu ana 40 months na ana upele, hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-102p", "message": "Mtoto wangu wa 19 months ana upele na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-102d", "message": "Mtoto wangu wa 19 months ana upele na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-103p", "message": "Mtoto wangu ana 45 months, ana upele na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-103d", "message": "Mtoto wangu ana 45 months, ana upele na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-104p", "message": "Mtoto wangu wa 26 months ana kikohozi kidogo na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-104d", "message": "Mtoto wangu wa 26 months ana kikohozi kidogo na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-105p", "message": "Mtoto wangu wa 33 months ana homa kidogo na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-105d", "message": "Mtoto wangu wa 33 months ana homa kidogo na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-106p", "message": "Mtoto wangu ana 42 months, anatapika kila kitu na ana homa.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-106d", "message": "Mtoto wangu ana 42 months, hatapiki kila kitu na ana homa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-107p", "message": "Mtoto wangu ana 23 months anatapika kila kitu, hata maji haitulii.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-107d", "message": "Mtoto wangu ana 23 months hatapiki kila kitu, hata maji haitulii.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-108p", "message": "Mtoto wangu wa 50 months ana rash na anatapika kila kitu, nisaidieni tafadhali.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-108d", "message": "Mtoto wangu wa 50 months ana rash na hatapiki kila kitu, nisaidieni tafadhali.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-109p", "message": "Mtoto wangu wa 16 months ana homa kidogo na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-109d", "message": "Mtoto wangu wa 16 months ana homa kidogo na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-110p", "message": "Mtoto wangu ana 34 months anatapika kila kitu, nisaidieni tafadhali.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-110d", "message": "Mtoto wangu ana 34 months hatapiki kila kitu, nisaidieni tafadhali.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-111p", "message": "Mtoto wangu ana 57 months, hana hamu ya kula na anatapika kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-111d", "message": "Mtoto wangu ana 57 months, hana hamu ya kula na hatapiki kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-112p", "message": "My child is 43 months and has a mild fever, he vomits everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-112d", "message": "My child is 43 months and has a mild fever, he does not vomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-113p", "message": "My child is 49 months and vomits everything I give, I am worried", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-113d", "message": "My child is 49 months and does not vomit everything I give, I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-114p", "message": "My child is 29 months and vomits everything I give, even water. I am worried", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-114d", "message": "My child is 29 months and does not vomit everything I give, even water. I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-115p", "message": "My child is 17 months, has poor appetite and vomits everything. Please help", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-115d", "message": "My child is 17 months, has poor appetite and does not vomit everything. Please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-116p", "message": "My child is 17 months and has poor appetite, vomits everything I give.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-116d", "message": "My child is 17 months and has poor appetite, vomits nothing I give.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-117p", "message": "My baby is 4 months and vomits everything, I am worried", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-117d", "message": "My baby is 4 months and vomits nothing, I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-118p", "message": "My child is 23 months, has a runny nose and vomits everything. What should I do?", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-118d", "message": "My child is 23 months, has a runny nose and has no vomiting everything. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-119p", "message": "My child is 39 months, has poor appetite and vomits everything I give.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-119d", "message": "My child is 39 months, has poor appetite and does not vomit everything I give.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-120p", "message": "My child is 36 months and vomits everything, I am worried", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-120d", "message": "My child is 36 months and does not vomit everything, I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-121p", "message": "My baby is 3 months, has a runny nose and vomits everything I give.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-121d", "message": "My baby is 3 months, has a runny nose and does not vomit everything I give.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-122p", "message": "My child is 41 months and vomits everything, even water. I am worried.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-122d", "message": "My child is 41 months and does not vomit everything, even water. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-123p", "message": "My child is 38 months and has a little cough but vomits everything, please help", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-123d", "message": "My child is 38 months and has a little cough but has no vomiting everything, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-124p", "message": "My baby is 5 months, has a runny nose and vomits everything I give.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-124d", "message": "My baby is 5 months, has a runny nose and does not vomit everything I give.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-125p", "message": "My child is 45 months and has a rash, vomits everything I give.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-125d", "message": "My child is 45 months and has a rash, vomits no everything I give.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-126p", "message": "My child is 45 months, has a rash and vomits everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-126d", "message": "My child is 45 months, has a rash and does not vomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-127p", "message": "My child is 25 months, has a runny nose and vomits everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-127d", "message": "My child is 25 months, has a runny nose and has no vomiting everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-128p", "message": "Mtoto wangu 56 months ako na cough kidogo and anavomit everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-128d", "message": "Mtoto wangu 56 months ako na cough kidogo and havomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-129p", "message": "Mtoto wangu wa 10 months ako na runny nose na anavomit everything akipewa kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-129d", "message": "Mtoto wangu wa 10 months ako na runny nose na havomit everything akipewa kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-130p", "message": "Mtoto wangu ana 31 months, ako na a little cough na anavomit everything nikimpa kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-130d", "message": "Mtoto wangu ana 31 months, ako na a little cough na havomit everything nikimpa kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-131p", "message": "My baby is 6 months, ako na runny nose na anatapika everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-131d", "message": "My baby is 6 months, ako na runny nose na hatapiki everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-132p", "message": "Mtoto wangu 5 months anatapika everything, nisaidie please", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-132d", "message": "Mtoto wangu 5 months hatapiki everything, nisaidie please", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-133p", "message": "Mtoto wangu wa 18 months ako na runny nose na anavomit everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-133d", "message": "Mtoto wangu wa 18 months ako na runny nose na havomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-134p", "message": "Mtoto wangu ako 30 months, ana mild fever na anavomit everything, nisaidie.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-134d", "message": "Mtoto wangu ako 30 months, ana mild fever na havomit everything, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-135p", "message": "Mtoto wangu wa 30 months ana rash na anatapika kila kitu, nisaidie.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-135d", "message": "Mtoto wangu wa 30 months ana rash na hatapiki kila kitu, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-136p", "message": "Mtoto wangu wa 8 months anatapika everything akinyonya, pia ana homa kidogo", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-136d", "message": "Mtoto wangu wa 8 months hatapiki everything akinyonya, pia ana homa kidogo", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-137p", "message": "Mtoto wangu wa 29 months hana appetite na anavomit everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-137d", "message": "Mtoto wangu wa 29 months hana appetite na havomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-138p", "message": "Mtoto wangu wa 19 months ako na poor appetite na anavomit everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-138d", "message": "Mtoto wangu wa 19 months ako na poor appetite na havomit everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-139p", "message": "Mtoto wangu wa 30 months ako na runny nose na anavomit everything akipewa kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-139d", "message": "Mtoto wangu wa 30 months ako na runny nose na havomit everything akipewa kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-140p", "message": "Mtoto wangu 14 months hana appetite na anavomit everything akijaribu kula.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-140d", "message": "Mtoto wangu 14 months hana appetite na havomit everything akijaribu kula.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-141p", "message": "Mtoto wangu 12 months ana vomit everything, hata maji haitulii.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-141d", "message": "Mtoto wangu 12 months hana vomit everything, hata maji haitulii.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-142p", "message": "My baby is 19 months, ako na cough kidogo and anavomit kila kitu.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-142d", "message": "My baby is 19 months, ako na cough kidogo and havomit kila kitu.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-143p", "message": "Mtoto wangu wa 2 months ana runny nose na akipewa kitu anatapika everything.", "present": [0, 0, 1, 0, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-143d", "message": "Mtoto wangu wa 2 months ana runny nose na akipewa kitu hatapiki everything.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-144p", "message": "Mtoto wangu wa miezi 47 ana mafua yanatoka na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-144d", "message": "Mtoto wangu wa miezi 47 ana mafua yanatoka na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-145p", "message": "Mtoto wangu ana 59 months, ana upele na amelala sana siwezi kumwamsha vizuri.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-145d", "message": "Mtoto wangu ana 59 months, ana upele na hajalala sana naweza kumwamsha vizuri.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-146p", "message": "Mtoto wangu ana 59 months, amelala sana leo na ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-146d", "message": "Mtoto wangu ana 59 months, hajalala sana leo na si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-147p", "message": "Mtoto wangu wa 51 months ana kikohozi kidogo na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-147d", "message": "Mtoto wangu wa 51 months ana kikohozi kidogo na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-148p", "message": "Mtoto wangu ana 48 months, analala sana si kawaida na ni vigumu kumuamsha, pia hana hamu ya kula.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-148d", "message": "Mtoto wangu ana 48 months, halali sana si kawaida na si vigumu kumuamsha, pia hana hamu ya kula.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-149p", "message": "Mtoto wangu 55 months ana homa kidogo na analala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-149d", "message": "Mtoto wangu 55 months ana homa kidogo na halali sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-150p", "message": "Mtoto wangu ana 13 months, ana kikohozi kidogo na amelala sana, ni vigumu kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-150d", "message": "Mtoto wangu ana 13 months, ana kikohozi kidogo na hajalala sana, si vigumu kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-151p", "message": "Mtoto wangu ana 50 months na amelala sana isivyo kawaida, ni vigumu kumwamsha. Naogopa", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-151d", "message": "Mtoto wangu ana 50 months na hajalala sana isivyo kawaida, si vigumu kumwamsha. Naogopa", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-152p", "message": "Mtoto wangu wa 4 months amelala sana leo, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-152d", "message": "Mtoto wangu wa 4 months hajalala sana leo, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-153p", "message": "Mtoto wangu ana 49 months, ana upele na amelala sana si rahisi kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-153d", "message": "Mtoto wangu ana 49 months, ana upele na hajalala sana, ni rahisi kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-154p", "message": "Mtoto wangu ana 40 months, ana upele na amelala sana kuliko kawaida, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-154d", "message": "Mtoto wangu ana 40 months, ana upele na hajalala sana kuliko kawaida, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-155p", "message": "Mtoto wangu wa 7 months ana homa kidogo na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-155d", "message": "Mtoto wangu wa 7 months ana homa kidogo na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-156p", "message": "Mtoto wangu wa 20 months ana usingizi mwingi sana, ni vigumu kumwamsha, na hana hamu ya kula.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-156d", "message": "Mtoto wangu wa 20 months hana usingizi mwingi sana, si vigumu kumwamsha, na hana hamu ya kula.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-157p", "message": "Mtoto wangu ana 42 months, ana upele na amelala sana siwezi kumuamsha vizuri.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-157d", "message": "Mtoto wangu ana 42 months, ana upele na hajalala sana, naweza kumuamsha vizuri.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-158p", "message": "Mtoto wangu ana 29 months, hali chakula vizuri na analala sana, ni mgumu kuamka.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-158d", "message": "Mtoto wangu ana 29 months, hali chakula vizuri na halali sana, si mgumu kuamka.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-159p", "message": "Mtoto wangu ana 5 months, analala sana kuliko kawaida na ni vigumu kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-159d", "message": "Mtoto wangu ana 5 months, halali sana kuliko kawaida na si vigumu kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-160p", "message": "My baby is 8 months and has a little cough, very sleepy and hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-160d", "message": "My baby is 8 months and has a little cough, not very sleepy and not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-161p", "message": "My child is 22 months, very sleepy and hard to wake, also eating poorly. I am worried.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-161d", "message": "My child is 22 months, not very sleepy and not hard to wake, also eating poorly. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-162p", "message": "My child is 49 months, has a runny nose and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-162d", "message": "My child is 49 months, has a runny nose and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-163p", "message": "My baby is 11 months, has a little cough and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-163d", "message": "My baby is 11 months, has a little cough and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-164p", "message": "My baby is 3 months, has a rash and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-164d", "message": "My baby is 3 months, has a rash and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-165p", "message": "My child is 28 months, has a little cough and is unusually sleepy, hard to wake. What should I do?", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-165d", "message": "My child is 28 months, has a little cough and is not unusually sleepy, not hard to wake. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-166p", "message": "My child is 42 months and is unusually sleepy, hard to wake. I am worried.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-166d", "message": "My child is 42 months and is not unusually sleepy, not hard to wake. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-167p", "message": "My child is 24 months, has a runny nose and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-167d", "message": "My child is 24 months, has a runny nose and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-168p", "message": "My child is 53 months and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-168d", "message": "My child is 53 months and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-169p", "message": "My child is 38 months and has a mild fever, is unusually sleepy and hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-169d", "message": "My child is 38 months and has a mild fever, is not unusually sleepy and not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-170p", "message": "My child is 44 months, unusually sleepy and hard to wake, also has poor appetite.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-170d", "message": "My child is 44 months, not unusually sleepy or hard to wake, also has poor appetite.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-171p", "message": "My child is 25 months and has a rash. He is unusually sleepy and hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-171d", "message": "My child is 25 months and has a rash. He is not unusually sleepy and not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-172p", "message": "My child is 57 months, has a runny nose and is unusually sleepy, hard to wake. What should I do?", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-172d", "message": "My child is 57 months, has a runny nose and is not unusually sleepy, not hard to wake. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-173p", "message": "My baby is 12 months, has a runny nose and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-173d", "message": "My baby is 12 months, has a runny nose and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-174p", "message": "My child is 35 months, very sleepy and hard to wake, also has poor appetite.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-174d", "message": "My child is 35 months, not very sleepy and not hard to wake, also has poor appetite.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-175p", "message": "My baby is 2 months, has a rash and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-175d", "message": "My baby is 2 months, has a rash and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-176p", "message": "Mtoto wangu 57 months ako na rash na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-176d", "message": "Mtoto wangu 57 months ako na rash na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-177p", "message": "Mtoto wangu ako 26 months, ana mild fever na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-177d", "message": "Mtoto wangu ako 26 months, ana mild fever na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-178p", "message": "Mtoto wangu 41 months ana runny nose na leo amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-178d", "message": "Mtoto wangu 41 months ana runny nose na leo hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-179p", "message": "Mtoto wangu 52 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-179d", "message": "Mtoto wangu 52 months ako na runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-180p", "message": "Mtoto wangu ana 33 months, ako unusually sleepy na ni hard kumwamsha, pia hana appetite.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-180d", "message": "Mtoto wangu ana 33 months, hayuko unusually sleepy na si hard kumwamsha, pia hana appetite.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-181p", "message": "Mtoto wangu 47 months ako na mild fever na analala sana, ni hard kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-181d", "message": "Mtoto wangu 47 months ako na mild fever na halali sana, si hard kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-182p", "message": "Mtoto wangu wa 20 months ako unusually sleepy na ni hard kumwamsha, na worry sana.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-182d", "message": "Mtoto wangu wa 20 months hayuko unusually sleepy na si hard kumwamsha, na worry sana.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-183p", "message": "My baby is 6 months, anakataa kula vizuri na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-183d", "message": "My baby is 6 months, anakataa kula vizuri na hayuko unusually sleepy, hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-184p", "message": "Mtoto wangu 52 months ako na rash na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-184d", "message": "Mtoto wangu 52 months ako na rash na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-185p", "message": "My baby is 23 months, ako na runny nose na amelala sana, ni hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-185d", "message": "My baby is 23 months, ako na runny nose na hajalala sana, si hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-186p", "message": "Mtoto wangu 43 months ako unusually sleepy, hard to wake na hana appetite vizuri", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-186d", "message": "Mtoto wangu 43 months ako not unusually sleepy, not hard to wake na hana appetite vizuri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-187p", "message": "Mtoto wangu 24 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-187d", "message": "Mtoto wangu 24 months ako na runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-188p", "message": "Mtoto wangu wa 49 months ako unusually sleepy na hard to wake, pia hana appetite vizuri. Nifanye nini?", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-188d", "message": "Mtoto wangu wa 49 months hayuko unusually sleepy na si hard to wake, pia hana appetite vizuri. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-189p", "message": "Mtoto wangu 27 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-189d", "message": "Mtoto wangu 27 months ako na runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-190p", "message": "Mtoto wangu 6 months ana runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-190d", "message": "Mtoto wangu 6 months ana runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-191p", "message": "Mtoto wangu wa 34 months ako na rash na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-191d", "message": "Mtoto wangu wa 34 months ako na rash na ako not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-192p", "message": "Mtoto wangu ana 41 months, ana kikohozi kidogo na ana damu kwenye kinyesi.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-192d", "message": "Mtoto wangu ana 41 months, ana kikohozi kidogo na hana damu kwenye kinyesi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-193p", "message": "Mtoto wangu ana 19 months, ana upele na kinyesi kina damu, nifanye nini?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-193d", "message": "Mtoto wangu ana 19 months, ana upele na kinyesi hakina damu, nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-194p", "message": "Mtoto wangu ana 32 months, hana hamu ya kula na ana damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-194d", "message": "Mtoto wangu ana 32 months, hana hamu ya kula na hana damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-195p", "message": "Mtoto wangu ana 27 months, hana hamu ya kula na ana damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-195d", "message": "Mtoto wangu ana 27 months, hana hamu ya kula na hana damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-196p", "message": "Mtoto wangu ana 49 months, leo ameharisha na kuna damu kwenye choo, nisaidie tafadhali", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-196d", "message": "Mtoto wangu ana 49 months, leo ameharisha na hakuna damu kwenye choo, nisaidie tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-197p", "message": "Mtoto wangu wa 33 months ana homa kidogo na damu kwenye choo, nifanyeje?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-197d", "message": "Mtoto wangu wa 33 months ana homa kidogo na hana damu kwenye choo, nifanyeje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-198p", "message": "Mtoto wangu ana 17 months, ana homa kidogo na damu kwenye kinyesi. Nisaidie tafadhali.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-198d", "message": "Mtoto wangu ana 17 months, ana homa kidogo na hana damu kwenye kinyesi. Nisaidie tafadhali.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-199p", "message": "Mtoto wangu wa 20 months ameharisha kidogo na kuna damu kwenye kinyesi.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-199d", "message": "Mtoto wangu wa 20 months ameharisha kidogo na hakuna damu kwenye kinyesi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-200p", "message": "Mtoto wangu ana 37 months, ana kikohozi kidogo na nimeona damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-200d", "message": "Mtoto wangu ana 37 months, ana kikohozi kidogo na sijaona damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-201p", "message": "Mtoto wangu wa 4 months anakula kidogo na ana damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-201d", "message": "Mtoto wangu wa 4 months anakula kidogo na hana damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-202p", "message": "Mtoto wangu ana 31 months, ameharisha na kuna damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-202d", "message": "Mtoto wangu ana 31 months, ameharisha na hakuna damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-203p", "message": "Mtoto wangu ana 23 months, ana homa kidogo na nimeona damu kwenye kinyesi.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-203d", "message": "Mtoto wangu ana 23 months, ana homa kidogo na sijaona damu kwenye kinyesi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-204p", "message": "Mtoto wangu wa 3 months ana mafua na nimeona damu kwenye choo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-204d", "message": "Mtoto wangu wa 3 months ana mafua na sijaona damu kwenye choo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-205p", "message": "Mtoto wangu ana 45 months, ana homa kidogo na nimeona damu kwenye kinyesi.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-205d", "message": "Mtoto wangu ana 45 months, ana homa kidogo na sijaona damu kwenye kinyesi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-206p", "message": "Mtoto wangu ana 5 months, hanyonyi vizuri na ana damu kwenye kinyesi.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-206d", "message": "Mtoto wangu ana 5 months, hanyonyi vizuri na hana damu kwenye kinyesi.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-207p", "message": "Mtoto wangu ana 55 months ana upele na damu kwenye choo, nisaidie tafadhali", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-207d", "message": "Mtoto wangu ana 55 months ana upele na hana damu kwenye choo, nisaidie tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-208p", "message": "My child is 30 months and has mild fever. I saw blood in the stool, please help", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-208d", "message": "My child is 30 months and has mild fever. I saw no blood in the stool, please help", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-209p", "message": "My baby is 11 months, has a mild fever and there is blood in the stool. Please help.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-209d", "message": "My baby is 11 months, has a mild fever and there is no blood in the stool. Please help.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-210p", "message": "My child is 57 months and has a little cough. I saw blood in the stool, what should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-210d", "message": "My child is 57 months and has a little cough. I saw no blood in the stool, what should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-211p", "message": "My baby is 7 months and has a rash. I saw blood in the stool, what should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-211d", "message": "My baby is 7 months and has a rash. I saw no blood in the stool, what should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-212p", "message": "My child is 18 months, has a mild fever and I saw blood in the stool.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-212d", "message": "My child is 18 months, has a mild fever and I saw no blood in the stool.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-213p", "message": "My child is 52 months and has blood in the stool, I am worried.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-213d", "message": "My child is 52 months and has no blood in the stool, I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-214p", "message": "My child is 25 months and has a rash, I saw blood in the stool. What should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-214d", "message": "My child is 25 months and has a rash, I saw no blood in the stool. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-215p", "message": "My baby is 4 months and has blood in the stool, I am worried", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-215d", "message": "My baby is 4 months and has no blood in the stool, I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-216p", "message": "My child is 52 months and has a little cough, and I have seen blood in the stool. What should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-216d", "message": "My child is 52 months and has a little cough, and I have seen no blood in the stool. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-217p", "message": "My child is 21 months, has a mild fever and there is blood in the stool. What should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-217d", "message": "My child is 21 months, has a mild fever and there is no blood in the stool. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-218p", "message": "My baby is 9 months, has a runny nose and there is blood in the stool. What should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-218d", "message": "My baby is 9 months, has a runny nose and there is no blood in the stool. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-219p", "message": "My child is 59 months and has blood in the stool, I am worried.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-219d", "message": "My child is 59 months and has no blood in the stool, I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-220p", "message": "My baby is 9 months and has a mild fever. I saw blood in the stool, what should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-220d", "message": "My baby is 9 months and has a mild fever. I saw no blood in the stool, what should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-221p", "message": "My baby is 15 months, has a little cough and there is blood in the stool. I am worried", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-221d", "message": "My baby is 15 months, has a little cough and there is no blood in the stool. I am worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-222p", "message": "My baby is 4 months and has a mild fever. I saw blood in the stool, what should I do?", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-222d", "message": "My baby is 4 months and has a mild fever. I saw no blood in the stool, what should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-223p", "message": "My child is 30 months and has blood in the stool, I am worried.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-223d", "message": "My child is 30 months and has no blood in the stool, I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-224p", "message": "Mtoto wangu wa 2 months ako na rash na nimeona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-224d", "message": "Mtoto wangu wa 2 months ako na rash na sijaona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-225p", "message": "Mtoto wangu wa 2 months ako na blood kwa stool, nimepanic kidogo.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-225d", "message": "Mtoto wangu wa 2 months hana blood kwa stool, nimepanic kidogo.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-226p", "message": "Mtoto wangu wa 58 months ana mild fever na nimeona blood kwa stool.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-226d", "message": "Mtoto wangu wa 58 months ana mild fever na sijaona blood kwa stool.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-227p", "message": "Mtoto wangu ana 10 months, ako na runny nose na nimeona blood kwa stool.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-227d", "message": "Mtoto wangu ana 10 months, ako na runny nose na sijaona blood kwa stool.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-228p", "message": "Mtoto wangu wa 56 months ako na rash na nimeona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-228d", "message": "Mtoto wangu wa 56 months ako na rash na sijaona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-229p", "message": "Mtoto wangu wa 27 months ako na runny nose na nimeona blood kwa stool.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-229d", "message": "Mtoto wangu wa 27 months ako na runny nose na sijaona blood kwa stool.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-230p", "message": "Mtoto wangu ako 29 months, ana mild fever na nimeona blood kwa stool.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-230d", "message": "Mtoto wangu ako 29 months, ana mild fever na sijaona blood kwa stool.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-231p", "message": "Mtoto wangu 11 months ako na blood kwa stool, naogopa.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-231d", "message": "Mtoto wangu 11 months hana blood kwa stool, naogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-232p", "message": "Mtoto wangu wa 7 months ako na rash na nimeona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-232d", "message": "Mtoto wangu wa 7 months ako na rash na sijaona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-233p", "message": "Mtoto wangu 41 months hana appetite vizuri na ana blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-233d", "message": "Mtoto wangu 41 months hana appetite vizuri na hana blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-234p", "message": "Mtoto wangu 37 months ako na blood in stool, nimeogopa.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-234d", "message": "Mtoto wangu 37 months hana blood in stool, nimeogopa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-235p", "message": "Mtoto wangu 26 months ako na a little cough na nimeona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-235d", "message": "Mtoto wangu 26 months ako na a little cough na sijaona blood kwa stool, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-236p", "message": "Mtoto wangu wa 24 months hana appetite vizuri na stool yake ina blood, nisaidie.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-236d", "message": "Mtoto wangu wa 24 months hana appetite vizuri na stool yake haina blood, nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-237p", "message": "Mtoto wangu wa 4 months hana appetite vizuri na nimeona blood kwa stool yake.", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-237d", "message": "Mtoto wangu wa 4 months hana appetite vizuri na sijaona blood kwa stool yake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-238p", "message": "Mtoto wangu 36 months ako na blood in stool, naogopa sana", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-238d", "message": "Mtoto wangu 36 months hana blood in stool, naogopa sana", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-239p", "message": "Mtoto wangu wa 35 months hana appetite vizuri na ana blood kwa stool, nisaidie", "present": [0, 0, 0, 0, 1, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-239d", "message": "Mtoto wangu wa 35 months hana appetite vizuri na hana blood kwa stool, nisaidie", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-240p", "message": "Mtoto wangu 7 months ako unusually sleepy, hard to wake, na appetite iko poor.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-240d", "message": "Mtoto wangu 7 months ako not unusually sleepy, not hard to wake, na appetite iko poor.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-241p", "message": "Mtoto wangu wa 58 months ana makamasi na amelala sana, ni vigumu kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-241d", "message": "Mtoto wangu wa 58 months ana makamasi na hajalala sana, si vigumu kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-242p", "message": "Mtoto wangu 20 months anakula kidogo na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-242d", "message": "Mtoto wangu 20 months anakula kidogo na ako not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-243p", "message": "Mtoto wangu ana 12 months, ana kikohozi kidogo na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-243d", "message": "Mtoto wangu ana 12 months, ana kikohozi kidogo na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-244p", "message": "Mtoto wangu ana 17 months, ana upele na amelala sana ajabu, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-244d", "message": "Mtoto wangu ana 17 months, ana upele na hajalala sana ajabu, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-245p", "message": "My baby is 8 months and has a mild fever, she is unusually sleepy and hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-245d", "message": "My baby is 8 months and has a mild fever, she is not unusually sleepy and not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-246p", "message": "My child is 22 months and is unusually sleepy, hard to wake. I'm worried", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-246d", "message": "My child is 22 months and is not unusually sleepy, not hard to wake. I'm worried", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-247p", "message": "Mtoto wangu wa 52 months ako unusually sleepy na ni hard to wake, pia hana appetite vizuri.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-247d", "message": "Mtoto wangu wa 52 months ako not unusually sleepy na si hard to wake, pia hana appetite vizuri.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-248p", "message": "My baby wa 3 months ako na mafua and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-248d", "message": "My baby wa 3 months ako na mafua and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-249p", "message": "Mtoto wangu wa 11 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-249d", "message": "Mtoto wangu wa 11 months ako na runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-250p", "message": "My child is 36 months, has a mild fever and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-250d", "message": "My child is 36 months, has a mild fever and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-251p", "message": "My baby is 11 months, very sleepy and hard to wake, also has poor appetite", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-251d", "message": "My baby is 11 months, not very sleepy and not hard to wake, also has poor appetite", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-252p", "message": "Mtoto wangu wa 23 months ako na mild fever na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-252d", "message": "Mtoto wangu wa 23 months ako na mild fever na ako not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-253p", "message": "My child is 18 months, has a little cough and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-253d", "message": "My child is 18 months, has a little cough and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-254p", "message": "Mtoto wangu 57 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-254d", "message": "Mtoto wangu 57 months ako na runny nose na haja lala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-255p", "message": "Mtoto wangu 30 months ako unusually sleepy na ni hard to wake, nimeworry.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-255d", "message": "Mtoto wangu 30 months ako not unusually sleepy na si hard to wake, nimeworry.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-256p", "message": "My child is 47 months, has a mild fever and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-256d", "message": "My child is 47 months, has a mild fever and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-257p", "message": "Mtoto wangu 41 months ana kikohozi kidogo na amelala sana, ni vigumu kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-257d", "message": "Mtoto wangu 41 months ana kikohozi kidogo na hajalala sana, si vigumu kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-258p", "message": "My child is 20 months, has a little cough and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-258d", "message": "My child is 20 months, has a little cough and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-259p", "message": "Mtoto wangu wa 56 months ana homa kidogo na amelala sana, ni vigumu kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-259d", "message": "Mtoto wangu wa 56 months ana homa kidogo na hajalala sana, si vigumu kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-260p", "message": "Mtoto wangu wa 40 months ako na runny nose na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-260d", "message": "Mtoto wangu wa 40 months ako na runny nose na hajalala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-261p", "message": "My child is 32 months, has a little cough and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-261d", "message": "My child is 32 months, has a little cough and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-262p", "message": "Mtoto wangu 51 months ana cough kidogo na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-262d", "message": "Mtoto wangu 51 months ana cough kidogo na hayuko unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-263p", "message": "Mtoto wangu wa 6 months ako na a little cough na amelala sana, ni hard kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-263d", "message": "Mtoto wangu wa 6 months ako na a little cough na hajalala sana, si hard kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-264p", "message": "Mtoto wangu wa 6 months ako na little cough na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-264d", "message": "Mtoto wangu wa 6 months ako na little cough na haja lala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-265p", "message": "Mtoto wangu wa 15 months ako na mild fever na analala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-265d", "message": "Mtoto wangu wa 15 months ako na mild fever na halali sana, si hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-266p", "message": "Mtoto wangu 34 months ako na mild fever na analala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-266d", "message": "Mtoto wangu 34 months ako na mild fever na halali sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-267p", "message": "Mtoto wangu wa 13 months ana homa kidogo na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-267d", "message": "Mtoto wangu wa 13 months ana homa kidogo na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-268p", "message": "Mtoto wangu wa 23 months ana homa kidogo na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-268d", "message": "Mtoto wangu wa 23 months ana homa kidogo na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-269p", "message": "Mtoto wangu wa 30 months analala sana leo, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-269d", "message": "Mtoto wangu wa 30 months halali sana leo, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-270p", "message": "Mtoto wangu ana 16 months, ana homa kidogo na analala sana si rahisi kumwamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-270d", "message": "Mtoto wangu ana 16 months, ana homa kidogo na halali sana si rahisi kumwamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-271p", "message": "Mtoto wangu 59 months ako na runny nose na ako unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-271d", "message": "Mtoto wangu 59 months ako na runny nose na hana unusually sleepy, hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-272p", "message": "Mtoto wangu 4 months ako unusually sleepy na ni hard to wake, nisaidie please", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-272d", "message": "Mtoto wangu 4 months ako not unusually sleepy na si hard to wake, nisaidie please", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-273p", "message": "Mtoto wangu ana 27 months, ana upele na amelala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-273d", "message": "Mtoto wangu ana 27 months, ana upele na hajalala sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-274p", "message": "My child is 38 months and is unusually sleepy, hard to wake. I am worried.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-274d", "message": "My child is 38 months and is not unusually sleepy, not hard to wake. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-275p", "message": "Mtoto wangu 30 months ako na fever kidogo na amekuwa unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-275d", "message": "Mtoto wangu 30 months ako na fever kidogo na hana unusually sleepy, hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-276p", "message": "Mtoto wangu ana 26 months, ana hamu ndogo ya kula na analala sana, ni vigumu kumuamsha.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-276d", "message": "Mtoto wangu ana 26 months, ana hamu ndogo ya kula na halali sana, si vigumu kumuamsha.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-277p", "message": "My child is 29 months, has a runny nose and is unusually sleepy, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-277d", "message": "My child is 29 months, has a runny nose and is not unusually sleepy, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-278p", "message": "Mtoto wangu 54 months ako na a little cough na amelala sana, hard to wake.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-278d", "message": "Mtoto wangu 54 months ako na a little cough na haja lala sana, not hard to wake.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3c-279p", "message": "My child is 54 months and is unusually sleepy, hard to wake. I am worried.", "present": [0, 0, 0, 1, 0, 0, 0, 0], "category": "danger", "source": "contrast"}
+{"id": "v3c-279d", "message": "My child is 54 months and is not unusually sleepy, not hard to wake. I am worried.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "contrast_denial"}
+{"id": "v3d-000", "message": "Mtoto wangu ana 19 months na amekuwa akikohoa since karibu 2 weeks ago, ni siku 13 sasa. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-001", "message": "Mtoto wangu ana miezi 40 na amekuwa akikohoa tangu siku nne zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-002", "message": "Mtoto wangu wa miezi 59 ako na body hot for 3 days. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-003", "message": "Mtoto wangu ako 9 months, amekuwa na cough since 6 days ago. Hana dalili ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-004", "message": "Mtoto wangu 49 months amekuwa na cough since 10 days ago. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-005", "message": "Mtoto wangu 16 months ako na mwili moto tangu siku 5 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-006", "message": "Mtoto wangu miezi 16 mwili wake ni moto tangu siku 6 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-007", "message": "Mtoto wangu miezi 27 ana mwili moto kwa siku 3. Sina dalili nyingine. Nifanyeje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-008", "message": "My child is 17 months old and has had loose watery stools since last week. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-009", "message": "My child is 48 months old and has had a cough for 7 days. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-010", "message": "My child is 13 months old and has had loose watery stool for 11 days. Please advise.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-011", "message": "Mtoto wangu 55 months ako na mwili moto since juzi. Hana dalili zingine. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-012", "message": "Mtoto wangu ana miezi 17. Mwili wake una joto kwa siku 6 sasa. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-013", "message": "Mtoto wangu miezi 20 anaharisha maji maji tangu siku 5 zilizopita. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-014", "message": "Mtoto wangu 49 months ako na diarrhoea ya maji maji for 7 days sasa. Naomba ushauri pls", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-015", "message": "Mtoto wangu miezi 7 anaharisha choo cha maji maji tangu juzi. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-016", "message": "Mtoto wangu ana miezi 43, body iko hot tangu juzi. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-017", "message": "Mtoto wangu ana 30 months, amekuwa na diarrhoea ya maji maji for 3 days. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-018", "message": "Mtoto wangu 12 months ako na cough since Sunday before last. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-019", "message": "Mtoto wangu 35 months ako na cough for 5 days sasa, hakuna kitu ingine. Nifanye aje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-020", "message": "My child is 23 months old and has had a hot body since 6 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-021", "message": "Mtoto wangu ako 20 months ako na mwili moto for 3 days sasa. Hana dalili ingine. nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-022", "message": "Mtoto wangu ana miezi 27. Anakohoa tangu siku 8 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-023", "message": "Mtoto wangu ako 36 months ana hot body for 4 days sasa. Hakuna dalili ingine. nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-024", "message": "Mtoto wangu ana miezi 50, anakohoa kwa siku 2. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-025", "message": "Mtoto wangu miezi 7 anaharisha choo cha maji maji kwa siku 4.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-026", "message": "My child is 15 months old and has had a hot body for 3 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-027", "message": "Mtoto wangu 16 months ako na cough tangu wiki iliyopita, kama 10 days sasa. Hakuna symptom ingine", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-028", "message": "My child is 37 months old and has had a cough for 13 days now. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-029", "message": "Mtoto wangu ana miezi 7. Mwili wake uko moto kwa siku 6 sasa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-030", "message": "My child is 45 months old and has hot body for 5 days now. No other problem. pls advise", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-031", "message": "Mtoto wangu ako 6 months na ako na cough for 10 days sasa. Nifanye aje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-032", "message": "Mtoto wangu miezi 56 ana kikohozi kwa siku 9 sasa. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-033", "message": "Mtoto wangu miezi 44 anaharisha maji maji tangu juzi. Sina dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-034", "message": "Mtoto wangu miezi 18 ana kikohozi kwa siku 8.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-035", "message": "Mtoto wangu 11 months ako na cough for 11 days sasa. Hakuna symptom nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-036", "message": "Mtoto wangu ako 6 months na amekuwa na choo loose yenye maji for 8 days. Naomba ushauri.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-037", "message": "Mtoto wangu 39 months ako na mwili moto tangu jana. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-038", "message": "My child is 26 months old and has had loose watery stools for 13 days now. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-039", "message": "Mtoto wangu ako 13 months, amekuwa na cough for 3 days. Hakuna symptom nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-040", "message": "My baby is 10 months old and has had a hot body for 2 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-041", "message": "Mtoto wangu 21 months ako na kuharisha, stool ni loose watery for 9 days sasa. Hakuna kitu ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-042", "message": "My child is 24 months old and has had a cough since 9 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-043", "message": "My child is 10 months old and has had a cough for 3 days. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-044", "message": "Mtoto wangu 20 months ako na diarrhoea, choo ni watery sana for 4 days. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-045", "message": "My child is 27 months old and has had a hot body for 4 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-046", "message": "Mtoto wangu ana 23 months amekuwa na loose watery stool for 3 days. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-047", "message": "Mtoto wangu miezi 3 ana mwili moto tangu jana. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-048", "message": "Mtoto wangu miezi 19 amekuwa akikohoa tangu wiki iliyopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-049", "message": "My child is 8 months old and has had loose watery stools for 3 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-050", "message": "Mtoto wangu ana miezi 52 ako na kikohozi tangu siku 6 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-051", "message": "Mtoto wangu ana 18 months, ako na loose watery stools tangu karibu wiki mbili iliyopita, sasa ni 12 days. Tafadhali nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-052", "message": "Mtoto wangu ana miezi 14. Mwili wake uko moto tangu siku 6 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-053", "message": "My child is 47 months old and has had loose watery stools since 4 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-054", "message": "My baby is 5 months old and has had a hot body for 1 day. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-055", "message": "My child is 52 months old and has had a hot body for 4 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-056", "message": "Mtoto wangu ana 34 months na mwili iko moto tangu juzi. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-057", "message": "My child is 55 months old and has had loose watery stools for 5 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-058", "message": "My child is 15 months old and has had loose watery stools for 2 days. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-059", "message": "Mtoto wangu 36 months ako na cough for 5 days. Hakuna dalili ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-060", "message": "My child is 20 months old and has had loose watery stool for 10 days now. Pls what can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-061", "message": "My baby is 3 months old and has had loose watery stools since last week, 7 days now. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-062", "message": "My child is 52 months old and has had a hot body for 5 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-063", "message": "Mtoto wangu miezi 43 ana haja kubwa ya maji maji kwa siku 12. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-064", "message": "My baby is 3 months old and has had loose watery stools for 9 days. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-065", "message": "Mtoto wangu wa 36 months ako na hot body for 3 days. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-066", "message": "My baby is 3 months old and has had a hot body for 5 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-067", "message": "Mtoto wangu ana miezi 58, anakohoa tangu siku 3 zilizopita. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-068", "message": "Mtoto wangu 34 months ako na cough for 9 days sasa. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-069", "message": "My child is 44 months old and has had a hot body since yesterday. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-070", "message": "Mtoto wangu miezi 4 anakohoa kwa siku 6 sasa. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-071", "message": "Mtoto wangu ana miezi 43. Anaharisha choo cha maji kwa siku 7.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-072", "message": "Mtoto wangu ana miezi 24. Mwili wake una joto kwa siku 5.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-073", "message": "Mtoto wangu ana miezi 21. Mwili wake ni moto kwa siku 4 sasa. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-074", "message": "Mtoto wangu ako 31 months, amekuwa na diarrhoea maji maji for 12 days sasa. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-075", "message": "Mtoto wangu 10 months ako na cough since about 2 weeks ago. Naomba advice.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-076", "message": "My child is 18 months old and has had a cough for 2 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-077", "message": "My baby is 4 months old and has had a hot body since 5 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-078", "message": "My child is 17 months old and has had a cough for 5 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-079", "message": "My child is 13 months old and has had a hot body for 6 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-080", "message": "Mtoto wangu ana miezi 13. Ana harisha ya maji maji kwa siku 2. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-081", "message": "Mtoto wangu miezi 45 anaendesha choo cha majimaji tangu wiki iliyopita, sasa ni siku 8. Tafadhali nisaidie.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-082", "message": "Mtoto wangu miezi 45 anaendesha choo cha maji maji tangu wiki iliyopita, kama siku 9 sasa. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-083", "message": "Mtoto wangu 39 months ako na mwili moto for 3 days now. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-084", "message": "Mtoto wangu miezi 16 anaharisha choo cha maji tangu kama siku 12 zilizopita. Sina dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-085", "message": "Mtoto wangu ana miezi 15. Mwili wake ni moto kwa siku 3 sasa. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-086", "message": "Mtoto wangu ana miezi 31 amekuwa akikohoa kwa siku 7.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-087", "message": "Mtoto wangu ana miezi 52. Mwili wake ni moto kwa siku 3 sasa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-088", "message": "Mtoto wangu miezi 12 ana mwili moto tangu juzi. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-089", "message": "Mtoto wangu ana miezi 11. Anaharisha maji maji kwa siku 10 sasa.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-090", "message": "Mtoto wangu ana miezi 47 amekuwa na kikohozi kwa siku 9. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-091", "message": "My child is 58 months old and has had loose watery stools for 11 days. Please advise.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-092", "message": "Mtoto wangu wa 5 months ako na kuharisha maji maji since last week, imekuwa 8 days sasa. Naomba ushauri.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-093", "message": "My child is 18 months and has hot body since yesterday. No other problem. pls advise", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-094", "message": "Mtoto wangu 17 months ako na cough for 3 days. Hana symptom ingine. Nifanye aje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-095", "message": "Mtoto wangu miezi 11 ako na mwili moto kwa siku 5 sasa. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-096", "message": "My child is 5 months old and has had a cough for 4 days. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-097", "message": "Mtoto wangu ana miezi 2, mwili ni moto kwa siku 2 sasa. Nisaidieni pls", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-098", "message": "Mtoto wangu miezi 8 anaharisha maji maji tangu juzi. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-099", "message": "My child is 14 months old and has had loose watery stool since 5 days ago. pls advise", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-100", "message": "Mtoto wangu miezi 52 ana mwili moto kwa siku 1. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-101", "message": "Mtoto wangu ako 50 months na mwili iko moto since jana. Hakuna dalili ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-102", "message": "Mtoto wangu 55 months ako na mwili moto for 2 days sasa. Hakuna kitu ingine. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-103", "message": "Mtoto wangu ako 51 months na amekuwa na cough for 6 days. Hana symptom nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-104", "message": "Mtoto wangu miezi 10 anaharisha maji maji tangu juzi. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-105", "message": "My child is 44 months old and has had a cough for 2 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-106", "message": "My child is 38 months old and has had a hot body for 2 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-107", "message": "Mtoto wangu miezi 53 ana kikohozi tangu juzi. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-108", "message": "Mtoto wangu ana 27 months, body iko hot tangu siku 3 zilizopita. Hakuna dalili ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-109", "message": "My baby is 3 months old and has had a cough for 8 days. No other symptoms. Pls advise", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-110", "message": "My child is 48 months old and has had a cough for 13 days now. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-111", "message": "My child is 51 months old and has had a cough for 8 days now. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-112", "message": "Mtoto wangu miezi 41 anaharisha maji maji tangu wiki iliyopita, sasa ni kama siku 13. Hana dalili nyingine. Nifanyeje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-113", "message": "Mtoto wangu miezi 4 ako na kuharisha maji maji kwa siku 3. Naomba ushauri", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-114", "message": "My child is 10 months old and has had a cough for 3 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-115", "message": "My child is 47 months old and has hot body for 1 day. No other symptom pls advise", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-116", "message": "My child is 53 months old and has had loose watery stools for 4 days. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-117", "message": "My child is 55 months and has had a cough for 13 days now. No other symptoms. What can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-118", "message": "My child is 12 months old and has had loose watery stools since 10 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-119", "message": "My child is 46 months old and has had loose watery stool since 3 days ago. No other symptoms.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-120", "message": "Mtoto wangu ana 51 months, amekuwa na cough tangu kama siku 11 zilizopita. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-121", "message": "My child is 47 months old and has had loose watery stool since 6 days ago. No other problem. What can i do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-122", "message": "Mtoto wangu ako 9 months ana loose watery stool for 7 days sasa. Hakuna symptom ingine. nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-123", "message": "Mtoto wangu miezi 46 anakohoa kwa siku 8 sasa. Hana dalili nyingine. Nisaidieni tafadhali", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-124", "message": "Mtoto wangu ako 18 months, mwili ni moto tangu siku tano zilizopita. Sina symptom ingine nimeona.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-125", "message": "Mtoto wangu ana 53 months na amekuwa na cough for 9 days. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-126", "message": "Mtoto wangu ana 59 months, mwili iko hot tangu siku tatu zilizopita. Hakuna kitu ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-127", "message": "Mtoto wangu ako 50 months na amekuwa na cough for 3 days. Hakuna symptom ingine. Nifanye aje?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-128", "message": "My baby is 9 months old. He has had a hot body since 3 days ago. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-129", "message": "My child is 17 months old and has had loose watery stools for 10 days now. What should I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-130", "message": "My baby is 6 months old and has had loose watery stool for 12 days now. Pls what can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-131", "message": "Mtoto wangu miezi 36 anaendesha choo cha maji tangu wiki iliyopita, sasa ni siku 8. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-132", "message": "Mtoto wangu wa miezi 24 ana mwili moto kwa siku 5. Sina dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-133", "message": "Mtoto wangu ana 16 months ako na diarrhoea, stool ni loose watery, for 10 days sasa. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-134", "message": "Mtoto wangu ako 51 months, amekuwa na cough for 9 days. Hakuna symptom ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-135", "message": "Mtoto wangu ana 43 months, ako na hot body since yesterday. Hakuna symptom nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-136", "message": "Mtoto wangu ana 46 months amekuwa na choo ya maji maji since siku 6 zilizopita. Hakuna dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-137", "message": "My baby is 3 months old and has had loose watery stools for 7 days. Please advise.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-138", "message": "Mtoto wangu ana miezi 10. Amekuwa na kikohozi kwa siku 12.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-139", "message": "My baby is 7 months old and has had a cough for 6 days now. no other problem", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-140", "message": "My child is 54 months old and has had a hot body for 1 day. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-141", "message": "Mtoto wangu ana miezi 23. Ameharisha choo cha maji maji kwa siku 8. Sina dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-142", "message": "Mtoto wangu ana miezi 35 amekuwa na kikohozi kwa siku 13. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-143", "message": "Mtoto wangu wa 56 months ako na cough for 10 days sasa. Hakuna symptom ingine. Nifanye nini?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-144", "message": "My child is 38 months old and has had a hot body for 6 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-145", "message": "Mtoto wangu wa miezi 26 amekuwa na kikohozi tangu juzi. Hana dalili nyingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-146", "message": "Mtoto wangu 37 months ako na cough for 9 days. Hakuna dalili nyingine. Nishauri tafadhali.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-147", "message": "My child is 41 months old and has had a cough for 10 days now. What can I do?", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-148", "message": "Mtoto wangu ako 37 months anaendesha watery stool tangu siku 5 zilizopita. Hakuna dalili ingine.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
+{"id": "v3d-149", "message": "My child is 29 months old and has had a hot body for 5 days. No other symptom.", "present": [0, 0, 0, 0, 0, 0, 0, 0], "category": "no_danger", "source": "duration_negative"}
