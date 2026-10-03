@@ -1,7 +1,7 @@
 """Post-freeze test runs (prereg section 4 step 5): every set sealed before the `freeze` push, three arms each:
 keyword list E2 (comparator), ours = the registered model, and the deployed variant (its own labelled row).
 Writes raw output files under results/test/ and prints a file count only. Never prints message text.
-Usage (only after `freeze` is pushed): python train/run_tests.py <registered model dir> <deployed model dir>
+Usage (only after `freeze` is pushed): python train/run_tests.py <registered dir> <deployed dir> [v2 dir]
 """
 import subprocess
 import sys
@@ -25,6 +25,8 @@ def main():
     arms = {"keyword_E2": (list_extractor(lexicon.e2_list()),),
             "ours_registered": (Encoder(reg), keyword_extractor),
             "deployed": (Encoder(dep), keyword_extractor)}
+    if len(sys.argv) > 3:                                  # v2: its own labelled row (not the registered model)
+        arms["v2"] = (Encoder(sys.argv[3]), keyword_extractor)
     for s in ("a", "b", "ytest"):
         harness.run(s, params, arms, ROOT / "results" / "test")
     print(f"{len(list((ROOT / 'results' / 'test').glob('*.jsonl')))} raw files written")
