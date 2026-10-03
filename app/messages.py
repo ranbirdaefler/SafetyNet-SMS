@@ -50,3 +50,26 @@ def refer_now(code, age_months, u2m, reasons):
 
 def non_red(code, age_months):
     return NON_RED.format(code=code, age=age_txt(age_months))
+
+ALERT = "REFERRAL {code}: child {age}, {prefix}{reasons}, CHU {chu}, CHP {chp}, {time}. On arrival, text {code} here."
+ACK = "{code}: arrival recorded {time}. CHP and CHA told."
+ARRIVED = "{head}: child arrived at facility {time}. Follow up per chart booklet anyway."
+
+
+def hhmm(ts=None):
+    import time as _t
+    return _t.strftime("%H:%M", _t.localtime(ts))
+
+
+def alert(code, age_months, reasons, chu, chp_id, parent=False, ts=None):
+    age = f"{age_txt(age_months)}m" if age_months is not None else "age unknown"
+    return ALERT.format(code=code, age=age, prefix="PARENT SMS: " if parent else "", reasons=", ".join(reasons),
+                        chu=chu, chp=chp_id, time=hhmm(ts))
+
+
+def ack(code, ts=None):
+    return ACK.format(code=code, time=hhmm(ts))
+
+
+def arrived(code, age_months, u2m, ts=None):
+    return ARRIVED.format(head=head(code, age_months, u2m), time=hhmm(ts))
