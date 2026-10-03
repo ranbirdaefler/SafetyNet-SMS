@@ -1,0 +1,84 @@
+{
+ "v3_trim_report": {
+  "target": 60000,
+  "kept": 13809,
+  "single_char_and_specials": 2244,
+  "after_task_text": 10544,
+  "massive_sw_val": {
+   "n": 2033,
+   "unk": 0,
+   "tokens_per_msg_full": 11.95,
+   "tokens_per_msg_trim": 11.98,
+   "identical_segmentation": 1962
+  },
+  "x_train": {
+   "n": 5473,
+   "unk": 0,
+   "tokens_per_msg_full": 26.46,
+   "tokens_per_msg_trim": 26.46,
+   "identical_segmentation": 5473
+  }
+ },
+ "v3_trim_wq8_mb": 92.7,
+ "v3_temperatures": {
+  "convulsions": 0.25,
+  "not_drink_feed": 0.25,
+  "vomits_everything": 0.25,
+  "sleepy_unconscious": 0.85,
+  "blood_stool": 0.25,
+  "cough_long": 0.25,
+  "diarrhoea_long": 0.65,
+  "fever_long": 0.65
+ },
+ "v3_xval_n": 547,
+ "threshold_split_sizes": {
+  "MASSIVE sw-KE dev": 2033,
+  "FLORES-200 dev": 997,
+  "AfriSenti swa dev": 453
+ },
+ "v3_thresholds": {
+  "lo": 0.8492201056070879,
+  "hi": 0.9966338610433941,
+  "ydev_danger_below_lo": 0,
+  "ydev_no_danger_possible": 1,
+  "everyday_flagged_pct_at_lo": {
+   "MASSIVE sw-KE dev": 0.0,
+   "FLORES-200 dev": 0.0,
+   "AfriSenti swa dev": 0.0
+  },
+  "flag_cap_35_met": true,
+  "everyday_possible_pct": {
+   "MASSIVE sw-KE dev": 0.0,
+   "FLORES-200 dev": 0.0,
+   "AfriSenti swa dev": 0.0
+  }
+ },
+ "v2_retuned_thresholds": {
+  "lo": 0.06806502949832131,
+  "hi": 0.8443638835653922,
+  "ydev_danger_below_lo": 0,
+  "ydev_no_danger_possible": 2,
+  "everyday_flagged_pct_at_lo": {
+   "MASSIVE sw-KE dev": 60.1,
+   "FLORES-200 dev": 70.3,
+   "AfriSenti swa dev": 76.6
+  },
+  "flag_cap_35_met": false,
+  "everyday_possible_pct": {
+   "MASSIVE sw-KE dev": 0.4,
+   "FLORES-200 dev": 0.4,
+   "AfriSenti swa dev": 1.5
+  }
+ },
+ "v3_variant_agreement": {
+  "ydev_go_now": "120/120",
+  "ydev_danger_missed_vs_full": 0,
+  "board_flag_agreement_pct": {
+   "MASSIVE sw-KE dev": 100.0,
+   "FLORES-200 dev": 100.0,
+   "AfriSenti swa dev": 100.0,
+   "Y-dev": 100.0
+  },
+  "passes": true
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "model_dir": "models/onnx/v2_trim_wq8",
+ "model_hash": "e8e8883382b74bd165ab3eb075a01dca96dd92d5",
+ "temperatures": {
+  "convulsions": 0.6,
+  "not_drink_feed": 0.25,
+  "vomits_everything": 0.35,
+  "sleepy_unconscious": 0.6,
+  "blood_stool": 0.65,
+  "cough_long": 0.4,
+  "diarrhoea_long": 0.5,
+  "fever_long": 0.6
+ },
+ "lo": 0.06806502949832131,
+ "hi": 0.8443638835653922,
+ "rule": "v3/CRITERIA.md",
+ "thresholds_on": "Y-dev + MASSIVE sw-KE dev + FLORES-200 dev + AfriSenti swa dev"
+}
