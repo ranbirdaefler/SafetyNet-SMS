@@ -1,0 +1,755 @@
+{
+ "recipe": "PREREGISTRATION.md section 5",
+ "source": "data/x_train.dedup.jsonl",
+ "n_messages": 1195,
+ "mined": {
+  "convulsions": [
+   {
+    "ngram": "ugonjwa",
+    "pos": 45,
+    "tot": 45,
+    "precision": 1.0
+   },
+   {
+    "ngram": "huu",
+    "pos": 38,
+    "tot": 38,
+    "precision": 1.0
+   },
+   {
+    "ngram": "during",
+    "pos": 35,
+    "tot": 35,
+    "precision": 1.0
+   },
+   {
+    "ngram": "during this",
+    "pos": 33,
+    "tot": 33,
+    "precision": 1.0
+   },
+   {
+    "ngram": "degedege",
+    "pos": 32,
+    "tot": 32,
+    "precision": 1.0
+   },
+   {
+    "ngram": "sickness",
+    "pos": 28,
+    "tot": 28,
+    "precision": 1.0
+   },
+   {
+    "ngram": "this sickness",
+    "pos": 27,
+    "tot": 27,
+    "precision": 1.0
+   },
+   {
+    "ngram": "wakati wa",
+    "pos": 26,
+    "tot": 26,
+    "precision": 1.0
+   },
+   {
+    "ngram": "fits",
+    "pos": 22,
+    "tot": 22,
+    "precision": 1.0
+   },
+   {
+    "ngram": "during this sickness",
+    "pos": 22,
+    "tot": 22,
+    "precision": 1.0
+   },
+   {
+    "ngram": "amepata degedege",
+    "pos": 20,
+    "tot": 20,
+    "precision": 1.0
+   },
+   {
+    "ngram": "huu ugonjwa",
+    "pos": 20,
+    "tot": 20,
+    "precision": 1.0
+   },
+   {
+    "ngram": "degedege wakati",
+    "pos": 19,
+    "tot": 19,
+    "precision": 1.0
+   },
+   {
+    "ngram": "fit",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "wa huu",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "wa ugonjwa",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "wa huu ugonjwa",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "wakati wa huu",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "had fits",
+    "pos": 16,
+    "tot": 16,
+    "precision": 1.0
+   },
+   {
+    "ngram": "amepata degedege wakati",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   }
+  ],
+  "not_drink_feed": [
+   {
+    "ngram": "hawezi",
+    "pos": 73,
+    "tot": 73,
+    "precision": 1.0
+   },
+   {
+    "ngram": "hawezi kunywa",
+    "pos": 57,
+    "tot": 57,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kumeza",
+    "pos": 19,
+    "tot": 19,
+    "precision": 1.0
+   },
+   {
+    "ngram": "hawezi kumeza",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "maji au",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "au maziwa",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "maji au maziwa",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "all",
+    "pos": 16,
+    "tot": 16,
+    "precision": 1.0
+   },
+   {
+    "ngram": "maziwa anakataa",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "nikimpa maji",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "at",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   },
+   {
+    "ngram": "at all",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   },
+   {
+    "ngram": "au maziwa anakataa",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   },
+   {
+    "ngram": "nikimpa maji au",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   },
+   {
+    "ngram": "cannot drink",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kama hawezi",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   },
+   {
+    "ngram": "cannot drink or",
+    "pos": 11,
+    "tot": 11,
+    "precision": 1.0
+   },
+   {
+    "ngram": "drink or breastfeed",
+    "pos": 11,
+    "tot": 11,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kama hawezi kunywa",
+    "pos": 11,
+    "tot": 11,
+    "precision": 1.0
+   },
+   {
+    "ngram": "naona kama hawezi",
+    "pos": 11,
+    "tot": 11,
+    "precision": 1.0
+   }
+  ],
+  "vomits_everything": [
+   {
+    "ngram": "anatapika kila",
+    "pos": 36,
+    "tot": 36,
+    "precision": 1.0
+   },
+   {
+    "ngram": "anatapika kila kitu",
+    "pos": 36,
+    "tot": 36,
+    "precision": 1.0
+   },
+   {
+    "ngram": "akinywa",
+    "pos": 22,
+    "tot": 22,
+    "precision": 1.0
+   },
+   {
+    "ngram": "comes",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kinarudi",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "stomach",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "every",
+    "pos": 14,
+    "tot": 14,
+    "precision": 1.0
+   },
+   {
+    "ngram": "stays",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "back up",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "comes back",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "every drink",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "nothing stays",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "the stomach",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "comes back up",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "in the stomach",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "akila",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   },
+   {
+    "ngram": "feed comes",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   },
+   {
+    "ngram": "stays in",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   },
+   {
+    "ngram": "every drink or",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   },
+   {
+    "ngram": "feed comes back",
+    "pos": 12,
+    "tot": 12,
+    "precision": 1.0
+   }
+  ],
+  "sleepy_unconscious": [
+   {
+    "ngram": "kumuamsha",
+    "pos": 29,
+    "tot": 29,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kawaida na",
+    "pos": 29,
+    "tot": 29,
+    "precision": 1.0
+   },
+   {
+    "ngram": "amelala",
+    "pos": 28,
+    "tot": 28,
+    "precision": 1.0
+   },
+   {
+    "ngram": "amelala sana",
+    "pos": 28,
+    "tot": 28,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kawaida na ni",
+    "pos": 27,
+    "tot": 27,
+    "precision": 1.0
+   },
+   {
+    "ngram": "to wake",
+    "pos": 22,
+    "tot": 22,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kuliko kawaida na",
+    "pos": 22,
+    "tot": 22,
+    "precision": 1.0
+   },
+   {
+    "ngram": "vigumu",
+    "pos": 21,
+    "tot": 21,
+    "precision": 1.0
+   },
+   {
+    "ngram": "ni vigumu",
+    "pos": 21,
+    "tot": 21,
+    "precision": 1.0
+   },
+   {
+    "ngram": "hard to wake",
+    "pos": 20,
+    "tot": 20,
+    "precision": 1.0
+   },
+   {
+    "ngram": "vizuri na",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kumwamsha",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "amelala sana kuliko",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "na ni vigumu",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "nikimuamsha",
+    "pos": 16,
+    "tot": 16,
+    "precision": 1.0
+   },
+   {
+    "ngram": "ni hard",
+    "pos": 16,
+    "tot": 16,
+    "precision": 1.0
+   },
+   {
+    "ngram": "floppy",
+    "pos": 15,
+    "tot": 15,
+    "precision": 1.0
+   },
+   {
+    "ngram": "anarudi",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "hajibu",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "anarudi kulala",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   }
+  ],
+  "blood_stool": [
+   {
+    "ngram": "nimeona",
+    "pos": 35,
+    "tot": 35,
+    "precision": 1.0
+   },
+   {
+    "ngram": "diaper",
+    "pos": 33,
+    "tot": 33,
+    "precision": 1.0
+   },
+   {
+    "ngram": "blood in",
+    "pos": 25,
+    "tot": 25,
+    "precision": 1.0
+   },
+   {
+    "ngram": "streaks",
+    "pos": 24,
+    "tot": 24,
+    "precision": 1.0
+   },
+   {
+    "ngram": "red streaks",
+    "pos": 24,
+    "tot": 24,
+    "precision": 1.0
+   },
+   {
+    "ngram": "damu kwenye",
+    "pos": 23,
+    "tot": 23,
+    "precision": 1.0
+   },
+   {
+    "ngram": "blood in the",
+    "pos": 20,
+    "tot": 20,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kuna",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "saw",
+    "pos": 18,
+    "tot": 18,
+    "precision": 1.0
+   },
+   {
+    "ngram": "kuna damu",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "damu kwenye choo",
+    "pos": 17,
+    "tot": 17,
+    "precision": 1.0
+   },
+   {
+    "ngram": "i saw",
+    "pos": 16,
+    "tot": 16,
+    "precision": 1.0
+   },
+   {
+    "ngram": "nimeona damu",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "of blood",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "saw red",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "streaks of",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "the poo",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "in the poo",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "of blood in",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   },
+   {
+    "ngram": "red streaks of",
+    "pos": 13,
+    "tot": 13,
+    "precision": 1.0
+   }
+  ]
+ },
+ "rows": {
+  "convulsions": [
+   "convulsion",
+   "convulsions",
+   "fits",
+   "degedege",
+   "ugonjwa",
+   "huu",
+   "during",
+   "during this",
+   "sickness",
+   "this sickness",
+   "wakati wa",
+   "during this sickness",
+   "amepata degedege",
+   "huu ugonjwa",
+   "degedege wakati",
+   "fit",
+   "wa huu",
+   "wa ugonjwa",
+   "wa huu ugonjwa",
+   "wakati wa huu",
+   "had fits",
+   "amepata degedege wakati"
+  ],
+  "not_drink_feed": [
+   "cannot drink",
+   "cannot feed",
+   "cannot breastfeed",
+   "not able to drink",
+   "unable to drink",
+   "hawezi kunywa",
+   "hawezi kunyonya",
+   "hanyonyi",
+   "kushindwa kunywa",
+   "kushindwa kunyonya",
+   "hawezi",
+   "kumeza",
+   "hawezi kumeza",
+   "maji au",
+   "au maziwa",
+   "maji au maziwa",
+   "all",
+   "maziwa anakataa",
+   "nikimpa maji",
+   "at",
+   "at all",
+   "au maziwa anakataa",
+   "nikimpa maji au",
+   "kama hawezi",
+   "cannot drink or",
+   "drink or breastfeed",
+   "kama hawezi kunywa",
+   "naona kama hawezi"
+  ],
+  "vomits_everything": [
+   "vomits everything",
+   "vomiting everything",
+   "nothing stays down",
+   "anatapika kila kitu",
+   "kutapika kila kitu",
+   "anatapika kila",
+   "akinywa",
+   "comes",
+   "kinarudi",
+   "stomach",
+   "every",
+   "stays",
+   "back up",
+   "comes back",
+   "every drink",
+   "nothing stays",
+   "the stomach",
+   "comes back up",
+   "in the stomach",
+   "akila",
+   "feed comes",
+   "stays in",
+   "every drink or",
+   "feed comes back"
+  ],
+  "sleepy_unconscious": [
+   "very sleepy",
+   "unusually sleepy",
+   "hard to wake",
+   "cannot wake",
+   "cannot be woken",
+   "unconscious",
+   "usingizi mwingi",
+   "usingizi usio kawaida",
+   "usingizi usio wa kawaida",
+   "haamki",
+   "kumuamsha",
+   "kawaida na",
+   "amelala",
+   "amelala sana",
+   "kawaida na ni",
+   "to wake",
+   "kuliko kawaida na",
+   "vigumu",
+   "ni vigumu",
+   "vizuri na",
+   "kumwamsha",
+   "amelala sana kuliko",
+   "na ni vigumu",
+   "nikimuamsha",
+   "ni hard",
+   "floppy",
+   "anarudi",
+   "hajibu",
+   "anarudi kulala"
+  ],
+  "blood_stool": [
+   "blood in stool",
+   "damu kwenye kinyesi",
+   "nimeona",
+   "diaper",
+   "blood in",
+   "streaks",
+   "red streaks",
+   "damu kwenye",
+   "blood in the",
+   "kuna",
+   "saw",
+   "kuna damu",
+   "damu kwenye choo",
+   "i saw",
+   "nimeona damu",
+   "of blood",
+   "saw red",
+   "streaks of",
+   "the poo",
+   "in the poo",
+   "of blood in",
+   "red streaks of"
+  ]
+ },
+ "k": null
+}
