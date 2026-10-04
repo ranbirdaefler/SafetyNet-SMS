@@ -24,8 +24,6 @@ Every figure, with its table or page and URL: [DATA.md](DATA.md#1-problem-eviden
 
 **Honest status:** our pre-registered test on native Swahili messages could not run (no native speaker's texts were ready), so the claim stays NOT TESTED. Every result here is on AI-written test messages. Not for medical use.
 
-Video: {link}
-
 > **For judges.** Click first: the live demo, https://huggingface.co/spaces/ranbirr1/safetynet-sms, then **Play the story** (three stories, a minute each; "Show English" puts our English under Swahili messages). **Not for medical use**: synthetic data, no real patients, no SMS gateway. **AI-written:** every test message, the training data and the story messages (team-written, AI-assisted); the Swahili parent texts are machine translations approved by the team, not reviewed by a native speaker. **Experimental:** the questions a health worker can approve for a parent (Tier 1 and Tier 2, below); not evaluated.
 >
 > Files: [PREREGISTRATION.md](PREREGISTRATION.md) · [DATA.md](DATA.md) · [results/TABLES.md](results/TABLES.md) and [results/ERRATA.md](results/ERRATA.md) · model card: https://huggingface.co/ranbirr1/safetynet-sms-board · [LICENSE](LICENSE)
