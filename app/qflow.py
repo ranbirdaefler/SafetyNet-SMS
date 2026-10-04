@@ -26,14 +26,14 @@ PREARRIVAL = "{code} PRE-ARRIVAL, parent report, not checked: {label} (answered 
 def qstate(st):
     q = st.setdefault("q", {})
     for k, v in (("asked", []), ("declined", []), ("log", []), ("answers", []), ("pending", None), ("own", []),
-                 ("replies", []), ("chw_pending", None)):
+                 ("replies", []), ("chw_pending", None), ("queue", []), ("lapsed", [])):
         q.setdefault(k, v)
     return q
 
 
 def used(q):
-    """One shared cap per case (review E5): bank questions and her own messages together."""
-    return len(q.get("asked", [])) + len(q.get("own", []))
+    """One shared cap per case (review E5): bank questions (sent or queued) and her own messages together."""
+    return len(q.get("asked", [])) + len(q.get("own", [])) + len(q.get("queue", []))
 
 
 def suggestions(case):
@@ -52,13 +52,25 @@ def chw_action(store, reg, proto, chp_phone, code, qid, action):
     parent = case.get("parent_phone")
     if not parent or reg.parent(parent) is None:
         return {"ok": False, "error": "parent not registered"}
-    offered = {s["id"]: s for s in suggestions(case)}
-    if qid not in offered:
-        return {"ok": False, "error": "not a current suggestion for this case"}
     chp = reg.chp_by_phone[chp_phone]
     st = case["state"]
     q = qstate(st)
     now = time.time()
+    queued = next((x for x in q["queue"] if x["id"] == qid), None)
+    if queued is not None:                                          # actions on a queued question
+        if action == "cancel":
+            q["queue"].remove(queued)
+            q["log"].append({"at": now, "qid": qid, "action": "cancelled", "by": chp["id"], "reason": queued["reason"]})
+            store.update_case(code, state=st)
+            return {"ok": True, "action": "cancelled"}
+        if action == "approve" and queued.get("hold") and not live_pending(q, now):   # E5: her re-approval
+            q["queue"].remove(queued)
+            store.update_case(code, state=st)
+            return send_question(store, reg, proto, store.case(code), qid, queued["reason"], chp, "approved again by CHP ")
+        return {"ok": False, "error": "already queued"}
+    offered = {s["id"]: s for s in suggestions(case)}
+    if qid not in offered:
+        return {"ok": False, "error": "not a current suggestion for this case"}
     if action == "decline":
         q["declined"].append(qid)
         q["log"].append({"at": now, "qid": qid, "action": "declined", "by": chp["id"], "reason": offered[qid]["reason"]})
@@ -68,17 +80,68 @@ def chw_action(store, reg, proto, chp_phone, code, qid, action):
         return {"ok": False, "error": "unknown action"}
     if used(q) >= MAX_PER_CASE:
         return {"ok": False, "error": "at most 3 messages per case"}
-    lang = reg.parent_lang(parent)
-    body = Q.text_for(qid, lang, case["status"] == "REFERRED", proto.params)
+    if live_pending(q, now):                                        # one question at a time: queue it (keeps M8)
+        q["queue"].append({"id": qid, "at": now, "by": chp["id"], "reason": offered[qid]["reason"], "hold": False})
+        q["log"].append({"at": now, "qid": qid, "action": "queued", "by": chp["id"], "reason": offered[qid]["reason"]})
+        store.update_case(code, state=st)
+        return {"ok": True, "action": "queued"}
+    return send_question(store, reg, proto, case, qid, offered[qid]["reason"], chp, "drafted by model, approved by CHP ")
+
+
+def live_pending(q, now):
+    p = q.get("pending")
+    return bool(p) and now - p["at"] <= WINDOW_S
+
+
+def send_question(store, reg, proto, case, qid, reason, chp, how, action="approved"):
+    """Send one approved bank question (fixed allowlisted text) and make it the pending one."""
+    code, parent = case["code"], case["parent_phone"]
+    st = case["state"]
+    q = qstate(st)
+    now = time.time()
+    body = Q.text_for(qid, reg.parent_lang(parent), case["status"] == "REFERRED", proto.params)
     store.send(parent, "parent", "Q_" + qid, body, code)            # allowlisted fixed text (send-time check)
     q["asked"].append(qid)
-    q["pending"] = {"id": qid, "at": now}                          # M8: latest wins
+    q["pending"] = {"id": qid, "at": now}                          # M8: one pending question
     q["chw_pending"] = None
     q["alert"] = None
-    q["log"].append({"at": now, "qid": qid, "action": "approved", "by": chp["id"], "reason": offered[qid]["reason"],
-                     "text": "drafted by model, approved by CHP " + chp["id"]})
+    q["log"].append({"at": now, "qid": qid, "action": action, "by": chp["id"], "reason": reason, "text": how + chp["id"]})
     store.update_case(code, state=st)                               # M2: status, due and chp_replied untouched
     return {"ok": True, "action": "approved", "msg_id": "Q_" + qid}
+
+
+def send_next(flow, case_code):
+    """After a parsed answer: send the next queued question (her approval already given), FIFO. Lapses on a closed
+    or arrived case; held questions (after her own message, E5) wait for her re-approval."""
+    case = flow.store.case(case_code)
+    if case is None:
+        return
+    st = case["state"]
+    q = qstate(st)
+    if not q["queue"] or live_pending(q, time.time()):
+        return
+    if case["status"] not in ("REFERRED", "ASK_SIGNS") or st.get("arrived_at"):
+        lapse(flow.store, case, "the case is closed or the child arrived")
+        return
+    nxt = q["queue"][0]
+    if nxt.get("hold"):
+        return
+    q["queue"].pop(0)
+    flow.store.update_case(case_code, state=st)
+    chp = flow.reg.chp_by_phone.get(case["chp_phone"]) or {"id": nxt["by"]}
+    send_question(flow.store, flow.reg, flow.proto, flow.store.case(case_code), nxt["id"], nxt["reason"], chp,
+                  "approved by CHP " + nxt["by"] + ", sent after the previous answer; CHP ", action="approved")
+
+
+def lapse(store, case, why):
+    st = case["state"]
+    q = qstate(st)
+    if not q["queue"]:
+        return
+    for x in q["queue"]:
+        q["lapsed"].append({"at": time.time(), "id": x["id"], "why": why})
+    q["queue"] = []
+    store.update_case(case["code"], state=st)
 
 
 def on_parent_text(flow, phone, case, body):
@@ -103,6 +166,7 @@ def on_parent_text(flow, phone, case, body):
     if now - pend["at"] > WINDOW_S:
         q["pending"] = None
         flow.store.update_case(case["code"], state=st)
+        lapse(flow.store, flow.store.case(case["code"]), "no answer to the previous one")
         return None
     item = Q.question(pend["id"])
     if case["status"] in ("ASK_SIGNS", "NON_RED") and item["kind"] == "check":
@@ -125,9 +189,11 @@ def on_parent_text(flow, phone, case, body):
                         PREARRIVAL.format(code=case["code"], label=label, time=M.hhmm(now), chp=chp["id"] if chp else "-"),
                         case["code"])
     if not bare:
+        send_next(flow, case["code"])                               # M5 'not sure' counts as an answer
         return None                                                 # then the existing flow (D23 repeat) runs
     if not arrived:
         flow.store.send(phone, "parent", "Q_ACK", Q.ack_text(flow.reg.parent_lang(phone)), case["code"])
+    send_next(flow, case["code"])
     return case["code"]
 
 
@@ -155,6 +221,10 @@ def on_check_answer(flow, phone, case, body, item, now):
             st.setdefault("fields", {})[sign] = PRESENT
         reason = (f"parent report, not checked: {LABEL[sign]}" if n == 1
                   else f"parent report, not checked: not sure, {LABEL[sign]}")
+        if q.get("queue"):                                          # the parent is going now: no more questions
+            for x in q["queue"]:
+                q["lapsed"].append({"at": now, "id": x["id"], "why": "the parent was told to go now"})
+            q["queue"] = []
         flow.store.update_case(case["code"], state=st)
         flow.go_now(phone, chp, st, [reason], code=case["code"])
         return case["code"]
@@ -162,6 +232,7 @@ def on_check_answer(flow, phone, case, body, item, now):
         q["alert"] = f"Parent not sure: {label}. Call now."
     flow.store.update_case(case["code"], state=st)
     if not bare:
+        send_next(flow, case["code"])
         return None                                                 # then the existing flow (awaiting) runs
     if case["status"] == "ASK_SIGNS" and case.get("due"):
         import math
@@ -169,6 +240,7 @@ def on_check_answer(flow, phone, case, body, item, now):
         t = Q.ack_told_text(flow.reg.parent_lang(phone), minutes, flow.fac())
         if t:                                                       # only once Florian approved the text
             flow.store.send(phone, "parent", "Q_ACK_TOLD", t, case["code"])
+    send_next(flow, case["code"])
     return case["code"]
 
 
@@ -230,13 +302,19 @@ def board_lines(case):
     q = st.get("q") or {}
     out = []
     for e in q.get("log", []):
+        if e["action"] == "approved" and e.get("text"):
+            out.append(f"{M.hhmm(e['at'])} {e['qid']}: " + e["text"])
+            continue
         what = {"approved": "drafted by model, approved by CHP ", "declined": "drafted by model, declined by CHP ",
-                "edited": "edited and sent by CHP ", "written": "written and sent by CHP "}[e["action"]]
-        out.append(f"{M.hhmm(e['at'])} {e['qid']}: " + what + e["by"])
+                "edited": "edited and sent by CHP ", "written": "written and sent by CHP ",
+                "queued": "approved by CHP ", "cancelled": "queued question cancelled by CHP "}[e["action"]]
+        out.append(f"{M.hhmm(e['at'])} {e['qid']}: " + what + e["by"] + (" (queued)" if e["action"] == "queued" else ""))
     for o in q.get("own", []):
         out.append(f"{M.hhmm(o['at'])} her message: {o['text']} (replies are shown, not read automatically)")
     for r in q.get("replies", []):
         out.append(f"{M.hhmm(r['at'])} Parent replied: {r['text']}")
+    for x in q.get("lapsed", []):
+        out.append(f"{M.hhmm(x['at'])} Queued question {x['id']} not sent: {x['why']}")
     for g in q.get("ignored", []):
         out.append(f"{M.hhmm(g['at'])} parent later replied {g['n']} to {g['qid']}: ignored, earlier answer stands")
     for a in q.get("answers", []):
@@ -302,6 +380,8 @@ def chw_message(store, reg, proto, chp_phone, code, text, from_qid=None):
     now = time.time()
     q["own"].append({"at": now, "text": text, "from_qid": from_qid})
     q["pending"] = None                                               # E5: her message ends parsing of a bank question
+    for x in q.get("queue", []):
+        x["hold"] = True                                              # queued questions wait for her re-approval
     q["chw_pending"] = {"at": now}
     q["alert"] = None
     q["log"].append({"at": now, "qid": from_qid or "OWN", "action": "edited" if from_qid else "written", "by": chp["id"],
@@ -329,3 +409,18 @@ def note_symptoms(store, phone, body):
     for k, v in m.items():
         sy[k] = {"duration": bool(sy.get(k, {}).get("duration")) or v["duration"]}
     store.update_case(case["code"], state=st)
+
+
+def queue_view(case):
+    """Her board: queued questions with what they wait for."""
+    q = (case["state"].get("q") or {})
+    pend = q.get("pending")
+    first = Q.question(pend["id"]) if pend else None
+    short = (first["en"].split("?")[0][:48] + "?") if first else ""
+    out = []
+    for x in q.get("queue", []):
+        it = Q.question(x["id"])
+        out.append({"id": x["id"], "text_en": it["en"] if it else x["id"], "hold": bool(x.get("hold")),
+                    "note": ("Will send only if you re-approve (you sent your own message)." if x.get("hold")
+                             else f"Queued: sends after the parent answers '{short}'")})
+    return out

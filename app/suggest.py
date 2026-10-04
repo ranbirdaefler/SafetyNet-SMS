@@ -43,10 +43,11 @@ def suggest(state, bank_questions, status, table=None):
     if status != "REFERRED" or not eligible(state):
         return []
     q = state.get("q") or {}
-    done = set(q.get("asked", [])) | set(q.get("declined", []))
-    if len(q.get("asked", [])) + len(q.get("own", [])) >= MAX_PER_CASE:   # one shared cap (review E5)
+    queued = [x["id"] for x in q.get("queue", [])]
+    done = set(q.get("asked", [])) | set(q.get("declined", [])) | set(queued)
+    if len(q.get("asked", [])) + len(q.get("own", [])) + len(queued) >= MAX_PER_CASE:   # one shared cap (review E5)
         return []
-    pre_asked = sum(1 for e in q.get("asked", []) if e.startswith("PA_"))
+    pre_asked = sum(1 for e in list(q.get("asked", [])) + queued if e.startswith("PA_"))
     signs = triggered_signs(state)
     heads = (state.get("model") or {}).get("heads") or {}
     out = []
@@ -107,9 +108,10 @@ def suggest_checks(state, bank_questions, table=None):
     q = state.get("q") or {}
     asked = list(q.get("asked", []))
     declined = list(q.get("declined", []))
-    if len(asked) + len(q.get("own", [])) >= MAX_PER_CASE:
+    queued = [x["id"] for x in q.get("queue", [])]
+    if len(asked) + len(q.get("own", [])) + len(queued) >= MAX_PER_CASE:
         return []
-    done = set(asked) | set(declined)
+    done = set(asked) | set(declined) | set(queued)
     present = {s for s, v in (state.get("fields") or {}).items() if v == "PRESENT"}
     by_id = {it["id"]: it for it in bank_questions if it["kind"] == "check"}
     heads = (state.get("model") or {}).get("heads") or {}
@@ -120,7 +122,7 @@ def suggest_checks(state, bank_questions, table=None):
     used = {SLOT.get(x, x) for x in done if x.startswith("CK_")}
     room = MAX_SLOTS - len(used)
     if room <= 0:
-        return out[:MAX_PER_CASE - len(asked) - len(q.get("own", []))]
+        return out[:MAX_PER_CASE - len(asked) - len(q.get("own", [])) - len(queued)]
     reasons = {}                                             # slot -> reason (first rule that drew it)
     model_slots = []
     for qid, item in sorted(by_id.items(), key=lambda kv: -(heads.get(kv[1]["sign"]) or 0)):
@@ -161,4 +163,4 @@ def suggest_checks(state, bank_questions, table=None):
         out.append({"id": qid, "reason": reason + f" Source: {item['source']}."})
         used.add(slot)
         room -= 1
-    return out[:MAX_PER_CASE - len(asked) - len(q.get("own", []))]
+    return out[:MAX_PER_CASE - len(asked) - len(q.get("own", [])) - len(queued)]

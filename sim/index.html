@@ -108,6 +108,7 @@
   .qsug button { font:inherit; font-size:13px; padding:3px 10px; margin:4px 6px 0 0; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
   .qsug button.ok { background:#3b2a85; color:#fff; border-color:#3b2a85; }
   .qline { font-size:12.5px; margin-top:3px; }
+  .qsug.qqueue { border-style:dashed; background:#fbfbfd; }
   .qalert { margin:4px 0; padding:4px 8px; border-radius:8px; background:#fde7e6; color:#8a1c12; font-weight:700; font-size:14px; }
   .qwrite { margin-top:6px; }
   .qwrite .start { font-size:12.5px; color:var(--muted); }
@@ -425,7 +426,7 @@ async function pollBoard() {
     chips.appendChild(mc);
     c.appendChild(chips);
     if (r.reminder) { const rm = document.createElement("div"); rm.className = "rem"; rm.textContent = r.reminder; c.appendChild(rm); }
-    if ((r.q_suggestions && r.q_suggestions.length) || (r.q_lines && r.q_lines.length)) {
+    if ((r.q_suggestions && r.q_suggestions.length) || (r.q_lines && r.q_lines.length) || (r.q_queue && r.q_queue.length)) {
       const qb = document.createElement("div"); qb.className = "qbox";
       qb.innerHTML = '<b>Questions before arrival</b><span class="xp">experimental</span>';
       for (const sg of r.q_suggestions || []) {
@@ -443,6 +444,23 @@ async function pollBoard() {
         box.children[2].onclick = () => act("approve");
         box.children[3].onclick = () => act("decline");
         if (box.children[4]) box.children[4].onclick = () => openWrite(qb, r, sg.text_en, sg.id);
+        qb.appendChild(box);
+      }
+      for (const qq of r.q_queue || []) {                 // one question at a time: the others wait in a queue
+        const box = document.createElement("div"); box.className = "qsug qqueue";
+        box.innerHTML = `<div></div><div class="qwhy"></div>` + (qq.hold ? `<button type="button" class="ok">Send now</button>` : "") +
+          `<button type="button">Cancel</button>`;
+        box.children[0].textContent = qq.text_en;
+        box.children[1].textContent = qq.note;
+        const act = async a => {
+          box.querySelectorAll("button").forEach(x => x.disabled = true);
+          await fetch("chw/question", { method: "POST", headers: { "content-type": "application/json" },
+            body: JSON.stringify({ chp: p.select.value, code: r.code, qid: qq.id, action: a }) });
+          poll(); pollBoard();
+        };
+        const btns = box.querySelectorAll("button");
+        if (qq.hold) { btns[0].onclick = () => act("approve"); btns[1].onclick = () => act("cancel"); }
+        else btns[0].onclick = () => act("cancel");
         qb.appendChild(box);
       }
       for (const l of r.q_lines || []) { const x = document.createElement("div"); x.className = "qline"; x.textContent = l; qb.appendChild(x); }

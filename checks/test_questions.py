@@ -191,15 +191,72 @@ def test_non_bare_reply_counts_as_not_sure_then_old_flow(on, reply):
     assert ("parent", "CG_GO_NOW") in ids(out) and ("parent", "Q_ACK") not in ids(out)   # then D23 as before
 
 
-def test_latest_question_wins(on):
+def test_second_approval_is_queued_then_sent_after_the_answer(on):
+    e = Env(PROTO)
+    code = referred(e)
+    r1, out1 = approve(e, code, "PA_FITS_COUNT")
+    r2, out2 = approve(e, code, "PA_AWAKE")
+    assert ids(out1) == [("parent", "Q_PA_FITS_COUNT")] and r2["action"] == "queued" and out2 == []   # only the first sent
+    out = e.send(P1, "parent", "2")                                  # answer to the FIRST question
+    assert ids(out) == [("parent", "Q_ACK"), ("parent", "Q_PA_AWAKE")]   # the queued one follows the answer
+    out = e.send(P1, "parent", "1")                                  # answer to the SECOND question
+    note = [m for m in out if m["msg_id"] == "PREARRIVAL"][0]["body"]
+    assert "not awake or fitting now" in note
+    ans = e.store.case(code)["state"]["q"]["answers"]
+    assert [(a["qid"], a["n"]) for a in ans] == [("PA_FITS_COUNT", 2), ("PA_AWAKE", 1)]   # each against the right qid
+    assert any("sent after the previous answer" in x for x in qflow.board_lines(e.store.case(code)))
+
+
+def test_queued_question_cancel(on):
     e = Env(PROTO)
     code = referred(e)
     approve(e, code, "PA_FITS_COUNT")
     approve(e, code, "PA_AWAKE")
+    r = qflow.chw_action(e.store, e.reg, PROTO, CHP7, code, "PA_AWAKE", "cancel")
+    assert r["action"] == "cancelled"
+    assert ids(e.send(P1, "parent", "2")) == [("parent", "Q_ACK")]   # nothing queued any more
+
+
+def test_queue_lapses_on_window_and_arrival(on):
+    e = Env(PROTO)
+    code = referred(e)
+    approve(e, code, "PA_FITS_COUNT")
+    approve(e, code, "PA_AWAKE")
+    c = e.store.case(code)
+    c["state"]["q"]["pending"]["at"] -= qflow.WINDOW_S + 1
+    e.store.update_case(code, state=c["state"])
     out = e.send(P1, "parent", "1")
-    note = [m for m in out if m["msg_id"] == "PREARRIVAL"][0]["body"]
-    assert "not awake or fitting now" in note and "fit" not in note.replace("fitting", "")   # M8
-    assert e.send(P1, "parent", "1")[0]["msg_id"] == "CG_GO_NOW"                    # no pending: old D23 path
+    assert not any(m["msg_id"] == "Q_PA_AWAKE" for m in out)       # never sent without an answer
+    assert any("not sent: no answer to the previous one" in x for x in qflow.board_lines(e.store.case(code)))
+    e2 = Env(PROTO)
+    code2 = referred(e2)
+    approve(e2, code2, "PA_FITS_COUNT")
+    approve(e2, code2, "PA_AWAKE")
+    e2.send(FAC, "facility", code2)                                  # ARRIVED
+    out = e2.send(P1, "parent", "2")
+    assert not any(m["msg_id"] == "Q_PA_AWAKE" for m in out)
+
+
+def test_no_queued_send_after_her_own_message(on):
+    e = Env(PROTO)
+    code = referred(e)
+    approve(e, code, "PA_FITS_COUNT")
+    approve(e, code, "PA_AWAKE")
+    own(e, code, "Nijulishe mkifika kliniki.")
+    out = e.send(P1, "parent", "1")
+    assert not any(m["msg_id"].startswith("Q_PA") for m in out)
+    v = qflow.queue_view(e.store.case(code))
+    assert v and v[0]["hold"] and "re-approve" in v[0]["note"]
+    r, out = approve(e, code, "PA_AWAKE")                             # her re-approval sends it
+    assert ids(out) == [("parent", "Q_PA_AWAKE")]
+
+
+def test_queue_counts_toward_the_cap(on):
+    e = Env(PROTO)
+    code = referred(e)
+    approve(e, code, "PA_FITS_COUNT")
+    approve(e, code, "PA_AWAKE")
+    assert qflow.suggestions(e.store.case(code)) == []                # 2 pre-arrival questions used (one queued)
 
 
 def test_bare_digit_without_pending_question_is_old_flow(on):
@@ -576,3 +633,17 @@ def test_non_digit_after_answer_is_old_path(on):
     code = referred(e)
     answered(e, code, "2")
     assert ids(e.send(P1, "parent", "asante")) == [("parent", "CG_GO_NOW")]
+
+
+
+def test_tier2_go_now_clears_the_queue(tier2):
+    e = Env(PROTO)
+    code = told(e, text="mtoto wangu wa miaka 2 anaharisha")
+    sug = [s["id"] for s in qflow.suggestions(e.store.case(code))]
+    assert sug == ["CK_WAKE", "CK_BLOOD"]
+    approve(e, code, "CK_WAKE")
+    r, out = approve(e, code, "CK_BLOOD")
+    assert r["action"] == "queued" and out == []
+    out = e.send(P1, "parent", "1")                                   # danger on WAKE: go now, queue cleared
+    assert ("parent", "CG_GO_NOW") in ids(out) and not any(m["msg_id"] == "Q_CK_BLOOD" for m in out)
+    assert any("the parent was told to go now" in x for x in qflow.board_lines(e.store.case(code)))

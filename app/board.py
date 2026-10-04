@@ -98,7 +98,7 @@ def _questions(case):
     reg = _REG.get("r") or _REG.setdefault("r", Registry(os.environ.get(
         "SNS_REGISTRY", Path(__file__).resolve().parent.parent / "config" / "registry.yaml")))
     return {"q_suggestions": sugg, "q_lines": qflow.board_lines(case), "q_write": qflow.write_info(case, reg),
-            "q_alert": (case["state"].get("q") or {}).get("alert")}
+            "q_alert": (case["state"].get("q") or {}).get("alert"), "q_queue": qflow.queue_view(case)}
 
 
 _REG = {}
