@@ -5,14 +5,14 @@
 ## The problem
 
 - **Children die of illnesses that can be treated if care comes in time.** Kenya's under-5 mortality rate is 41 per 1,000 live births (KDHS 2022). Pneumonia alone caused about 15% of under-5 deaths, almost 9,000 a year (2018 data; UNICEF/Save the Children, *Fighting for Breath*, 2020).
-- **Delay is what kills.** In 74% of child deaths studied at Kenya's CHAMPS sites (213 of 287), there was at least one delay in care (CHAMPS, *PLOS Global Public Health*, 2024).
+- **Delay is what kills.** In 74% of deaths of children aged 1 to 59 months studied at Kenya's CHAMPS sites (213 of 287), there was at least one delay in care (CHAMPS, *PLOS Global Public Health*, 2024).
 - **Clinicians are scarce and often absent.** Kenya has 2.6 doctors per 10,000 people (WHO Global Health Observatory, 2024). On unannounced visits, 52.8% of health workers were absent, and 19.6% correctly diagnosed all four tracer conditions (World Bank / MoH Service Delivery Indicators, 2018 survey).
 - **The first person a family can reach is a community health promoter (CHP)**, each responsible for about 100 households (Presidential address, 25 Sep 2023). She hears about a sick child only if the parent reaches her.
 - **The parent's phone is usually a basic one.** Only 27.5% of rural Kenyan women own a smartphone (KDHS 2022). SMS is the channel that reaches every family, with no data bundle.
 - **Many sick children never get advice or treatment.** For 3 in 10 under-5s with fever in the past two weeks, no advice or treatment was sought, even counting shops and drug sellers (KDHS 2022: sought for 69.5%).
 - **Referrals disappear.** In one Kenyan sub-county, referral forms were on file at the hospital for only 19 of 112 children referred for pneumonia (Opuba et al., 2025). In a Kenyan young-infant programme, heavy workload led some facility staff to skip the feedback form, so health volunteers relied on what caregivers told them (Odwe et al., *Health Policy and Planning*, 2024).
 
-Every figure, with its table or page and URL: [DATA.md](DATA.md), section 1.
+Every figure, with its table or page and URL: [DATA.md](DATA.md#1-problem-evidence-kenya-unless-stated), section 1.
 
 ## How SafetyNet-SMS fixes it
 
@@ -20,7 +20,7 @@ Every figure, with its table or page and URL: [DATA.md](DATA.md), section 1.
 2. **A small AI model reads every message** (AfroXLMR, 93 MB; designed to run on the health worker's phone, and it ran offline in a phone browser). It puts the urgent cases at the top of her board and catches danger signs the keyword rules miss: on a fresh sealed test set, the board flagged 12 of the 14 danger messages the rules missed (AI-written test messages; exploratory). It never sends anything to a parent on its own.
 3. **The health worker decides.** She answers the WHO checklist by number, and she can send a question the model suggests, only after she approves it. The parent's answer reaches the clinic before the child does (experimental).
 4. **The loop closes.** The facility texts the code back when the child arrives and a short outcome code after the visit. Her follow-up visit is set from it, and the referral record (referred, arrived, outcome) is written for her instead of adding reports for her to send. It is designed to feed Kenya's eCHIS and KHIS (DHIS2); that integration isn't built.
-5. **It is cheap.** A danger-sign case, from the first text to the clinic's outcome, costs about 11 text messages, around 13 Kenyan shillings (roughly 10 US cents).
+5. **It is cheap.** A danger-sign case, from the first text to the clinic's outcome, costs about 11 billed SMS (10 messages), around 13 Kenyan shillings (roughly 10 US cents).
 
 **Honest status:** our pre-registered test on native Swahili messages could not run (no native speaker's texts were ready), so the claim stays NOT TESTED. Every result here is on AI-written test messages. Not for medical use.
 

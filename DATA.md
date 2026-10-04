@@ -43,6 +43,7 @@ Every figure in the problem and device sections was found by one researcher and 
 | F1 | Women aged 15 to 49: 77.5% own a mobile phone, 42.7% a smartphone; rural women 69.6% / 27.5% | KNBS / Communications Authority, *Key Indicators on Uptake of ICTs based on the 2022 KDHS*. https://www.ca.go.ke/sites/default/files/2024-12/ICT-KDHS%20Analytical%20Fact%20Sheet.pdf |
 | F2 | Adults 18+ (2024): women 93% own a mobile, 42% a smartphone, 43% use mobile internet (men 95% / 50% / 55%) | GSMA, *The Mobile Gender Gap Report 2025*, Figure 2. https://www.gsma.com/wp-content/uploads/2025/12/The-Mobile-Gender-Gap-Report-2025.pdf |
 | F3 | 48.7 million smartphone and 29.6 million feature-phone connections; 14.4 billion SMS in the quarter; average pay-as-you-go SMS price KES 1.18 | Communications Authority of Kenya, Sector Statistics Report Q2 FY2025/26 (Oct to Dec 2025). https://www.ca.go.ke/sites/default/files/2026-04/Sector%20Statistics%20Report%20Q2%202025-2026.pdf |
+| F4 | USD/KES 129.56, updated Sat 3 Oct 2026 00:02 UTC; KES 12.98 / 129.56 = US$0.10 (README headline cost) | ExchangeRate-API open feed, https://open.er-api.com/v6/latest/USD. Secondary source (market rate feed) |
 
 **Community health promoters (CHPs) and eCHIS**
 
