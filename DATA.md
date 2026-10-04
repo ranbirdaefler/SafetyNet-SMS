@@ -101,6 +101,8 @@ The training and development data were written by GPT; every test set was writte
 | MASSIVE 1.1 sw-KE train (v3) | as above | CC BY 4.0 | 1,000 of 11,397 after the health filter | v3 training (no-danger examples) |
 | MASSIVE sw-KE validation, FLORES-200 swh_Latn dev | as above | CC BY 4.0 / CC BY-SA 4.0 | 2,033 / 997 | v3 board thresholds only (FLORES is never trained on) |
 | Nekoto et al., "Participatory Research for Low-resourced Machine Translation", Findings of EMNLP 2020 | https://aclanthology.org/2020.findings-emnlp.195/ | | | Cited (README, Local languages) |
+| Adelani et al., "MasakhaNER: Named Entity Recognition for African Languages", TACL 2021 | https://arxiv.org/abs/2103.11811 (author list: Adelani first author; Alabi a co-author) | | | Cited (README, Model provenance) |
+| Nakatumba-Nabende et al., Applied AI Letters 2024 (MakerereNLP: text and speech for East Africa) | https://nru.uncst.go.ug/bitstreams/a5fb0afa-ba12-4a7d-a200-df333144d18c/download (Sec. 5: speech collected on Mozilla Common Voice; Sec. 5.1: Maseno and Kabarak students contributed Swahili voice); project page https://www.masakhane.io/ongoing-projects/makererenlp-text-speech-for-east-africa | | | Cited (README, Local languages) |
 | Diagnosis contrast pairs (synthetic) | gpt-5.5, `gen/diag/` | ours | 40 pairs | Diagnosis D2 only (denial vs present) |
 | Fresh test set y_test2 (synthetic) | claude-opus-5-5, seed 7007, `tests/y_test2.jsonl` | ours | 150 (80 / 55 / 15) | Sealed unopened (64a4fff, SHA-256 da065131...8035); opened once for the joint v2/v3 evaluation |
 
