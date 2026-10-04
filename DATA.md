@@ -79,6 +79,9 @@ Every figure in the problem and device sections was found by one researcher and 
 | Y-test | Claude, `claude-opus-5-5` | 150: 80 / 55 / 15 | Test set, sealed unopened (commit 839a4a5) | `tests/y_test.jsonl` |
 | Set (a) | Claude Opus 5.5, Fri 2 Oct, before the event, from a fixed case grid | 25: 12 / 13 / 0 | Test set, sealed before the pre-registration (commit b492142) | `tests/caregiver_set_a.csv` |
 | Set (b) | Claude, `claude-opus-5-5`, Swahili, same grid | 25: 12 / 13 / 0 | Test set, sealed unopened (commit f76c92d) | `tests/caregiver_set_b.csv` |
+| v2 additions | GPT, `gpt-5.5` | 474 generated, 462 kept after dedupe | Training v2 | `data/x_aug.jsonl`, `data/x_train_v2.jsonl` |
+| v3 additions | GPT, `gpt-5.5` | 710 (contrast pairs and duration negatives) | Training v3 | `data/v3_gen.jsonl`, `data/x_train_v3.jsonl` |
+| X-val | GPT, `gpt-5.5` (held out from X train) | 547 | Temperature fit for the board calibration; never trained on | `data/board_calibration.json` |
 
 The training and development data were written by GPT; every test set was written by Claude, so the model never trains on the test writer's style. The prompts are in `prompts/` and the card sampler in `gen/cards.py`, both committed before any generation call. Released with this repository.
 
@@ -87,7 +90,7 @@ The training and development data were written by GPT; every test set was writte
 | Item | Source | Licence | Size | Use |
 |---|---|---|---|---|
 | AfroXLMR-base | Alabi, Adelani, Mosbach and Klakow (Saarland University), COLING 2022. https://huggingface.co/Davlan/afro-xlmr-base ; https://aclanthology.org/2022.coling-1.382/ | MIT | 278.0 M parameters in our fine-tuned checkpoint (incl. 6,152 in our 8 heads); 17 African languages incl. Swahili; no Kikuyu; Luo not seen in training (M1) | The encoder |
-| MASSIVE 1.1, sw-KE and en-US | Amazon. https://huggingface.co/datasets/AmazonScience/massive | CC BY 4.0 | sw-KE splits 11,514 / 2,033 / 2,974 (M4) | Train split: generic vocabulary for the model-size trim. Validation: tokenization drift check. Test split: exploratory false-alarm row only (1,000 sw-KE utterances, fixed seed). Never used for training or tuning |
+| MASSIVE 1.1, sw-KE and en-US | Amazon. https://huggingface.co/datasets/AmazonScience/massive | CC BY 4.0 | sw-KE splits 11,514 / 2,033 / 2,974 (M4) | Train split: generic vocabulary for the model-size trim. Validation: tokenization drift check. Test split: exploratory false-alarm row only (1,000 sw-KE utterances, fixed seed). Not used for training before v3; v3 trains on 1,000 train utterances and sets thresholds on validation; the test split is never trained on |
 | Kenya healthsites (OpenStreetMap) | healthsites.io / Open Healthsite Consulting on HDX. https://data.humdata.org/dataset/kenya-healthsites ; https://healthsites.io/ | ODbL, © OpenStreetMap contributors (M6) | 2,640 rows in the export we downloaded on 3 Oct 2026 (our count) | 5 real facility names in Busia County for the demo registry (`config/registry.yaml`, with OSM node ids); every phone number, CHU, CHP, CHA and village is synthetic |
 | WHO/UNICEF, *Caring for the sick child in the community* (2011): CHW manual (S1) and chart booklet (S2) | https://www.who.int/publications/i/item/9789241548045 | © WHO 2011, all rights reserved (manual copyright page) | | Rule logic only (danger signs, thresholds, follow-up days, with page citations in `config/protocol.yaml`); no text reproduced |
 | MASSIVE 1.1 sw-KE test split | as above | CC BY 4.0 | 1,000 of 2,974 utterances, fixed seed 20261003 | Exploratory false-alarm rows only (MASSIVE row and diagnosis D5) |
@@ -98,7 +101,7 @@ The training and development data were written by GPT; every test set was writte
 | MASSIVE sw-KE validation, FLORES-200 swh_Latn dev | as above | CC BY 4.0 / CC BY-SA 4.0 | 2,033 / 997 | v3 board thresholds only (FLORES is never trained on) |
 | Nekoto et al., "Participatory Research for Low-resourced Machine Translation", Findings of EMNLP 2020 | https://aclanthology.org/2020.findings-emnlp.195/ | | | Cited (README, Local languages) |
 | Diagnosis contrast pairs (synthetic) | gpt-5.5, `gen/diag/` | ours | 40 pairs | Diagnosis D2 only (denial vs present) |
-| Fresh test set y_test2 (synthetic) | claude-opus-5-5, seed 7007, `tests/y_test2.jsonl` | ours | 150 (80 / 55 / 15) | Sealed unopened (64a4fff, SHA-256 da065131...8035) for a possible v3; not used if v3 does not run |
+| Fresh test set y_test2 (synthetic) | claude-opus-5-5, seed 7007, `tests/y_test2.jsonl` | ours | 150 (80 / 55 / 15) | Sealed unopened (64a4fff, SHA-256 da065131...8035); opened once for the joint v2/v3 evaluation |
 
 Alternative facility source, not used in the demo: Maina et al. 2019, 98,745 public facilities in 50 countries, 6,146 in Kenya (102 without coordinates); data file CC0 (figshare 10.6084/m9.figshare.7725374.v1); article CC BY 4.0 (M5). https://pmc.ncbi.nlm.nih.gov/articles/PMC6658526
 

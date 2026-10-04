@@ -19,7 +19,7 @@ tags:
 
 ## What it does
 
-Reads a parent's SMS about a sick child (Swahili, English or mixed) and gives the community health worker's board a band per danger sign: *possible*, *unsure* or *none*. It **only annotates the health worker's board**. It never decides or changes what a parent is told: the parent line runs on a fixed keyword list and rules, and parents receive only fixed, pre-approved messages.
+Reads a parent's SMS about a sick child (Swahili, English or mixed) and gives the community health worker's board a band per danger sign: *possible*, *unsure* or *none*. It **only annotates the health worker's board** and never changes an automatic reply: the parent line runs on a fixed keyword list and rules. Automatic replies to parents come only from fixed rules. The model never sends anything to a parent on its own: a question it suggests reaches a parent only after the health worker approves it (experimental).
 
 ## Files
 

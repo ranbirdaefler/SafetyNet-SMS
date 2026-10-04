@@ -1,26 +1,40 @@
 # SafetyNet-SMS
 
-**Pre-registered claim (native Swahili): NOT TESTED**
+**Pre-registered claim (native Swahili): NOT TESTED.** No native speaker's texts were ready, so the claim we registered in advance stays untested. Everything below is on AI-written test messages.
 
-SafetyNet-SMS closes the referral loop for community health workers in Kenya. A parent texts about a sick child from any phone; fixed rules tell the parent to go now when a WHO danger sign is present and alert the facility; the facility texts a code back when the child arrives and a short outcome code after it is seen; the health worker's follow-up is set from it. A small model, designed to run on her phone, reads the same message and puts the urgent ones at the top of her board. It never decides what the parent is told.
+Video: {link}
 
-An assistant for Kenya's community health promoters (CHPs). The user is the health worker: she makes every clinical call. Parents in her area text a free-text SMS about a sick child (2 to 59 months) in Swahili, English or both. The assistant reads it for danger signs, tells her (with the full checklist), keeps her case board, and writes the referral and arrival record for her. When a danger sign is reported, or she is on a visit or asleep and does not reply in time, the automatic "go now" to the parent and the facility alert are a safety net, not a replacement for her. The model reads every message and puts the urgent ones in front of the health worker; it never decides what the parent is told.
+> **For judges.** Click first: the live demo, https://huggingface.co/spaces/ranbirr1/safetynet-sms, then **Play the story** (three stories, a minute each; "Show English" puts our English under Swahili messages). **Not for medical use**: synthetic data, no real patients, no SMS gateway. **AI-written:** every test message, the training data and the story messages (team-written, AI-assisted); the Swahili parent texts are machine translations approved by the team, not reviewed by a native speaker. **Experimental:** the questions a health worker can approve for a parent (Tier 1 and Tier 2, below); not evaluated.
+>
+> Files: [PREREGISTRATION.md](PREREGISTRATION.md) · [DATA.md](DATA.md) · [results/TABLES.md](results/TABLES.md) and [results/ERRATA.md](results/ERRATA.md) · model card: https://huggingface.co/ranbirr1/safetynet-sms-board · [LICENSE](LICENSE)
+
+| | |
+|---|---|
+| **What it does** | An assistant for Kenya's community health promoters (CHPs) that closes the referral loop by SMS: a parent texts about a sick child (2 to 59 months, Swahili, English or both); the rules say "go now" when a WHO danger sign is present and alert the facility and the supervisor (CHA); the facility texts a code when the child arrives and a short outcome code after the visit; the health worker's follow-up is set from it. She makes every clinical call; the automatic "go now" is a safety net when she is on a visit or asleep, not a replacement for her. |
+| **What the AI does** | One model (AfroXLMR-base fine-tuned, v3, 93 MB) reads every parent text and sorts the health worker's board, so she reads the urgent ones first. Automatic replies to parents come only from fixed rules. The model never sends anything to a parent on its own: a question it suggests reaches a parent only after the health worker approves it (experimental). |
+| **What the rules do** | Every automatic message to a parent and every referral: fixed, checkable rules from the WHO/UNICEF danger signs, editable by the ministry and tested on every load. |
+| **What's experimental** | Questions to parents: the model suggests a fixed WHO question; nothing is sent until the health worker approves it. |
+| **What was tested** | AI-written test sets (GPT for training, Claude for tests) and an iPhone browser. NOT TESTED: real parents' messages, native Swahili, an entry-level Android phone, Kikuyu or Luo. See [What our data does not cover](DATA.md#4-what-our-data-does-not-cover). |
+
+**The problem.** Because of this tool, a community health promoter will see a sick child's danger signs within minutes of the parent's text, and will learn whether the child reached the clinic and what the clinic decided, which today often depends on what the caregiver tells her; we know because 74% of child deaths studied at Kenya's CHAMPS sites involved at least one delay in care, and in one Kenyan sub-county, referral forms were on file at the hospital for only 19 of 112 children referred for pneumonia (DATA.md: P3, P8; Odwe et al. 2024).
+
+**Stack.** Python 3.11, FastAPI/uvicorn, SQLite, ONNX Runtime (Raspberry Pi) and onnxruntime-web (phone browser); AfroXLMR-base fine-tuned, 8-bit weight-only, 92.7 MB; Raspberry Pi 5; a Hugging Face Space for the public demo.
 
 Designed to sit alongside eCHIS on the health worker's government phone; integration not built this weekend. eCHIS records her visits; this assistant reads parents' SMS, flags danger signs, and writes the referral and arrival record for her instead of adding reports for her to send.
 
 World Bank / Hack-Nation *Small AI for Development* hackathon, health track, 3 to 4 October 2026.
 
-> **Results at a glance.** Pre-registered test: the model tied a keyword list (20 against 20 danger messages missed), so fixed rules talk to parents. After retraining (exploratory; one evaluation on a fresh sealed set): rules plus the model's board (rules as frozen) left 2 of 80 danger messages unflagged and flagged 2 of 55 harmless messages, and 1 of 1,012 everyday Swahili sentences it never trained on. All test messages are AI-written; native Swahili is not tested. Offline: 93 MB, p95 165 ms in a phone browser.
+> **Results at a glance.** Pre-registered test: the model tied a keyword list (20 against 20 danger messages missed), so fixed rules talk to parents. After retraining (exploratory; one evaluation on a fresh sealed set): rules plus the model's board (rules as frozen) left 2 of 80 danger messages unflagged and flagged 2 of 55 harmless messages, and 1 of 1,012 everyday Swahili sentences it never trained on. All test messages are AI-written; native Swahili is not tested. Device: 93 MB model, offline in a phone browser: 165 ms (iPhone, best case; not yet measured on an entry-level Android). Raspberry Pi 5, 1 core: 215 ms. Cost: on our older test sets v3 let through 3 of 104 danger messages the first retrain caught, mostly long illnesses described in Swahili; it is very sure of itself; how often it would flag real parents' messages is unknown.
 
 ## Try it in 60 seconds
 
-Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data, not for medical use; it runs the `submission` tag on a cloud server). Press **Play the story** and pick one; each step waits for you to press Next. The messages were written by the team (AI-assisted) and appear in no test set; they are examples, not evidence.
+Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data, not for medical use; it runs a tagged release of this repository on a cloud server; the final one is the `submission` tag). Press **Play the story** and pick one; each step waits for you to press Next. The messages were written by the team (AI-assisted) and appear in no test set; they are examples, not evidence.
 
-1. **The rules miss it. The model and the health worker catch it.** Amina writes "kila kitu anachokula anatapika hata maji" (everything he eats, he vomits, even water): the keyword rule looks for "anatapika kila kitu", so it misses the different word order and she is told her health worker has been told. The model flags "possible: vomits everything" and drafts a fixed WHO check; Achieng approves it; Amina replies 1 and gets "go now" at once, with the facility alerted ("parent report, not checked"). The facility sends the code back (arrived), then `T5` (treated, follow-up day 5).
+1. **The rules miss it. The model and the health worker catch it.** Amina writes "kila kitu anachokula anatapika hata maji" (everything they eat, they vomit, even water): the keyword rule looks for "anatapika kila kitu", so it misses the different word order and she is told her health worker has been told. The model flags "possible: vomits everything" and drafts a fixed WHO check; Achieng approves it; Amina replies 1 and gets "go now" at once, with the facility alerted ("parent report, not checked"). The facility sends the code back (arrived), then `T5` (treated, follow-up day 5).
 2. **Clear danger: go now, and the clinic is ready.** Zawadi reports convulsions ("degedege"): "go now" at once. The model drafts two pre-arrival questions, crediting the rule that found the sign; Achieng approves one, Zawadi answers, and the facility gets a pre-arrival note. Achieng declines the other draft, tries a message with "usijali" (don't worry), which is refused, removes it, and her message goes out signed as hers after the fixed "Keep going to the clinic.". Zawadi's reply is shown to her as written, never read automatically.
-3. **Not every cough is an emergency.** Akinyi's child has had a cough for 3 days, "hana homa" (no fever), and is eating and playing: no alarm, no model flag. Achieng declines the two standard checks offered (she knows the family), checks the child herself and replies "0": the case closes with a check-in in 3 days.
+3. **Not every cough is an emergency.** Akinyi's child has had a cough for 3 days, "hana homa" (no fever), and is eating and playing: no alarm and no model flag, and no checks are suggested, because there is no danger signal (the cough has a duration under the cut-off and the fever is denied). Achieng checks the child herself and replies "0": the case closes with a check-in in 3 days.
 
-Or type your own messages in the three panes. Questions to parents are an experimental layer (below).
+Or type your own messages in the three panes. **Show English** (on by default) adds a grey line with our own English under Swahili system messages and the story messages; anything you type yourself is not translated. **show message IDs** reveals the internal message names (CG_TOLD, Q_ACK, ...). Questions to parents are an experimental layer (below).
 
 ## Run it yourself (offline)
 
@@ -30,10 +44,11 @@ Python 3.11, no GPU:
 git clone https://github.com/ranbirdaefler/SafetyNet-SMS && cd SafetyNet-SMS
 pip install -r requirements-demo.txt
 python scripts/fetch_model.py   # board model, 92.7 MB, SHA-256 checked; needs internet once
+python -m app.check              # step 0: load the protocol, run T1-T35, CG1-CG18 and the lints
 python -m uvicorn app.server:app --port 8000      # open http://localhost:8000
 ```
 
-After this, it runs with no internet.
+After this, it runs with no internet. Tests: `python -m pytest checks`. On the Pi: `sh scripts/pi_run.sh`.
 
 > SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.
 
@@ -42,11 +57,15 @@ After this, it runs with no internet.
 ```mermaid
 flowchart LR
   P["Parent SMS (Swahili, English or mixed)"] --> R["Fixed rules: regex + keyword list"]
-  P --> M["Board model on the device: AfroXLMR v3, 93 MB"]
+  P --> M["Board model (AfroXLMR v3, 93 MB): phone browser or county box"]
   R -->|"danger sign, no age, under 2 months"| G["Parent: fixed 'go now'; facility + CHA alert with code"]
   R -->|"otherwise"| T["Parent: fixed 'your health worker has been told'"]
   M --> B["Health worker's board: 'possible: sign' / 'unsure: please read'"]
   T --> B
+  M -.-> Q["Experimental: model drafts a fixed WHO question; she approves or declines"]
+  Q -.->|"approved: fixed text, or her own words signed by her"| P2["Parent answers 1 / 2 / 3"]
+  P2 -.->|"1 or 3, referred"| N["Facility: pre-arrival note, 'parent report, not checked'"]
+  P2 -.->|"1, waiting"| G
   B --> C["She answers the WHO checklist; RED rules decide referral"]
   C --> G
   G --> A["Facility texts the code back: ARRIVED"] --> O["Facility outcome code: A / T n / R"] --> F["Follow-up reminder"]
@@ -54,21 +73,21 @@ flowchart LR
 
 Designed to run on her phone: the same model ran offline in a phone browser; no phone app was built. Where phones fail, the same model runs on a county box behind the SMS number. That box is what we demoed. The parent still gets "go now" and the facility is still alerted when her phone is off or broken.
 
-- **Two readers, one message.** Every parent text is read twice, on the device, with no internet. Fixed rules (regex + keyword list from the WHO/UNICEF danger signs) decide the parent's instant reply and any referral; they can be checked line by line, so they talk to parents. The board model (AfroXLMR-base fine-tuned, v3, 92.7 MB, 8-bit) reads the same text and adds one band to her board; it never changes what the parent is told, sends no SMS and changes no case status (tested: the parent reply is identical with the model on and off). Why both: on a fresh sealed set, the board flagged 12 of the 14 danger messages the rules missed (rules as frozen; exploratory; AI-written test messages; see Results).
-- **One endpoint.** `POST /sms {from, to, body}`; the role (parent, health worker, facility) comes from the number texted. A 3-pane web simulator (Parent / Health worker / Facility + CHA) is the demo client. A gateway adapter (Africa's Talking or a county shortcode in Kenya; Twilio elsewhere) is a thin mapping onto this endpoint and is not built.
-- **Parent line.** The parent only ever gets one of five fixed messages: go now, go now (unregistered number), your health worker has been told (with a waiting time and the danger-sign list), the health worker did not reply (go now), or not for this number. The parent is never asked a question and never gets advice, reassurance, a diagnosis, a medicine or a dose. A send-time check refuses any other text to a parent.
+- **Two readers, one message.** Every parent text is read twice, locally, with no internet. Fixed rules (regex + keyword list from the WHO/UNICEF danger signs) decide the parent's instant reply and any referral; they can be checked line by line, so they talk to parents. The board model (AfroXLMR-base fine-tuned, v3, 92.7 MB, 8-bit) reads the same text and adds one band to her board; it never changes what the parent is told, sends no SMS and changes no case status (tested: the parent reply is identical with the model on and off). Automatic replies to parents come only from fixed rules. The model never sends anything to a parent on its own: a question it suggests reaches a parent only after the health worker approves it (experimental). Why both: on a fresh sealed set, the board flagged 12 of the 14 danger messages the rules missed (rules as frozen; exploratory; AI-written test messages; see Results).
+- **One endpoint.** `POST /sms {from, to, body}`; the role (parent, health worker, facility) comes from the number texted. A 3-pane web simulator (Parent / Health worker / Facility + CHA) is the demo client. A gateway adapter (Africa's Talking or a county shortcode in Kenya) is a thin mapping onto this endpoint and is not built.
+- **Parent line.** The rules answer with one of five fixed messages: go now, go now (unregistered number), your health worker has been told (with a waiting time in minutes and the danger-sign list), the health worker did not reply (go now), or not for this number. The only other texts a parent can get come from the experimental question layer: a fixed bank question the health worker approved, a fixed acknowledgement, or her own message signed with her name (below). A parent never gets model-written text, advice, reassurance, a diagnosis, a medicine or a dose. A send-time check refuses any other text to a parent.
 - **Health-worker line.** Deterministic. The parent's texts are read on the parent line (above); on this line her numbered replies answer the checklist, and any other text she sends (a child she reports herself, or a note on an open case) is read by the same regex and keyword list for signs that are present; nothing is ever read as absent, and text inside an open case can only add a sign. The model never reads her texts. The health worker gets the full 8-option checklist and only a numbered reply ("0") clears a sign. Any sign, "9", silence or two unreadable replies refer.
 - **Case board.** In the health-worker pane: her cases with code, age, a danger flag, the signs recorded, status (to check / referred / no reply / arrived / closed) and time. Rule-flagged danger first, then model 'possible', then model 'unsure', then the rest, oldest first within each group. Model lines are fixed band words, never generated text. Built only from stored case records; nothing generated. After an arrival it shows "follow-up visit due {date}", after she closes a case with "0" "check on child due {date}" (3 days, WHO/UNICEF CHW manual pp.98 and 116); these say only when to go back and are never sent as SMS.
 - **Referral loop.** Every referral sends an alert with a 4-digit code to the facility and the community health assistant (CHA). The facility texts the code on arrival; the health worker and CHA are told the child arrived. The facility owns the arrival code. No reply to a code means it was not recorded: resend. **Counter-referral:** after arrival, a registered facility number can text the code with an outcome: `A` (admitted), `T` and a number of days 1 to 30 (treated, sent home, e.g. `T5`) or `R` (referred on). The health worker and CHA are told; the parent is never messaged; codes only (any other text is read as before). The follow-up reminder is never removed: `T5` moves it to day 5, `A` and `R` keep the 3-day check-in. In a Kenyan young-infant referral programme, heavy workload led some facility providers to skip the MOH-100 form that served as feedback to referring CHVs, so CHVs relied on caregivers' verbal reports (Odwe et al., 2024). In Mozambique, CHWs and supervisors saw lack of feedback as a barrier (Give et al., 2019). Some CHWs there already send feedback informally by SMS and phone (Give et al., 2019); our outcome codes make that structured and tie it to a follow-up reminder.
   - Odwe G, et al. Health Policy and Planning 2024;39(1):56-65. doi:10.1093/heapol/czad113 (Results, "Inadequate providers"). PMC10775218.
   - Give C, et al. BMC Health Services Research 2019;19:263. https://pmc.ncbi.nlm.nih.gov/articles/PMC6489304/ (Discussion; Results, "Pragmatic problem-solving approach").
 - **Referral record.** The Facility + CHA pane counts referred, arrived and outcome (A / T n / R) cases and the median time to arrival for the demo session, and downloads them as CSV (code, dates, community unit, age, reason, outcome; no names or phone numbers). Column names chosen for a DHIS2 mapping; not tested against DHIS2.
-- **Play the story.** A button in the simulator plays one fictional family's case in six user-paced steps, sending team-written messages through the same `/sms` endpoint as any other text.
+- **Play the story.** A button in the simulator plays one of three fictional cases in user-paced steps (it advances only when you press Next), sending team-written messages through the same `/sms` endpoint as any other text.
 - **Rules.** `config/protocol.yaml` holds the RED (refer) rules from the WHO/UNICEF community case management materials, editable by the ministry. Must-stay-RED tests (T1 to T35, T34 retired) and caregiver tests (CG1 to CG18, CG16 retired) run on every load: a protocol edit that drops a RED rule is refused, and any red caregiver test switches the parent door off.
 
 ### The model on the health worker's board
 
-The model reads every message and puts the urgent ones in front of the health worker; it never decides what the parent is told. It sorts the health worker's cases and marks the ones it is unsure about for her to read first.
+The model reads every message and puts the urgent ones in front of the health worker. Automatic replies to parents come only from fixed rules. The model never sends anything to a parent on its own: a question it suggests reaches a parent only after the health worker approves it (experimental). It sorts the health worker's cases and marks the ones it is unsure about for her to read first.
 
 It reads parent text only and adds one of three board lines, from its calibrated top danger probability: "model: possible {sign}, check" (at or above hi), "model unsure: please read" (between lo and hi), or nothing (below lo). The board sorts rule-flagged danger first, then "possible", then "unsure", then the rest, oldest first within each group. It sends no SMS and changes no case status; a model failure just leaves no model line. Tested: the parent reply is identical with the model on and off (CG1 to CG18 both ways).
 
@@ -85,7 +104,7 @@ Until v3 (below), the board ran v2, vocabulary-trimmed with 8-bit weights (89.7 
 | diarrhoea_long | 0.5 | 0.0593 | 0.0243 |
 | fever_long | 0.6 | 0.0502 | 0.0127 |
 
-Thresholds, set on Y-dev (GPT-written): lo = 0.068 (the lowest Y-dev danger score: no Y-dev danger message falls below it; with 60 danger messages this bounds the miss rate at roughly 1/61 on data like Y-dev), hi = 0.9 (see the decision below the table). Sweep on Y-dev:
+Thresholds, set on Y-dev (GPT-written): lo = 0.068 (the lowest Y-dev danger score: no Y-dev danger message falls below it), hi = 0.9 (see the decision below the table). Sweep on Y-dev:
 
 | lo | hi | Y-dev messages sent to "please read" | Y-dev danger messages below lo (of 60) | Y-dev no-danger marked "possible" (of 45) |
 |---|---|---|---|---|
@@ -118,24 +137,35 @@ Results after the pre-registered tests (exploratory). The pre-registered model t
 | Everyday Swahili, FLORES-200 devtest (1,012; FLORES was never trained on): flagged | 70.6% | 70.6% | 0.1% |
 | Everyday Swahili, AfriSenti test (748 tweets): flagged | 80.5% | 80.5% | 0.0% |
 
+v3 trained on the train splits of MASSIVE and AfriSenti, so those two rows are in-domain; FLORES (never trained on) is the clean check. None of these are parents' messages about sick children.
+
+The model on its own (parent-line rule, p >= 0.5; exploratory), danger missed / needless go-now:
+
+| Set | v3 alone: missed | Keywords: missed | v3 alone: needless | Keywords: needless |
+|---|---|---|---|---|
+| (a) grid | 1 / 12 | 4 / 12 | 2 / 13 | 2 / 13 |
+| (b) Swahili | 1 / 12 | 2 / 12 | 1 / 13 | 3 / 13 |
+| Y-test | 0 / 80 | 14 / 80 | 7 / 55 | 11 / 55 |
+| y_test2 (fresh) | 1 / 80 | 14 / 80 | 7 / 55 | 11 / 55 |
+
 Thresholds behind each column: v2 as shipped lo 0.068 / hi 0.9; v2 re-tuned lo 0.068 / hi 0.844 (same rule as v3); v3 lo 0.849 / hi 0.997. A message counts as flagged when the board marks it 'possible' or 'unsure'. "Alone" figures use p ≥ 0.5, the pre-registered PRESENT rule, never tuned.
 
 ### Questions approved by the health worker (experimental, after results)
 
 On in this release, labelled experimental (`config/questions.yaml`, `enabled`; `SNS_QUESTIONS=0` switches it off); not evaluated; needs clinical and native-speaker review before any use. Tier 1: questions **before arrival, on cases already referred**. Tier 2: checks on cases still waiting for the health worker (below).
 
-- **Who does what.** Knowledge: a fixed question bank drawn from the WHO/UNICEF community case management manual, ministry-editable and checked on load (3 options, option 1 always the danger state, 1 SMS, no medicine, advice or diagnosis words; a failing bank switches the layer off). Selection: the board model's per-sign scores and the sign that triggered "go now" pick at most two pre-arrival questions, each with its reason (sign, score, WHO page). Judgment: the health worker approves or declines each one; nothing reaches a parent without her tap, and every suggestion is logged ("drafted by model, approved/declined by CHP 07").
-- **Safety rules** (clinical-safety review M1-M8): no drafts for under 2 months, no age, 5 years or older, pregnancy, adults or unregistered numbers; every message on a referred case starts with the fixed line "Keep going to the clinic. Do not stop to reply."; sending a question is never her reply and never moves a deadline; a parent's answer can only add information: 1 (danger) and 3 (not sure) go to the facility as a pre-arrival note marked "parent report, not checked", 2 goes to her board as "not a check, you still check", and no answer clears a sign; only a bare 1/2/3 (or moja/mbili/tatu) counts, anything else counts as "not sure" and the usual flow runs; one question pending at a time, the latest wins.
+- **Who does what.** Knowledge: a fixed question bank drawn from the WHO/UNICEF community case management manual, ministry-editable and checked on load (3 options, option 1 always the danger state, 1 SMS in pure GSM-7, no medicine, advice or diagnosis words; a failing bank switches the layer off). Selection: on a referred case, at most two pre-arrival questions linked to the sign that triggered "go now", whose reason credits the rule and the word it matched ("Linked to the sign the rules found: convulsions ('degedege')"); on a waiting case, the checks described below. A model score is shown only when the model ranked the question, never below 0.5. Judgment: the health worker approves or declines each one; nothing reaches a parent without her tap, and every suggestion is logged ("drafted by model, approved/declined by CHP 07").
+- **Safety rules** (clinical-safety review M1-M8): no drafts for under 2 months, no age, 5 years or older, pregnancy, adults or unregistered numbers; every message on a referred case starts with the fixed line "Keep going to the clinic. Do not stop to reply."; sending a question is never her reply and never moves a deadline; a parent's answer can only add information: 1 (danger) and 3 (not sure) go to the facility as a pre-arrival note marked "parent report, not checked", 2 goes to her board as "not a check, you still check", and no answer clears a sign; only a bare 1/2/3 (or moja/mbili/tatu) counts, anything else counts as "not sure" and the usual flow runs. One question is out at a time: a question she approves while another is unanswered is queued and sent automatically after the parent answers (her approval already given); she can cancel it; the queue lapses after 12 hours or when the case closes or the child arrives, and is cleared when a waiting case turns into "go now". Within 12 hours a later bare digit may only raise urgency (2 to 1, 2 to 3, 3 to 1): the answer is updated and the facility gets a note marked "answer changed"; a lower digit is ignored and shown to her.
 - **Her own words** (review E1-E6): she can edit a suggested question or write her own message on a referred case she owns, to a registered number only. The system adds the fixed first line "Keep going to the clinic." and her name ("Achieng, your health worker: ..."); she cannot remove either, and the whole SMS must fit one segment. Messages with medicine or dose words, words that could cancel a referral (wait, tomorrow, subiri, usiende, kesho, ...) or reassurance (don't worry, usijali, ...) are refused with "Not sent: for medicines or a change of plan, call the parent." (English and Swahili lists, both applied to every message). Her message ends automatic reading of any earlier question; the parent's replies to it are shown to her exactly as written and are never interpreted or forwarded, and the usual flow still runs (a referred parent gets "go now" again). At most 3 messages per case in all. Model-written text never reaches a parent.
-- **Tier 2: checks while she hasn't seen the child yet** (review M2, M4, M7, M8, E7). On a case waiting for her, the model ranks fixed checks by its per-sign scores (signs already recorded are skipped; the drink check only after the wake check; a duration check only when the model scores that long illness at 0.5 or more), and she approves each one. Answer 1 records the sign and the usual "go now" goes out first, with no acknowledgement before it; 3 (not sure) on fits, drinking, vomiting or waking also means "go now"; 3 on blood or a duration puts "Parent not sure: ... Call now." on her board and keeps the deadline; 2 changes nothing and is never a check. The acknowledgement restates the deadline as minutes left ("within {minutes} minutes"). A danger answer up to 12 hours later still goes now, even after she closed the case with "0". A parent's reply to her own message on such a case puts "PARENT REPLIED: read now" on her board and texts her; the keyword rules and the deadline still run underneath.
+- **Tier 2: checks while she hasn't seen the child yet** (review M2, M4, M7, M8, E7). On a case waiting for her, fixed checks are drafted as described in the next point (signs already recorded are skipped; the drink check only after the wake check), and she approves each one. Answer 1 records the sign and the usual "go now" goes out first, with no acknowledgement before it; 3 (not sure) on fits, drinking, vomiting or waking also means "go now"; 3 on blood or a duration puts "Parent not sure: ... Call now." on her board and keeps the deadline; 2 changes nothing and is never a check. The acknowledgement restates the deadline as minutes left ("within {minutes} minutes"). A danger answer up to 12 hours later still goes now, even after she closed the case with "0". A parent's reply to her own message on such a case puts "PARENT REPLIED: read now" on her board and texts her; the keyword rules and the deadline still run underneath.
 - **Which checks are drafted** (review Addendum B): only with a signal. Model scores of 0.5 or more come first; then a symptom the parent mentioned and did not deny links to fixed checks (diarrhoea: wake-then-drink, blood, how long; fever: wake-then-drink, fits, how long; vomiting: vomit, wake-then-drink; cough: how long only). The wake-then-drink pair counts as one slot; at most 2 slots per case (at most 3 SMS). No signal, no draft. A reviewed option not adopted: drafting the wake-then-drink pair whenever any symptom is mentioned.
-- **Swahili to be reviewed by a native speaker:** every question text; in particular "ananywa" (standard "anakunywa") in the drink check, "degedege" for fits, and the duration wording.
+- **Swahili to be reviewed by a native speaker:** every Swahili text a parent can receive is a machine translation (gpt-5.5) with a back-translation check, approved by the team: the five fixed messages (go now, go now unregistered, told, timeout, not for this number), all question texts, both acknowledgements and the "Keep going to the clinic" line. In particular "ananywa" (standard "anakunywa") in the drink check, "degedege" for fits, and the duration wording.
 - **Cost:** +1 SMS per question, +1 per acknowledgement, +1 per facility note (each 1 segment).
 - The Swahili question texts are machine translations (gpt-5.5) with a back-translation check, approved by Florian, not reviewed by a native speaker.
 
 ## Runs on a phone-class device
 
-The model runs on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
+Designed to run on the health worker's own phone, with no internet or data bundle; SMS is the only channel. Tested: the same model runs offline in an iPhone browser; not yet measured on an entry-level Android; no phone app built. Where her phone fails, the same model runs on a county box behind the SMS number: still no internet, but a shared local server rather than her device. In this demo a Raspberry Pi plays both roles.
 
 > The same 93 MB model runs offline in a phone browser (iPhone, Safari: p95 165 ms; a best case, since entry-level Android phones are slower). Raspberry Pi 5 limited to 1 core: the model answers in 215 ms (p95); a full round trip through the demo service takes 530 ms. Peak memory: model 350 MB; whole demo service 569 MB, which also holds the earlier pre-registered model and the web simulator; a phone app would carry neither. Not yet measured on an entry-level Android; no phone app was built this weekend.
 
@@ -143,9 +173,9 @@ The service also loads the earlier pre-registered encoder (v1) at start-up only 
 
 **In a phone browser (P4).** The board model (v3, trimmed, 8-bit weights, 92.7 MB) runs in Safari on an iPhone, single-threaded WebAssembly (onnxruntime-web 1.30), served once from the Pi over the local network with no CDN: 50 Y-dev messages p50 110 ms, p95 165 ms; model load 1.3 s (the v2 file, 89.7 MB, measured p50 109 ms, p95 170 ms) (user agent `Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7.5 Mobile/15E148 Safari/604.1`). Parity with the Pi on 20 Y-dev messages: tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021. With the v3 file on the same iPhone (posted back to the Pi, 16:27): tokens 20/20, head flags 20/20, board bands 20/20, largest probability difference 0.021; desktop Chrome gave the same. With airplane mode on and Wi-Fi off the status line read "Offline" and typed messages were still read. Works offline once loaded; a reload needs the network (no HTTPS service worker in this build). The tokenizer is a small JavaScript Unigram implementation of the same `tokenizer.json`.
 
-**Pi limited to 1 core (headroom).** The full service (rules, keyword list, board model) pinned to one core with `taskset -c 0`: 50 Y-dev parent messages end to end p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
+**Pi limited to 1 core (headroom).** With the v3 board file: model alone, 1 core, p95 215 ms at 64 tokens; peak model RSS 350 MB; 50 Y-dev parent messages end to end p50 404 ms, p95 530 ms; whole service peak RSS 569 MB. An earlier run with the v2 file (full service pinned to one core with `taskset -c 0`): p50 397 ms, p95 516 ms, max 718 ms; peak RSS 549 MB. The 2 GB memory cap (`systemd-run --user -p MemoryMax=2G`) was not enforced: this Pi's user session delegates only the cpu and pids cgroup controllers, and a system scope needs root. Note: the 2 GB cap could not be enforced without root (the cgroup memory controller is not delegated to the user session); peak RSS was measured instead.
 
-The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests. The tables below show the model the tool would ship once it passes the caregiver tests.
+The parent line runs the keyword list live. The board runs v3 live; caregiver tests T1-T35 and CG1-CG18 pass with it on. The tables below are the v1 size sweep that chose the trim + 8-bit recipe v3 reuses.
 
 ### What fits on which phone, and what it costs
 
@@ -167,10 +197,11 @@ All variants come from the same fine-tuned v1 model. Size = model + tokenizer on
 
 INT4 (MatMulNBits) was not built: its export failed on the first try. Activation-quantized INT8 (the registered INT8 and its variants) fails the rule badly: it pushes many danger probabilities below 0.5. Weight-only INT8 stores the weights as 8-bit and computes in FP32.
 
-### On-device card (deployed variant)
+### On-device card (v1 sweep variant; recipe reused for v3)
 
 | | Deployed: vocab trim + weight-only INT8 | Registered: FP32 (reference) |
 |---|---|---|
+| v3 as deployed (same recipe) | 92.7 MB; peak RAM 350 MB; p95 at 64 tokens, 1 core, 215 ms | not measured |
 | File size | 90.3 MB | 1074.9 MB |
 | Peak RAM | 322 MB (2 GB phone: Android itself uses part of this RAM) | 1851 MB |
 | Cold load | 0.63 s | 2.2 s |
@@ -178,7 +209,7 @@ INT4 (MatMulNBits) was not built: its export failed on the first try. Activation
 | p95 at 64 tokens, 2 cores | 118.2 ms | 192.1 ms |
 | p95 at 64 tokens, 1 core | 215.9 ms | 373.2 ms |
 
-Entry-level Android phone in Kenya: {spec line, cited in DATA.md}
+Entry-level phones sold in Kenya (DATA.md M8): Galaxy A05 and Tecno Spark 20 (MediaTek Helio G85), itel A70 (8x Cortex-A55). Phones issued to CHPs are reported to have 2 GB RAM (DATA.md C5; model and chipset not confirmed). Not measured on any of them.
 
 CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit needs root, so only core pinning was used.
 
@@ -196,7 +227,6 @@ CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit
 - MUAC and feet rest on the health worker's 0; there is no separate measuring step.
 - On the health-worker line, a sign typed in words the keyword list misses is asked in the full checklist, not referred at once.
 - Demo timeouts are 60 seconds. In production the reply window (60 minutes, at most 120) is agreed with the county.
-- Retention: in production, message text is deleted 7 days after a case closes (the county sets the period). Not implemented in this build: the demo database keeps message text and the synthetic demo numbers.
 - Precondition for deployment: a county shortcode on a Kenyan SMS gateway, so parents pay nothing. Texts sent while the box is down are lost.
 - Not clinically validated.
 
@@ -204,7 +234,7 @@ CPU clock was not reduced for the headroom test: changing the Pi's cpufreq limit
 
 ### Where the data sits, who reads it, lost or shared phone
 
-- **Where.** Cases live on the health worker's phone (DESIGN); in this demo, a SQLite file on the Raspberry Pi (BUILT). No cloud (BUILT). The model has no network access (BUILT).
+- **Where.** Cases live on the health worker's phone (DESIGN); in this demo, a SQLite file on the Raspberry Pi (BUILT). No cloud in deployment (DESIGN: on her phone or a county box); the public demo runs on a cloud server, with synthetic data only, so judges can try it. The model has no network access (BUILT).
 - **What leaves the device.** Only fixed SMS to the parent; the facility alert (case code, age, signs; no name, no sex); escalations to the CHA (BUILT).
 - **Who reads it.** The health worker; the facility, alerts only; the CHA, escalations only (BUILT). SMS is plain text, so the mobile carrier can read it.
 - **No names.** The tool asks for no name and has no name field (BUILT; tested: no name column, no name slot in any message, no parent words in any outgoing SMS or case record). A parent may still type one, and that text stays in the case log. Names stay in the health worker's existing household register.
@@ -220,7 +250,7 @@ Under Kenya's Data Protection Act 2019 (No. 24 of 2019), "health status" is sens
 
 ### Bias and who it may fail
 
-**Bias and who it may fail.** The model was trained on GPT-written messages and tested on Claude-written messages, in Swahili, English and code-mixed text; no message written by a real parent or health worker was used, and no native speaker checked them (see DATA.md). It is untested on Kikuyu, Luo and Sheng; AfroXLMR was not trained on Kikuyu, and Luo was not in its training (DATA.md, M1), so we expect it to do worse there. The keyword list is also Swahili and English only, so in Kikuyu, Luo or Sheng both can miss. The backstop is the danger list in every reply and the health worker reading every message. Because the model never decides what the parent is told, a miss in an untested language leaves the case where the keyword list put it, and the health worker still reads every message. The drift monitor counts model-vs-health-worker disagreements by language each week, so a group of parents the model fails shows up as a rising count (DESIGN). Results by language are reported as an exploratory row, using each test message's language as fixed when the data was generated.
+**Bias and who it may fail.** The model was trained on GPT-written messages and tested on Claude-written messages, in Swahili, English and code-mixed text; no message written by a real parent or health worker was used, and no native speaker checked them (see DATA.md). It is untested on Kikuyu, Luo and Sheng; AfroXLMR was not trained on Kikuyu, and Luo was not in its training (DATA.md, M1), so we expect it to do worse there. The keyword list is also Swahili and English only, so in Kikuyu, Luo or Sheng both can miss. The backstop is the danger list in every reply and the health worker reading every message. Because automatic replies to parents come only from fixed rules, a miss in an untested language leaves the case where the keyword list put it, and the health worker still reads every message. The drift monitor counts model-vs-health-worker disagreements by language each week, so a group of parents the model fails shows up as a rising count (DESIGN). Results by language are reported as an exploratory row, using each test message's language as fixed when the data was generated.
 
 ### Human in the loop
 
@@ -228,7 +258,7 @@ The tool never decides against care. Only a health worker can close a case, and 
 
 ### The fail-safe
 
-When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure), a model that fails to load: each one ends in "go now" for the parent or in the health worker being told, with a deadline. If a caregiver safety test fails at start-up, the parent line falls back to a fixed "go to the nearest health facility NOW" reply and the CHA is told; it is never silent.
+When the tool is not sure, it sends the child or calls a person; it never guesses "fine". A message it cannot read, a missing age, a silent health worker, a health worker who replies "9" (not sure): each one ends in "go now" for the parent or in the health worker being told, with a deadline. If a caregiver safety test fails at start-up, the parent line falls back to a fixed "go to the nearest health facility NOW" reply and the CHA is told; it is never silent. If the board model fails to load, the rules keep running unchanged and the board shows no model line.
 
 ### Data sovereignty
 
@@ -240,7 +270,7 @@ Our design is consistent with Masakhane's stated principle that Africans should 
 
 ## Where the record lands
 
-**The data gap this fills.** Nobody routinely knows whether a referred child reaches the facility. In one Kenyan sub-county, of 112 children referred for pneumonia by community volunteers, referral forms were on file at the hospital for 19 (DATA.md, P8). This tool writes the missing record as a side effect of care: a referral when the case opens and an arrival when the facility texts the code back (BUILT). Those two records are what a referral-completion rate needs, and they are designed to flow into eCHIS and, as eCHIS data is reported to sync to KHIS, into Kenya's national DHIS2 instance (DESIGN).
+**The data gap this fills.** Referral completion is often not recorded. In one Kenyan sub-county, of 112 children referred for pneumonia by community volunteers, referral forms were on file at the hospital for 19 (DATA.md, P8). This tool writes the missing record as a side effect of care: a referral when the case opens and an arrival when the facility texts the code back (BUILT). Those two records are what a referral-completion rate needs, and they are designed to flow into eCHIS and, as eCHIS data is reported to sync to KHIS, into Kenya's national DHIS2 instance (DESIGN).
 
 **Where the record lands (DESIGN, not built).** Each case produces two records: a referral (case code, child's age, CHP, danger signs flagged, time sent) and an arrival (facility, time seen). In a real deployment these would be sent to eCHIS, the Ministry of Health's community health app built on Medic's Community Health Toolkit, which already includes client referral. eCHIS data is reported to sync to KHIS, Kenya's national DHIS2 instance, so counts would roll up there. No public inbound API is confirmed. The demo writes the same fields to a local database.
 
@@ -258,7 +288,8 @@ Sources: Medic, 2023 (https://medic.org/stories/accompanying-kenyas-ministry-of-
 - Years and months joined by 'na' / 'and' (e.g. 'mwaka 2 na mwezi 1') are read as the younger age, so the child gets 'go now'. Safe, but it will send some toddlers to the clinic needlessly; to be fixed with real messages.
 - Natural word orders such as 'kila kitu anachokula anatapika' ('everything she eats, she vomits') miss the keyword list. Rules can't list every way a parent says something; that is why the model reads every message for the health worker. A deployment would add phrasings found in real messages, through the same only-adds-go-now check.
 - Ages written as Swahili number words (e.g. 'mwaka mmoja') are not read as ages, so the parent gets 'go now, age not received'. Safe, but it over-refers a common way of writing ages; to be fixed with real messages.
-- **Known over-referral bugs in the shared age regex (safe direction, both eval arms, not fixed).** (1) A number of days with no symptom word before it is read as the child's age, so the message goes to "under 2 months": "wide awake 2day", "homa since jana, 2 days", "It has been 5 days now with the cough", "ameharisha siku 5" ("ameharisha" is not in the symptom-word list). (2) "1yr 1 month" is read as two ages and the youngest (1 month) decides. Not fixed during the event because a fix could stop real newborn ages ("mtoto wa siku 5") from reaching "under 2 months", which would be a safety regression.
+- **Known over-referral bug in the shared age regex (safe direction, both eval arms, not fixed).** A number of days with no symptom word before it is read as the child's age, so the message goes to "under 2 months": "wide awake 2day", "homa since jana, 2 days", "It has been 5 days now with the cough". Not fixed during the event because a broad fix could stop real newborn ages ("mtoto wa siku 5") from reaching "under 2 months", a safety regression. (Fixed after results, see "Changes after pre-registration": a number after a Swahili symptom verb, e.g. "ameharisha siku 5", and "1yr 1 month" read as one age.)
+- Alerts on parent-opened cases start "PARENT SMS:" even when the sign came from the health worker's checklist answer; the alert should say who reported the sign.
 
 ## Built during the event
 
@@ -271,7 +302,7 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 - "umri N" without a unit is treated as no age (an age needs a unit).
 - Post-hoc (after `results`, Sat 3 Oct): a years count directly followed by a months count is read as one age ("1yr 1 month" = 13 months); "yr" and "yrs" were added as abbreviations of "years". The tagged results stay as computed; the v3 evaluation uses the fixed regex for both arms.
 - **Deployment rule and deployed model.** Extends prereg section 7: deploy the smallest variant with at least 99% go-now agreement with FP32 on Y-dev and no danger message missed that FP32 catches, chosen on Y-dev before `freeze`. Deployed: the v1 model with its vocabulary trimmed after fine-tuning to 9,759 tokens (keep-list: single Latin characters, X train, the keyword lists, the fixed strings, MASSIVE train) and weights stored as 8-bit (weight-only, per channel), 90.3 MB with tokenizer (FP32: 1,074.9 MB). Reason: the brief's rule that model files must be small enough to side-load or send over a weak connection. The registered row stays FP32 as pre-registered (the registered INT8 failed the section 7 rule); the deployed variant is reported as its own labelled row.
-- **Rung 3.** The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests (CG1 and CG5 with the encoder on) and the Y-dev go-live gate (more needless go-nows than the keyword list).
+- **Rung 3 (at the freeze; v3 now runs on the board, see "v3 on the board").** The parent line runs the keyword list live; the model was scored on the Pi (single pass, frozen), not used live, because it failed the caregiver safety tests (CG1 and CG5 with the encoder on) and the Y-dev go-live gate (more needless go-nows than the keyword list).
 - **v2.** A second training run (v2) added terse and negated messages after the v1 encoder failed the caregiver safety tests CG1/CG5; training on short danger-term messages makes CG1 easier to pass, which we consider legitimate because recognising bare danger terms is what CG1 requires. v2 still failed (CG5, CG5b, CG10, CG12 and the Y-dev gate) and is reported as its own labelled row.
 - **Board use of the v2 model.** The v2 model runs on the health worker's case board only, with calibrated probabilities and a "please read" band (thresholds set on Y-dev); the parent line is unchanged and stays rule-based. Its test-set numbers are an exploratory row: thresholds set on Y-dev (GPT-written); the test sets are Claude-written, so the Y-dev guarantee does not formally transfer.
 - **Board threshold.** Board threshold hi = 0.9 (chosen on Y-dev before the freeze, Sat 3 Oct). At hi = 0.9904, no Y-dev no-danger message was marked 'possible', but 30.8% of messages went to 'please read' and 'possible' almost never fired. At hi = 0.9, review load falls to 12.5%, at the cost of 2 of 45 Y-dev no-danger messages marked 'possible'. On the board a false 'possible' only moves a case up the health worker's list: no SMS is sent and no case status changes. A review load of about a third of all messages risks the health worker ignoring the flags (mTrac's on-time volunteer reporting fell from 60% to 9%; DFID 2014 via SDSN TReNDS 2018). lo = 0.068 is unchanged, so no Y-dev danger message falls below it. The full sweep is in the table above.
@@ -309,7 +340,7 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 |---|---|
 | Parents on basic phones, no data bundles (only 27.5% of rural women own a smartphone, DATA.md F1) | Parent side is plain SMS on any phone; no app, no data (BUILT) |
 | 2G/3G networks | SMS only; the model needs no internet (BUILT) |
-| Low digital literacy | Parent is never asked a question; fixed short messages (BUILT). Voice not built |
+| Low digital literacy | The system never asks a parent anything on its own; fixed short messages (BUILT). A question reaches a parent only when her health worker approves it, answered with a bare 1, 2 or 3 (experimental). Voice not built |
 | Clinician time and heavy load | Danger cases sorted first; checklist with numbered replies; facility gets one short alert (BUILT) |
 | Burdensome record-keeping | Referral and arrival records written automatically (BUILT) |
 | No new hardware for the user | Runs on the health worker's existing phone (DESIGN); the demo box is a stand-in and a county backup |
@@ -317,13 +348,19 @@ All project code was written after 12:00 ET on Sat 3 Oct 2026. Made before the e
 | Privacy (where data sits, lost phone) | See "Where the data sits" (BUILT/DESIGN marked) |
 
 **Constraints we add.**
-- The health worker needs an Android phone with about 322 MB free memory (peak RAM of the deployed model on the Pi) and 90.3 MB storage; reported CHP phones have 2 GB RAM (DATA.md, C5), and Android uses part of that.
-- Someone pays for the SMS: average KES 1.18 per message (DATA.md, F3); a case uses 4 to 10 outgoing messages (7 to 13 SMS segments), counted from scripted runs of the demo flows: told then no danger sign 4 (8 segments), parent go-now then arrival 7 (7), told then referred then arrival 10 (13).
+- The health worker needs an Android phone with about 350 MB free memory (peak RAM of the deployed v3 model on the Pi) and 93 MB storage; reported CHP phones have 2 GB RAM (DATA.md, C5), and Android uses part of that.
+- Someone pays for the SMS: average KES 1.18 per message (DATA.md, F3); a case uses 4 to 13 outgoing messages (9 to 18 segments), KES 10.62 to 21.24 at KES 1.18 per segment, without questions; see Cost per case.
 - The parent needs access to any phone, often shared; women are less likely than men to own one (DATA.md, F2).
 - The parent must read Swahili or English (replies: see the Swahili note).
 - Facilities must text the arrival code back; a facility that doesn't leaves the case open and escalates to the CHA (BUILT).
 
-## Local languages
+## Our take on localizing AI
+
+Localizing AI means the tool fits the phone, the language and the health worker it already has: a parent's basic phone, Swahili as she writes it, the health worker's chart booklet and her ministry's rules, which the ministry edits itself. And it means saying what we didn't test: no native speaker checked our Swahili messages yet.
+
+Swahili clock time runs 6 hours off standard time, so the parent's waiting time is given in minutes, never as a clock time. Swahili negation tripped both our rules and our models: 'hana' means 'doesn't have', but 'hawezi kunywa', 'can't drink', is itself a danger sign.
+
+### Local languages
 
 AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper only as an evaluation language, so we treat Swahili as the one language we can test today and say so plainly. Masakhane's own work shows how the rest should be done: community members translated their own data and evaluated the outputs (Nekoto et al., Findings of EMNLP 2020), and Swahili speech was collected on Mozilla Common Voice with students from Maseno and Kabarak universities (Nakatumba-Nabende et al., 2024). We couldn't do that this weekend; the pilot is designed to.
 
@@ -332,12 +369,12 @@ AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper 
 ## What happens next
 
 - **Clinician advice channel (DESIGN, not built):** a clinician sees an escalated case on a smartphone and sends advice to the health worker only, never automatically to the parent; never in the path of a 'go now' case; logged with the clinician's name; designed not to add to clinic load, since clinics are already overloaded.
-- **Questions, next stages (not built):** checks on cases still waiting for the health worker (Tier 2, wording on file, needs the reviewer's E7 rule), and a larger bank chosen by retrieval with the on-device encoder, trained on her Approve/Decline taps (every tap is a label; no message text logged).
+- **Questions, next stage (not built):** a larger bank chosen by retrieval with the on-device encoder, trained on her Approve/Decline taps (every tap is a label; no message text logged); automatic checks when she does not respond stay out until reviewed.
 - **Spoken parent messages:** Spoken versions of the fixed parent messages (IVR call-back) for parents who can't read, after native-speaker and clinician review.
 - **Speech and more languages:** NLLB-200, MMS, Common Voice and FLEURS for voice notes from parents who cannot read, Kikuyu and Luo through MMS, and translating replies; each needs native-speaker review before use.
 - **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.
 
-**Related work.** Masakhane Hub's LINGUA Africa 2026 grants include health language-AI work: WHO Kenya's AFYA-LINGUA (Kiswahili plus nine languages), IDI Uganda's Sasa (eight languages including Kiswahili), and Ushahidi's health-and-education resources for Tonga, Tjwao and Doma (https://www.microsoft.com/en-us/research/academic-program/lingua-africa-open-call/).
+**Related work.** Funded health language-AI work exists in the region (LINGUA Africa 2026 grants): https://www.microsoft.com/en-us/research/academic-program/lingua-africa-open-call/
 
 ## Licence
 
@@ -347,7 +384,7 @@ Code: MIT (see LICENSE). The model weights (see the model card: research and eva
 
 - **What changes:** the protocol file (`config/protocol.yaml`, edited by the ministry, checked by the must-stay-RED tests on every load); the facility and health worker registry; the fixed messages (reviewed once by a native speaker and a clinician); the model, retrained on local messages.
 - **What stays:** the workflow, the safety tests, the fail-safe, the case board.
-- **Cost to add a language (measured this weekend):** 1,794 generated training and development messages (gpt-5.5: 1,200 X train, 474 v2 additions, 120 Y-dev) plus 175 generated test messages (claude-opus-5-5); for v3, 710 more gpt-5.5 messages (contrast pairs and duration negatives) and a fresh 150-message claude-opus-5-5 test set (y_test2). API spend this weekend, all generated data: an estimated US$5 on OpenAI (gpt-5.5) and US$2 on Anthropic (claude-opus-5-5); to be confirmed from the providers' usage pages; fine-tuning 0.4 GPU-minutes per run on one desktop GPU (RTX 4070 Ti SUPER; v1 measured; v3, with the larger training set, 1.6 GPU-minutes); deployed board model 92.7 MB (v3; v2 was 89.7 MB); the whole build, from the first generation commit to the frozen results, took about 2 hours 10 minutes of wall-clock (git log: 12:21 to 14:31 ET, Sat 3 Oct). Real deployment would replace generated messages with messages written by local parents and health workers.
+- **Cost to add a language (measured this weekend):** 1,794 generated training and development messages (gpt-5.5: 1,200 X train, 474 v2 additions generated, 462 kept, 120 Y-dev) plus 175 generated test messages (claude-opus-5-5); for v3, 710 more gpt-5.5 messages (contrast pairs and duration negatives) and a fresh 150-message claude-opus-5-5 test set (y_test2). API spend this weekend, all generated data: an estimated US$5 on OpenAI (gpt-5.5) and US$2 on Anthropic (claude-opus-5-5); to be confirmed from the providers' usage pages; fine-tuning 0.4 GPU-minutes per run on one desktop GPU (RTX 4070 Ti SUPER; v1 measured; v3, with the larger training set, 1.6 GPU-minutes); deployed board model 92.7 MB (v3; v2 was 89.7 MB); the whole build, from the first generation commit to the frozen results, took about 2 hours 10 minutes of wall-clock (git log: 12:21 to 14:31 ET, Sat 3 Oct). Real deployment would replace generated messages with messages written by local parents and health workers.
 - **Running cost:** SMS at about KES 1.18 each (DATA.md, F3); no cloud.
 
 ### Cost per case
@@ -360,8 +397,12 @@ Outgoing SMS segments per case, counted from the demo service (all messages are 
 | No danger sign: parent "told" + health worker call + checklist + her "0" reply closes it | 4 (9) | 10.62 |
 | "Told", then her checklist reply refers + arrival + outcome code | 13 (18) | 21.24 |
 | No reply: "told" + timeout messages + facility and CHA alerts | 7 (12) | 14.16 |
+| Experimental questions, danger path: as the first row + 2 pre-arrival questions, 2 acknowledgements, 1 facility note (answers 1 then 2) | 15 (16) | 18.88 |
+| Experimental questions, waiting case: "told" + her "0" (as the second row) + 1 check + 1 acknowledgement (answer 2) | 6 (11) | 12.98 |
 
-No cloud costs: the model runs on the health worker's phone or a county box. Cost of generating the training data this weekend: an estimated US$7 in API fees, to be confirmed from the providers' usage pages.
+Question layer (experimental): +1 SMS per question, +1 per acknowledgement, +1 per facility note, each 1 segment; at most 3 question SMS per case.
+
+No cloud costs in deployment: the model would run on the health worker's phone or a county box. Cost of generating the training data this weekend: an estimated US$7 in API fees, to be confirmed from the providers' usage pages.
 
 ### Adapting to a new setting
 
@@ -371,7 +412,7 @@ M = measured this weekend; E = estimate.
 |---|---|---|
 | Edit the protocol file (danger signs, thresholds) to the local guideline; must-stay-RED tests check it on load | ministry clinician + engineer | 2-4 (E) |
 | Facility and health-worker registry for one county (public facility lists: healthsites.io / Maina et al.) | engineer | 1-2 (E; 5 facilities took under 1 h, M) |
-| Translate the 5 fixed parent messages; native-speaker + clinician review | translator + clinician | 2-4 (E) |
+| Translate the 5 fixed parent messages and the question bank; native-speaker + clinician review | translator + clinician | 2-4 (E) |
 | Training data: generated messages for a new language (stand-in until real messages exist) | engineer | ~1 h and ~US$7 (E) |
 | Fine-tune, trim, quantize, calibrate | engineer, one desktop GPU | under 0.5 (M: training 1.6 min) |
 | Collect and label real parent messages with health workers (the step that actually makes it work) | local team, community | pilot weeks (E) |
@@ -410,7 +451,20 @@ Single pass: each message read once, first reply scored; dialogue not replayed. 
 
 Baselines: always go now misses 0 and sends every no-danger child; never go now misses every danger child. Only a native set could produce a Win, so the Y-test McNemar p is not a win.
 
-### Summary for the video (`results/video_table.png`)
+### Summary for the video (v3, exploratory)
+
+Danger messages missed by the model on its own (parent-line rule, p >= 0.5):
+
+| | Keywords | Pre-registered model (v1) | v3 |
+|---|---|---|---|
+| (a) grid | 4 / 12 | 2 / 12 | 1 / 12 |
+| (b) Swahili | 2 / 12 | 3 / 12 | 1 / 12 |
+| Y-test | 14 / 80 | 15 / 80 | 0 / 80 |
+| y_test2 (fresh) | 14 / 80 | not run | 1 / 80 |
+
+With the board, keywords + v3 missed 1 on each older set and 2 on the fresh set. v3 = the shipped 92.7 MB file; test sets are AI-written; the pre-registered model was not run on the fresh set.
+
+### Historical: v2 (replaced by v3 on the board) (`results/video_table.png`)
 
 | | Keywords | Pre-registered model (v1) | Retrained model, board (v2) |
 |---|---|---|---|
@@ -421,7 +475,7 @@ Baselines: always go now misses 0 and sends every no-danger child; never go now 
 | **Needless trips: total** | **17 / 81** | **7 / 81** | **19 / 81** |
 | **False alarms, 1,000 everyday Swahili sentences written by people (MASSIVE, not about health)** | **43** | **9** | **59** |
 
-The board runs the 90 MB version of the retrained model (agreed with the full-size one on 119 of 120 dev messages); its MASSIVE count is the 90 MB version (full-size: 49). Test sets are AI-written. The v2 column is exploratory (a second training run after the freeze); the pre-registered comparison is keywords vs v1.
+At the freeze the board ran the 90 MB version of v2 (agreed with the full-size one on 119 of 120 dev messages); its MASSIVE count is that version (full-size: 49). The board now runs v3 (see "v3 on the board"). Test sets are AI-written. The v2 column is exploratory (a second training run after the freeze); the pre-registered comparison is keywords vs v1.
 
 ### Exploratory rows (not pre-registered)
 
@@ -443,7 +497,7 @@ The board runs the 90 MB version of the retrained model (agreed with the full-si
 | Y-test | English | 6/31 missed, 2/13 needless | 3/31 missed, 1/13 needless | 1/31 missed, 2/13 needless |
 | Y-test | code-mixed | 2/22 missed, 2/11 needless | 6/22 missed, 0/11 needless | 0/22 missed, 4/11 needless |
 
-**The board model (exploratory).** Deployed board model v2 (trimmed, 8-bit weights) at the board thresholds lo 0.068 / hi 0.9. On Y-dev, where the thresholds were set (thresholds set on this data), it flagged 10 of the 10 danger messages the keyword list E2 missed, and flagged 11 of 45 no-danger messages. On the sealed sets (thresholds set on Y-dev; the test sets are Claude-written, so the Y-dev guarantee does not formally transfer):
+**The board model at the freeze (exploratory).** The board model as deployed at the freeze, v2 (trimmed, 8-bit weights; since replaced by v3) at the board thresholds lo 0.068 / hi 0.9. On Y-dev, where the thresholds were set (thresholds set on this data), it flagged 10 of the 10 danger messages the keyword list E2 missed, and flagged 11 of 45 no-danger messages. On the sealed sets (thresholds set on Y-dev; the test sets are Claude-written, so the Y-dev guarantee does not formally transfer):
 
 | Set | Danger messages E2 missed that the board flagged | No-danger messages flagged |
 |---|---|---|
@@ -451,7 +505,7 @@ The board runs the 90 MB version of the retrained model (agreed with the full-si
 | (b) AI-generated Swahili (claude-opus-5-5), not checked by a native speaker | 2/2 (15.8-100.0%) | 4/13 (9.1-61.4%) |
 | Y-test, Claude, caregiver | 14/14 (76.8-100.0%) | 19/55 (22.2-48.6%) |
 
-**Human-written Swahili with no health content: MASSIVE sw-KE (exploratory).** On 1,000 translated virtual-assistant commands (sampled with a fixed seed), counted as "go now" triggered by a sign, a C4 word or under 2 months, the keyword list triggered on 43, the first model (v1 FP32) on 9, and the shipped board model (v2, trimmed, 8-bit weights) on 59. All model counts use the parent-line rule (raw p >= 0.5 on any head), not the board's calibrated bands. v2 differs from v1 by 462 extra training messages, terse danger terms and negated lists, added after v1 failed the caregiver tests CG1 and CG5; v2 ships on the board because on Y-dev it passed more caregiver tests and caught more danger messages, and it was chosen there before the freeze. When each number was seen: the v1 FP32, v2 FP32 (49) and keyword list counts printed when the runs finished, after the freeze and after v2 had already been chosen for the board; the shipped v2 count was run after the freeze, before the tabulation. So on the AI-written test sets v1 (the registered model) had fewer needless trips than the keyword list, but on human-written Swahili the shipped v2 raised more "go now" triggers than the keyword list did.
+**Human-written Swahili with no health content: MASSIVE sw-KE (exploratory).** On 1,000 translated virtual-assistant commands (sampled with a fixed seed), counted as "go now" triggered by a sign, a C4 word or under 2 months, the keyword list triggered on 43, the first model (v1 FP32) on 9, and the board model as shipped at the freeze (v2, trimmed, 8-bit weights) on 59. All model counts use the parent-line rule (raw p >= 0.5 on any head), not the board's calibrated bands. v2 differs from v1 by 462 extra training messages, terse danger terms and negated lists, added after v1 failed the caregiver tests CG1 and CG5; v2 ships on the board because on Y-dev it passed more caregiver tests and caught more danger messages, and it was chosen there before the freeze. When each number was seen: the v1 FP32, v2 FP32 (49) and keyword list counts printed when the runs finished, after the freeze and after v2 had already been chosen for the board; the shipped v2 count was run after the freeze, before the tabulation. So on the AI-written test sets v1 (the registered model) had fewer needless trips than the keyword list, but on human-written Swahili the v2 shipped at the freeze raised more "go now" triggers than the keyword list did (v3, which replaced it, is in "v3 on the board").
 
 ### Evaluation notes
 
@@ -460,11 +514,3 @@ The board runs the 90 MB version of the retrained model (agreed with the full-si
 - Y labels not hand-checked.
 - Scored single-pass: each message read once, first reply scored; the dialogue was not replayed. Dialogue behaviour is checked only by must-stay-RED tests T1 to T35 and CG1 to CG18.
 
-## Run it
-
-```
-python -m app.check                     # load the protocol, run T1-T35, CG1-CG18 and the lints
-python -m pytest checks                 # unit and flow tests
-python -m uvicorn app.server:app --host 0.0.0.0 --port 8000   # endpoint + simulator at /
-```
-On the Pi: `sh scripts/pi_run.sh`.
