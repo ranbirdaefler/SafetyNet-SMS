@@ -8,6 +8,70 @@ Video: {link}
 >
 > Files: [PREREGISTRATION.md](PREREGISTRATION.md) · [DATA.md](DATA.md) · [results/TABLES.md](results/TABLES.md) and [results/ERRATA.md](results/ERRATA.md) · model card: https://huggingface.co/ranbirr1/safetynet-sms-board · [LICENSE](LICENSE)
 
+## Test it offline (judges)
+
+### In your browser, 2 minutes, no install
+
+This runs the board model only, inside the browser.
+
+1. Open https://ranbirr1-safetynet-sms.hf.space/phone and wait for **Model: ready (92.7 MB)** (about 5 to 7 seconds on a fast connection).
+2. Turn on airplane mode or switch Wi-Fi off. **Network** changes to **Offline**.
+3. Type a parent's message and press **Read**, for example Amina's "kila kitu anachokula anatapika hata maji" (everything they eat, they vomit, even water). You'll see "model: possible vomits everything, check". Try "mtoto wangu wa miezi 18 ana degedege" (convulsions) or an English message.
+4. Press **Time 50 messages** for the speed: p50 and p95 in ms.
+
+Limits:
+- Don't reload the page while offline. The page itself isn't cached, so a reload fails until you reconnect.
+- A fast phone or laptop is a best case. Not yet measured on an entry-level Android.
+- This is the model only. The full SMS workflow (rules, replies, alerts, arrival) needs the server below.
+
+We tested this on the live Space, in desktop Chrome and in a 390x844 phone emulation, with the browser set offline after loading:
+- Reading messages made 0 network requests.
+- The status line read "Offline".
+- p95 was 161 to 166 ms.
+- "Time 50 messages" tries once to send its timing to the server. The attempt fails offline and nothing else changes.
+
+### The whole system on your computer, about 5 minutes
+
+You need Python 3.11, git, about 400 MB of disk and about 1 GB of free RAM. The server used 243 MB on a Windows laptop after the three stories and peaked at 569 MB on the Raspberry Pi. No GPU.
+
+Windows (PowerShell). Clone to a short path such as `C:\sns`, because pip fails on onnxruntime's deep file paths under a long folder:
+
+```
+git clone https://github.com/ranbirdaefler/SafetyNet-SMS C:\sns\SafetyNet-SMS
+cd C:\sns\SafetyNet-SMS
+py -3.11 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-demo.txt
+python scripts/fetch_model.py   # once, with internet: board model 92.7 MB, SHA-256 checked
+python -m app.check              # step 0: load the protocol, run T1-T35, CG1-CG18 and the lints
+# now disconnect from the internet
+python -m uvicorn app.server:app --port 8000
+```
+
+macOS / Linux. Same steps; we ran them on Windows 11 only:
+
+```
+git clone https://github.com/ranbirdaefler/SafetyNet-SMS && cd SafetyNet-SMS
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-demo.txt
+python scripts/fetch_model.py   # once, with internet
+python -m app.check
+# now disconnect from the internet
+python -m uvicorn app.server:app --port 8000
+```
+
+Open http://localhost:8000 and press **Play the story**. Nothing leaves your machine, and the SMS gateway is simulated. Tests: `python -m pytest checks`. On the Pi: `sh scripts/pi_run.sh`.
+
+We checked this from a fresh clone (commit e4c4138):
+- We ran it with HF_HUB_OFFLINE=1.
+- The browser blocked every non-localhost request. All three stories played to the end with 0 external requests and no page errors.
+- The board model ran: the Amina message was marked "possible" in 89 ms.
+- A code search found every page request goes to the same local server. The only outbound call in the code is `scripts/fetch_model.py`, which downloads the model once from Hugging Face.
+
+In deployment the model would run on the health worker's phone (designed, not built as an app) or on a county box behind the SMS number.
+
+> SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.
+
 | | |
 |---|---|
 | **What it does** | An assistant for Kenya's community health promoters (CHPs) that closes the referral loop by SMS: a parent texts about a sick child (2 to 59 months, Swahili, English or both); the rules say "go now" when a WHO danger sign is present and alert the facility and the supervisor (CHA); the facility texts a code when the child arrives and a short outcome code after the visit; the health worker's follow-up is set from it. She makes every clinical call; the automatic "go now" is a safety net when she is on a visit or asleep, not a replacement for her. |
@@ -35,22 +99,6 @@ Live demo: https://huggingface.co/spaces/ranbirr1/safetynet-sms (synthetic data,
 3. **Not every cough is an emergency.** Akinyi's child has had a cough for 3 days, "hana homa" (no fever), and is eating and playing: no alarm and no model flag, and no checks are suggested, because there is no danger signal (the cough has a duration under the cut-off and the fever is denied). Achieng checks the child herself and replies "0": the case closes with a check-in in 3 days.
 
 Or type your own messages in the three panes. **Show English** (on by default) adds a grey line with our own English under Swahili system messages and the story messages; anything you type yourself is not translated. **show message IDs** reveals the internal message names (CG_TOLD, Q_ACK, ...). Questions to parents are an experimental layer (below).
-
-## Run it yourself (offline)
-
-Python 3.11, no GPU:
-
-```
-git clone https://github.com/ranbirdaefler/SafetyNet-SMS && cd SafetyNet-SMS
-pip install -r requirements-demo.txt
-python scripts/fetch_model.py   # board model, 92.7 MB, SHA-256 checked; needs internet once
-python -m app.check              # step 0: load the protocol, run T1-T35, CG1-CG18 and the lints
-python -m uvicorn app.server:app --port 8000      # open http://localhost:8000
-```
-
-After this, it runs with no internet. Tests: `python -m pytest checks`. On the Pi: `sh scripts/pi_run.sh`.
-
-> SMS gateway simulated. In deployment: a county shortcode on a Kenyan SMS gateway, with this code on the health worker's phone or a county box. Synthetic cases; not clinically validated.
 
 ## How it works
 
