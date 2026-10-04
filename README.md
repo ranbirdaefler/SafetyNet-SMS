@@ -1,6 +1,28 @@
 # SafetyNet-SMS
 
-**Pre-registered claim (native Swahili): NOT TESTED.** No native speaker's texts were ready, so the claim we registered in advance stays untested. Everything below is on AI-written test messages.
+**When a child under five is seriously ill, a parent's text should reach someone who can act that night, and the clinic's answer should get back to the health worker who sent the child.**
+
+## The problem
+
+- **Children die of illnesses that can be treated if care comes in time.** Kenya's under-5 mortality rate is 41 per 1,000 live births (KDHS 2022). Pneumonia alone caused about 15% of under-5 deaths, almost 9,000 a year (2018 data; UNICEF/Save the Children, *Fighting for Breath*, 2020).
+- **Delay is what kills.** In 74% of child deaths studied at Kenya's CHAMPS sites (213 of 287), there was at least one delay in care (CHAMPS, *PLOS Global Public Health*, 2024).
+- **Clinicians are scarce and often absent.** Kenya has 2.6 doctors per 10,000 people (WHO Global Health Observatory, 2024). On unannounced visits, 52.8% of health workers were absent, and 19.6% correctly diagnosed all four tracer conditions (World Bank / MoH Service Delivery Indicators, 2018 survey).
+- **The first person a family can reach is a community health promoter (CHP)**, each responsible for about 100 households (Presidential address, 25 Sep 2023). She hears about a sick child only if the parent reaches her.
+- **The parent's phone is usually a basic one.** Only 27.5% of rural Kenyan women own a smartphone (KDHS 2022). SMS is the channel that reaches every family, with no data bundle.
+- **Many sick children never get advice or treatment.** For 3 in 10 under-5s with fever in the past two weeks, no advice or treatment was sought, even counting shops and drug sellers (KDHS 2022: sought for 69.5%).
+- **Referrals disappear.** In one Kenyan sub-county, referral forms were on file at the hospital for only 19 of 112 children referred for pneumonia (Opuba et al., 2025). In a Kenyan young-infant programme, heavy workload led some facility staff to skip the feedback form, so health volunteers relied on what caregivers told them (Odwe et al., *Health Policy and Planning*, 2024).
+
+Every figure, with its table or page and URL: [DATA.md](DATA.md), section 1.
+
+## How SafetyNet-SMS fixes it
+
+1. **A parent texts from any phone,** in Swahili, English or both. Fixed rules built from the WHO/UNICEF danger signs reply within seconds. When a danger sign is present, the parent is told to go to the clinic now, with a code, and the facility and the supervisor are alerted, even at 2 a.m. when the health worker is asleep.
+2. **A small AI model reads every message** (AfroXLMR, 93 MB; designed to run on the health worker's phone, and it ran offline in a phone browser). It puts the urgent cases at the top of her board and catches danger signs the keyword rules miss: on a fresh sealed test set, the board flagged 12 of the 14 danger messages the rules missed (AI-written test messages; exploratory). It never sends anything to a parent on its own.
+3. **The health worker decides.** She answers the WHO checklist by number, and she can send a question the model suggests, only after she approves it. The parent's answer reaches the clinic before the child does (experimental).
+4. **The loop closes.** The facility texts the code back when the child arrives and a short outcome code after the visit. Her follow-up visit is set from it, and the referral record (referred, arrived, outcome) is written for her instead of adding reports for her to send. It is designed to feed Kenya's eCHIS and KHIS (DHIS2); that integration isn't built.
+5. **It is cheap.** A danger-sign case, from the first text to the clinic's outcome, costs about 11 text messages, around 13 Kenyan shillings (roughly 10 US cents).
+
+**Honest status:** our pre-registered test on native Swahili messages could not run (no native speaker's texts were ready), so the claim stays NOT TESTED. Every result here is on AI-written test messages. Not for medical use.
 
 Video: {link}
 
@@ -80,7 +102,7 @@ In deployment the model would run on the health worker's phone (designed, not bu
 | **What's experimental** | Questions to parents: the model suggests a fixed WHO question; nothing is sent until the health worker approves it. |
 | **What was tested** | AI-written test sets (GPT for training, Claude for tests) and an iPhone browser. NOT TESTED: real parents' messages, native Swahili, an entry-level Android phone, Kikuyu or Luo. See [What our data does not cover](DATA.md#4-what-our-data-does-not-cover). |
 
-**The problem.** Because of this tool, a community health promoter will see a sick child's danger signs within minutes of the parent's text, and will learn whether the child reached the clinic and what the clinic decided, which today often depends on what the caregiver tells her; we know because 74% of child deaths studied at Kenya's CHAMPS sites involved at least one delay in care, and in one Kenyan sub-county, referral forms were on file at the hospital for only 19 of 112 children referred for pneumonia (DATA.md: P3, P8; Odwe et al. 2024).
+**Problem statement (brief template).** Because of this tool, a community health promoter will see a sick child's danger signs within minutes of the parent's text, and will learn whether the child reached the clinic and what the clinic decided, which today often depends on what the caregiver tells her; we know because 74% of child deaths studied at Kenya's CHAMPS sites involved at least one delay in care, and in one Kenyan sub-county, referral forms were on file at the hospital for only 19 of 112 children referred for pneumonia (DATA.md: P3, P8; Odwe et al. 2024).
 
 **Stack.** Python 3.11, FastAPI/uvicorn, SQLite, ONNX Runtime (Raspberry Pi) and onnxruntime-web (phone browser); AfroXLMR-base fine-tuned, 8-bit weight-only, 92.7 MB; Raspberry Pi 5; a Hugging Face Space for the public demo.
 
