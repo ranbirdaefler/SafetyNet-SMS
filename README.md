@@ -442,7 +442,6 @@ AfroXLMR was trained on Swahili but not on Kikuyu, and Luo appears in its paper 
 - **Questions, next stage (not built):** a larger bank chosen by retrieval with the on-device encoder, trained on her Approve/Decline taps (every tap is a label; no message text logged); automatic checks when she does not respond stay out until reviewed.
 - **Spoken parent messages:** Spoken versions of the fixed parent messages (IVR call-back) for parents who can't read, after native-speaker and clinician review.
 - **Speech and more languages:** NLLB-200, MMS, Common Voice and FLEURS for voice notes from parents who cannot read, Kikuyu and Luo through MMS, and translating replies; each needs native-speaker review before use.
-- **Funding fit:** This prototype fits the kind of work the Masakhane African Languages Hub funds: its January 2026 call named benchmarking 'in the wild', testing how AI performs in real African settings, as one of three funding fronts, and LINGUA Africa (with Microsoft AI for Good, the Gates Foundation and Google.org) ran a sectoral-applications track with healthcare as a priority sector. The 2026 LINGUA Africa call is closed; we would look for a future call and an Africa-based partner, which applicants outside Africa need to show.
 
 **Related work.** Funded health language-AI work exists in the region (LINGUA Africa 2026 grants): https://www.microsoft.com/en-us/research/academic-program/lingua-africa-open-call/
 
