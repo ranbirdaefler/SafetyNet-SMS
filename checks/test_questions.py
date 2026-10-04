@@ -372,21 +372,68 @@ def told(e, phone=P1, text=RASH):
     return code
 
 
-def test_tier2_suggest_order_skips_and_wake_before_drink(tier2):
-    bank = QL.approved_questions()
-    st = {"age_months": 24, "u2m": False, "model": {"heads": {"vomits_everything": 0.8, "convulsions": 0.6, "not_drink_feed": 0.9}}}
-    ids_ = [s["id"] for s in suggest(st, bank, "ASK_SIGNS")]
-    assert ids_ == ["CK_VOMIT", "CK_FITS"]                                   # DRINK waits for WAKE
-    st2 = {**st, "q": {"asked": ["CK_WAKE"]}, "fields": {"vomits_everything": "PRESENT"}}
-    assert [s["id"] for s in suggest(st2, bank, "ASK_SIGNS")] == ["CK_DRINK"]          # 2 offered at most
-    assert all("COUGH" not in s["id"] for s in suggest(st, bank, "ASK_SIGNS"))   # durations only if scored >= 0.5
-    r = suggest(st, bank, "ASK_SIGNS")[0]["reason"]
+def test_tier2_drafts_need_a_signal(tier2):
+    bank, table = QL.approved_questions(), QL.STATE["bank"]["symptom_checks"]
+    st = {"age_months": 24, "u2m": False}
+    assert suggest(st, bank, "ASK_SIGNS", table) == []                                       # no signal: nothing
+    st = {**st, "model": {"heads": {"vomits_everything": 0.8, "convulsions": 0.6}}}
+    assert [s["id"] for s in suggest(st, bank, "ASK_SIGNS", table)] == ["CK_VOMIT", "CK_FITS"]   # model-ranked
+    r = suggest(st, bank, "ASK_SIGNS", table)[0]["reason"]
     assert "score 0.80" in r and "WHO/UNICEF" in r
+
+
+def test_tier2_table_drives_drafts_and_pair_is_one_slot(tier2):
+    bank, table = QL.approved_questions(), QL.STATE["bank"]["symptom_checks"]
+    ids = lambda st: [s["id"] for s in suggest(st, bank, "ASK_SIGNS", table)]
+    base = {"age_months": 24, "u2m": False}
+    assert ids({**base, "symptoms": {"diarrhoea": {"duration": False}}}) == ["CK_WAKE", "CK_BLOOD"]      # pair, then blood
+    assert ids({**base, "symptoms": {"fever": {"duration": False}}}) == ["CK_WAKE", "CK_FITS"]           # pair, then fits
+    assert ids({**base, "symptoms": {"vomiting": {"duration": True}}}) == ["CK_VOMIT", "CK_WAKE"]        # vomit, then pair
+    # the pair is ONE slot: after the wake check was sent, the drink check follows inside the same slot
+    st = {**base, "symptoms": {"diarrhoea": {"duration": False}}, "q": {"asked": ["CK_WAKE"]}}
+    assert ids(st) == ["CK_DRINK", "CK_BLOOD"]
+    st = {**base, "symptoms": {"diarrhoea": {"duration": False}}, "q": {"asked": ["CK_WAKE", "CK_DRINK", "CK_BLOOD"]}}
+    assert ids(st) == []                                                       # 2 slots used = 3 SMS: nothing more
+    st = {**base, "symptoms": {"diarrhoea": {"duration": False}}, "q": {"declined": ["CK_WAKE"]}}
+    assert ids(st) == ["CK_BLOOD"]                                             # a declined pair is not reopened
+
+
+def test_tier2_cough_rule(tier2):
+    bank, table = QL.approved_questions(), QL.STATE["bank"]["symptom_checks"]
+    ids = lambda st: [s["id"] for s in suggest(st, bank, "ASK_SIGNS", table)]
+    base = {"age_months": 24, "u2m": False}
+    assert ids({**base, "symptoms": {"cough": {"duration": False}}}) == ["CK_COUGH_DAYS"]   # cough: duration only
+    assert ids({**base, "symptoms": {"cough": {"duration": True}}}) == []
+    st = {**base, "symptoms": {"cough": {"duration": True}}, "model": {"heads": {"sleepy_unconscious": 0.7}}}
+    assert ids(st) == ["CK_WAKE"]                                              # the pair still drafts on a model signal
+
+
+@pytest.mark.parametrize("text,expect", [
+    ("mtoto wangu wa miaka 2 ana homa", {"fever"}), ("mtoto wangu wa miaka 2 hana homa", set()),
+    ("my child 2 years has no fever", set()), ("mtoto anaharisha kwa siku 3", {"diarrhoea"}),
+    ("mtoto hatapiki", set()), ("he keeps vomiting", {"vomiting"}), ("ana kikohozi", {"cough"})])
+def test_tier2_mentions_and_denials(tier2, text, expect):
+    from app import textparse
+    from app.suggest import mentions
+    m = mentions(text, QL.STATE["bank"]["symptom_checks"], lexicon.clauses(text), lexicon.CUES, textparse.parse(text).durations)
+    assert set(m) == expect
+
+
+def test_tier2_denied_symptom_and_no_signal_case_draft_nothing(tier2):
+    e = Env(PROTO)
+    code = told(e, text="mtoto wangu wa miaka 3 ana kikohozi siku 3, hana homa, anakula na kucheza vizuri")
+    assert qflow.suggestions(e.store.case(code)) == []
+
+
+def test_tier2_at_most_two_checks_offered(tier2):
+    bank, table = QL.approved_questions(), QL.STATE["bank"]["symptom_checks"]
+    st = {"age_months": 24, "u2m": False, "symptoms": {"fever": {"duration": False}}, "q": {"asked": [], "declined": ["CK_FITS", "CK_WAKE"]}}
+    assert suggest(st, bank, "ASK_SIGNS", table) == []
 
 
 def test_tier2_question_has_no_referred_prefix(tier2):
     e = Env(PROTO)
-    code = told(e)
+    code = told(e, text="mtoto wangu wa miaka 2 ana homa")
     r, out = approve(e, code, qflow.suggestions(e.store.case(code))[0]["id"])
     assert r["ok"] and not out[0]["body"].startswith("Endelea kwenda kliniki")
 
@@ -477,10 +524,55 @@ def test_tier2_m1_no_drafts_for_newborn_or_no_age(tier2):
     assert qflow.suggestions(e.store.case(code)) == []
 
 
+# ---------- answers stay open for upgrades (only raising urgency) ----------
+def test_upgrade_2_then_1_sends_changed_note_no_double_go_now(on):
+    e = Env(PROTO)
+    code = referred(e)
+    answered(e, code, "2")
+    out = e.send(P1, "parent", "1")
+    assert ("parent", "CG_GO_NOW") not in ids(out)                                   # consumed: no repeated go-now
+    note = [m for m in out if m["msg_id"] == "PREARRIVAL"][0]["body"]
+    assert "(answer changed): more than one fit" in note and ("parent", "Q_ACK") in ids(out)
 
-def test_tier2_at_most_two_checks_offered(tier2):
-    bank = QL.approved_questions()
-    st = {"age_months": 24, "u2m": False, "q": {"asked": [], "declined": ["CK_FITS", "CK_WAKE"]}}
-    assert suggest(st, bank, "ASK_SIGNS") == []
-    st = {"age_months": 24, "u2m": False, "q": {"asked": ["CK_FITS"], "declined": []}}
-    assert len(suggest(st, bank, "ASK_SIGNS")) == 1
+
+def test_downgrade_1_then_2_is_ignored(on):
+    e = Env(PROTO)
+    code = referred(e)
+    answered(e, code, "1")
+    out = e.send(P1, "parent", "2")
+    assert ("facility", "PREARRIVAL") not in ids(out) and ids(out) == [("parent", "CG_GO_NOW")]   # old D23 path
+    assert any("ignored, earlier answer stands" in x for x in qflow.board_lines(e.store.case(code)))
+
+
+def test_upgrade_3_then_1_fits_note(on):
+    e = Env(PROTO)
+    code = referred(e)
+    answered(e, code, "3")
+    out = e.send(P1, "parent", "1")
+    assert any("(answer changed)" in m["body"] for m in out if m["msg_id"] == "PREARRIVAL")
+
+
+def test_upgrade_after_arrival_board_only(on):
+    e = Env(PROTO)
+    code = referred(e)
+    answered(e, code, "2")
+    e.send(FAC, "facility", code)
+    out = e.send(P1, "parent", "1")
+    assert out == [] and any("changed the answer to 1" in x for x in qflow.board_lines(e.store.case(code)))
+
+
+def test_upgrade_tier2_safe_then_danger_goes_now_first(tier2):
+    e = Env(PROTO)
+    code = told(e)
+    first_check(e, code, "CK_VOMIT")
+    assert ids(e.send(P1, "parent", "2")) == [("parent", "Q_ACK_TOLD")]
+    out = e.send(P1, "parent", "1")
+    assert ("parent", "CG_GO_NOW") in ids(out) and ("parent", "Q_ACK_TOLD") not in ids(out)
+    assert e.store.case(code)["status"] == "REFERRED"
+
+
+def test_non_digit_after_answer_is_old_path(on):
+    e = Env(PROTO)
+    code = referred(e)
+    answered(e, code, "2")
+    assert ids(e.send(P1, "parent", "asante")) == [("parent", "CG_GO_NOW")]

@@ -21,6 +21,8 @@ def handle(store, reg, proto, role, sender, body, extractors=None, board_model=N
         Referral(store, reg).facility_text(sender, body)
     elif role == "parent":
         DoorFlow(store, reg, proto, Referral(store, reg), **_ex(extractors)).handle(sender, body)
+        from app import qflow                           # question layer (experimental): symptoms for suggestions only
+        qflow.note_symptoms(store, sender, body)
         if board_model is not None:                     # board only: after the reply is decided and sent
             from app.board_model import annotate
             annotate(store, board_model, sender, body)

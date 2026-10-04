@@ -346,8 +346,20 @@ async function poll() {
         const st = stepFor("o" + m.id, m.id > stepStart.o);
         if (storyOn && m.id > stepStart.o) stepSeen.add(m.msg_id);
         maxOut = Math.max(maxOut, m.id);
-        for (const p of Object.values(panes))
-          if (p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient))) bubble(p, "recv", m.body, `${p.role === "facility" ? (m.role === "cha" ? "to CHA · " : "to facility · ") : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`, st, primed, p.role === "parent" ? m.why : null, p.role === "parent" ? m.en : null);
+        for (const p of Object.values(panes)) {
+          if (!(p.select.value === m.recipient || (p.role === "facility" && cfg.cha.includes(m.recipient)))) continue;
+          if (p.role === "facility") {                    // display only: the same SMS to facility and CHA shows once
+            const key = m.msg_id + "|" + m.case_code + "|" + m.body;
+            if (p.lastFac && p.lastFac.key === key && p.lastFac.el.isConnected) {
+              const lab = p.lastFac.el.querySelector(".tofac");
+              if (lab) lab.textContent = "to facility + CHA (supervisor) · ";
+              continue;
+            }
+          }
+          const meta = `${p.role === "facility" ? `<span class="tofac">${m.role === "cha" ? "to CHA · " : "to facility · "}</span>` : ""}${fmt(m.ts)} <span class="id">· ${m.msg_id}</span>`;
+          bubble(p, "recv", m.body, meta, st, primed, p.role === "parent" ? m.why : null, p.role === "parent" ? m.en : null);
+          if (p.role === "facility") p.lastFac = { key: m.msg_id + "|" + m.case_code + "|" + m.body, el: p.thread.lastElementChild };
+        }
       }
     }
     primed = true;                       // no badges for the history loaded on the first poll
@@ -758,14 +770,11 @@ const AKINYI = { name: "Not every cough is an emergency", parent: "Akinyi",
     why: "A cough for 3 days is under the 14-day long-illness cut-off, and nothing in the text matches a danger sign: no alarm.",
     look: "Akinyi's reply.", roles: ["parent"], tab: "parent", nodes: ["P", "Rules"], expect: ["CG_TOLD"],
     run: async () => { chwView(false); storyCode = firstCode(await sms(cfg.parents[0], "parent", S3)); } },
-  { title: "No false alarm; she declines the standard checks", text: "The model shows no flag. The system still offers two standard WHO checks in a fixed order, with no score. Achieng knows this family and declines them: the decision is hers.",
-    why: "Suggestions are offers, never sends. Every decline is logged with her name; nothing reaches the parent.",
-    look: "'model · no flag' and the two declines on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Model", "Achieng"], expect: [], experimental: true,
-    ready: () => (panes.chp.boardEl.textContent.match(/declined by CHP/g) || []).length >= 2,
-    run: async () => { chwView(true); await sleep(2300);
-      const ids = (await (await fetch("board?phone=" + encodeURIComponent(cfg.chps[0]))).json())
-        .filter(r => r.code === storyCode).flatMap(r => (r.q_suggestions || []).map(x => x.id));
-      for (const id of ids) await qAct(id, "decline"); } },
+  { title: "No false alarm, no checks to bother the family", text: "No checks suggested: no danger signal, so Achieng isn't asked to bother this family. The model shows no flag, the cough has a duration under the cut-off, and the fever is denied ('hana homa').",
+    why: "Checks are drafted only with a signal: the model scores a sign at 0.5 or more, or a mentioned symptom (not denied) links to a check, or its duration is missing.",
+    look: "'model · no flag' and no suggested questions on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Model", "Achieng"], expect: [], experimental: true,
+    ready: () => !!panes.chp.boardEl.querySelector(".card") && !panes.chp.boardEl.querySelector(".qsug"),
+    run: async () => { chwView(true); } },
   { title: "Achieng checks and closes it", text: "Achieng calls, works through the checklist and replies 0 (none of the signs). The case closes and a check-in in 3 days appears on her board.",
     why: "The health worker makes the call. Her '0' is the only thing that clears a case, and even then a check-in is set.",
     look: "'closed' and the check-in date on Achieng's board.", roles: ["chp"], tab: "chp", nodes: ["Achieng"], expect: ["NON_RED"],

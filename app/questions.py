@@ -91,6 +91,15 @@ def lint(bank, params):
                 errs.append(f"{qid}: en banned word {has_word(t, NEVER)}")
             if re.search(r"\b0\b", t):
                 errs.append(f"{qid}: {lang} must not offer 0")
+    known = {q.get("id") for q in bank.get("questions", [])}
+    for kind, row in (bank.get("symptom_checks") or {}).items():
+        if kind not in ("diarrhoea", "fever", "vomiting", "cough"):
+            errs.append(f"symptom_checks: unknown symptom {kind}")
+        if not row.get("words"):
+            errs.append(f"symptom_checks.{kind}: words required")
+        for qid in list(row.get("checks") or []) + ([row["duration_check"]] if row.get("duration_check") else []):
+            if qid != "PAIR" and (qid not in known or not qid.startswith("CK_")):
+                errs.append(f"symptom_checks.{kind}: unknown check {qid}")
     if not bank.get("blocked", {}).get("refuse_text"):
         errs.append("blocked.refuse_text missing")
     return errs

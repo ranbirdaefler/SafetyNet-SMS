@@ -19,6 +19,7 @@ WINDOW_S = 12 * 3600
 PLAIN = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "-", "—": "-", "…": "...",
          " ": " "}
 PARENT_REPLIED = "{code}: parent replied to your message. Read now."
+PREARRIVAL_CHANGED = "{code} PRE-ARRIVAL, parent report, not checked (answer changed): {label} (answered {time}). Asked via CHP {chp}."
 PREARRIVAL = "{code} PRE-ARRIVAL, parent report, not checked: {label} (answered {time}). Asked via CHP {chp}."
 
 
@@ -38,7 +39,7 @@ def used(q):
 def suggestions(case):
     if not Q.is_on() or case is None:
         return []
-    return suggest(case["state"], Q.approved_questions(), case["status"])
+    return suggest(case["state"], Q.approved_questions(), case["status"], Q.STATE["bank"].get("symptom_checks"))
 
 
 def chw_action(store, reg, proto, chp_phone, code, qid, action):
@@ -98,7 +99,7 @@ def on_parent_text(flow, phone, case, body):
         flow.store.update_case(case["code"], state=st)
         return None                                                 # the existing flow runs (policy, D23 repeat)
     if not pend:
-        return None
+        return upgrade(flow, phone, case, body, now)               # an answered question stays open for upgrades
     if now - pend["at"] > WINDOW_S:
         q["pending"] = None
         flow.store.update_case(case["code"], state=st)
@@ -115,7 +116,7 @@ def on_parent_text(flow, phone, case, body):
     label = str(item["labels"][n]).format(**flow.proto.params)
     q["pending"] = None
     q["answers"].append({"at": now, "qid": pend["id"], "n": n, "label": label, "bare": bare,
-                         "forwarded": (not arrived and n in (1, 3))})
+                         "forwarded": (not arrived and n in (1, 3)), "asked_at": pend["at"]})
     flow.store.update_case(case["code"], state=st)
     if not arrived and n in (1, 3):                                 # M3: only danger / not sure go to the facility
         chp = flow.reg.chp_by_phone.get(case["chp_phone"])
@@ -145,7 +146,8 @@ def on_check_answer(flow, phone, case, body, item, now):
     sign = item["sign"]
     label = str(item["labels"][n]).format(**flow.proto.params)
     q["pending"] = None
-    q["answers"].append({"at": now, "qid": item["id"], "n": n, "label": label, "bare": bare, "forwarded": False})
+    q["answers"].append({"at": now, "qid": item["id"], "n": n, "label": label, "bare": bare, "forwarded": False,
+                         "asked_at": (q.get("pending_was") or {}).get("at", now)})
     chp = flow.reg.chp_by_phone.get(case["chp_phone"])
     go = (n == 1) or (n == 3 and sign in GENERAL)
     if go:
@@ -170,6 +172,58 @@ def on_check_answer(flow, phone, case, body, item, now):
     return case["code"]
 
 
+RANK = {2: 0, 3: 1, 1: 2}                                          # urgency: safe < not sure < danger
+
+
+def upgrade(flow, phone, case, body, now):
+    """A later bare 1/2/3 to the last answered bank question, within its 12 h window, may only RAISE urgency
+    (2->3, 2->1, 3->1): the answer is updated and handled like a first answer (facility note marked 'answer changed'
+    before arrival; Tier 2 go-now rules). A lower or equal digit is ignored (shown on her board); the old flow runs."""
+    st = case["state"]
+    q = st.get("q") or {}
+    if q.get("chw_pending") or not q.get("answers"):
+        return None
+    n = Q.parse_answer(body)
+    if n is None:
+        return None                                                 # not a bare digit: the old path exactly
+    last = q["answers"][-1]
+    if now - last.get("asked_at", last["at"]) > WINDOW_S or last.get("superseded"):
+        return None
+    item = Q.question(last["qid"])
+    if item is None:
+        return None
+    if RANK[n] <= RANK[last["n"]]:
+        q.setdefault("ignored", []).append({"at": now, "qid": last["qid"], "n": n})
+        flow.store.update_case(case["code"], state=st)
+        return None                                                 # ignored; nothing cleared; the old flow runs
+    status = case["status"]
+    if item["kind"] == "check" and status in ("ASK_SIGNS", "NON_RED"):
+        last["superseded"] = True
+        q["pending_was"] = {"at": last.get("asked_at", last["at"])}
+        flow.store.update_case(case["code"], state=st)
+        r = on_check_answer(flow, phone, flow.store.case(case["code"]), body, item, now)
+        c = flow.store.case(case["code"])
+        c["state"]["q"]["answers"][-1]["changed"] = True
+        flow.store.update_case(case["code"], state=c["state"])
+        return r
+    arrived = bool(st.get("arrived_at"))
+    if status != "REFERRED" and not (status == "CLOSED" and arrived):
+        return None
+    label = str(item["labels"][n]).format(**flow.proto.params)
+    last["superseded"] = True
+    q["answers"].append({"at": now, "qid": last["qid"], "n": n, "label": label, "bare": True, "changed": True,
+                         "forwarded": (not arrived and n in (1, 3)), "asked_at": last.get("asked_at", last["at"])})
+    flow.store.update_case(case["code"], state=st)
+    if not arrived and n in (1, 3):
+        chp = flow.reg.chp_by_phone.get(case["chp_phone"])
+        fac = flow.reg.facility_of_chp(chp)
+        flow.store.send(fac["phone"], "facility", "PREARRIVAL",
+                        PREARRIVAL_CHANGED.format(code=case["code"], label=label, time=M.hhmm(now), chp=chp["id"] if chp else "-"),
+                        case["code"])
+        flow.store.send(phone, "parent", "Q_ACK", Q.ack_text(flow.reg.parent_lang(phone)), case["code"])
+    return case["code"]                                             # consumed: no repeated go-now
+
+
 def board_lines(case):
     """Lines for her case card: suggestions are added by the server; here the log and the answers."""
     st = case["state"]
@@ -183,8 +237,13 @@ def board_lines(case):
         out.append(f"{M.hhmm(o['at'])} her message: {o['text']} (replies are shown, not read automatically)")
     for r in q.get("replies", []):
         out.append(f"{M.hhmm(r['at'])} Parent replied: {r['text']}")
+    for g in q.get("ignored", []):
+        out.append(f"{M.hhmm(g['at'])} parent later replied {g['n']} to {g['qid']}: ignored, earlier answer stands")
     for a in q.get("answers", []):
         tail = "" if a["bare"] else " (reply was not a bare 1/2/3: counted as not sure)"
+        if a.get("changed"):
+            out.append(f"{M.hhmm(a['at'])} parent changed the answer to {a['n']}: {a['label']}" + (" (sent to facility)" if a["forwarded"] else ""))
+            continue
         if a["n"] == 2:
             out.append(f"{M.hhmm(a['at'])} parent answered 2: {a['label']}: not a check, you still check{tail}")
         else:
@@ -249,3 +308,24 @@ def chw_message(store, reg, proto, chp_phone, code, text, from_qid=None):
                      "reason": "", "text": ("edited" if from_qid else "written") + " by CHP " + chp["id"]})
     store.update_case(code, state=st)                                 # E4: status, due, chp_replied untouched
     return {"ok": True, "action": "edited" if from_qid else "written", "msg_id": "CHW_MSG"}
+
+
+def note_symptoms(store, phone, body):
+    """Record which symptoms a parent's text mentions (not denied) and whether each has a readable duration; used only
+    to choose which checks to suggest to the health worker (never changes any reply or decision)."""
+    if not Q.is_on():
+        return
+    case = store.latest_case_for_parent(phone)
+    if case is None:
+        return
+    from app import lexicon, textparse
+    from app.suggest import mentions
+    table = Q.STATE["bank"].get("symptom_checks") or {}
+    m = mentions(body, table, lexicon.clauses(body), lexicon.CUES, textparse.parse(body).durations)
+    if not m:
+        return
+    st = case["state"]
+    sy = st.setdefault("symptoms", {})
+    for k, v in m.items():
+        sy[k] = {"duration": bool(sy.get(k, {}).get("duration")) or v["duration"]}
+    store.update_case(case["code"], state=st)

@@ -116,6 +116,32 @@ questions:
     sw: "Homa imekaa siku {fever_red_days} au zaidi, ukihesabu tangu ilipoanza, hata kama inakuja na kuisha? Jibu 1 ndio. 2 chini ya {fever_red_days}. 3 sina uhakika."
     labels: {1: "fever {fever_red_days} days or more", 2: "fever under {fever_red_days} days", 3: "not sure how long the fever"}
     source: "WHO/UNICEF CHW manual (S1) p.36"
+# Symptom -> check table (Tier 2; data, ministry-editable, validated on load). A check is drafted on a TOLD case only
+# with a signal: the model scores its sign >= 0.5, or a mentioned, NOT denied symptom links to it here, or a mentioned
+# symptom has no readable duration (duration_check). A denied symptom ("hana homa", "no fever") links to nothing.
+# PAIR = the wake check, then the drink check: ONE slot (review M6, Addendum B). At most 2 slots per case (3 SMS).
+# Several symptoms: model signals >= 0.5 first; then PAIR, CK_VOMIT, CK_FITS, CK_BLOOD, then the duration checks.
+symptom_checks:
+  diarrhoea:
+    words: [diarrhoea, diarrhea, loose stool, loose stools, watery stool, kuhara, kuharisha, choo cha maji, majimaji]
+    verb_stems: [harisha]
+    checks: [PAIR, CK_BLOOD]
+    duration_check: CK_DIARRHOEA_DAYS
+  fever:
+    words: [fever, hot body, homa, ana joto, joto mwilini, joto jingi]
+    verb_stems: []
+    checks: [PAIR, CK_FITS]
+    duration_check: CK_FEVER_DAYS
+  vomiting:
+    words: [vomit, vomits, vomiting, vomited, throwing up, throws up, kutapika]
+    verb_stems: [tapika]
+    checks: [CK_VOMIT, PAIR]
+    duration_check: null
+  cough:
+    words: [cough, coughs, coughing, kikohozi, kukohoa]
+    verb_stems: [kohoa]
+    checks: []
+    duration_check: CK_COUGH_DAYS
 # Blocked words for the health worker's own messages (review E2), approved by Florian (Sat 3 Oct). BOTH language
 # lists apply to EVERY message, whatever the parent's language (code-mixing). Matched on the lower-cased text as
 # whole words or phrases; *_stems_sw also match any word that contains the stem. Any hit refuses the message.
